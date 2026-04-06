@@ -1,4 +1,10 @@
 {
+  "TYPES.Actor.investigator": "Investigator",
+  "TYPES.Item.talent": "Talent",
+  "TYPES.Item.weapon": "Weapon",
+  "TYPES.Item.armor": "Armor",
+  "TYPES.Item.equipment": "Equipment",
+
   "DREADLIGHT.SheetInvestigator": "Investigator Sheet",
   "DREADLIGHT.SheetTalent": "Talent Sheet",
   "DREADLIGHT.SheetItem": "Item Sheet",

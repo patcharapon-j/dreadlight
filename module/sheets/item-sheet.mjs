@@ -6,6 +6,9 @@ export class DreadlightItemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
   static DEFAULT_OPTIONS = {
     classes: ["dreadlight", "sheet", "item"],
     position: { width: 380, height: 480 },
+    window: {
+      resizable: true,
+    },
     form: {
       submitOnChange: true,
     },

@@ -8,6 +8,9 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
   static DEFAULT_OPTIONS = {
     classes: ["dreadlight", "sheet", "actor", "investigator"],
     position: { width: 720, height: 820 },
+    window: {
+      resizable: true,
+    },
     actions: {
       rollAttribute: InvestigatorSheet.#rollAttribute,
       rollTalent: InvestigatorSheet.#rollTalent,

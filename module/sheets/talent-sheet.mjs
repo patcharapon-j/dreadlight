@@ -6,6 +6,9 @@ export class TalentSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
   static DEFAULT_OPTIONS = {
     classes: ["dreadlight", "sheet", "item", "talent"],
     position: { width: 380, height: 520 },
+    window: {
+      resizable: true,
+    },
     form: {
       submitOnChange: true,
     },
