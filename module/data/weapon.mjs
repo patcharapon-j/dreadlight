@@ -19,7 +19,7 @@ export class WeaponData extends foundry.abstract.TypeDataModel {
 
       range: new fields.StringField({
         required: true,
-        initial: "",
+        initial: "engaged",
         choices: ["engaged", "short", "medium", "long", "extreme"],
       }),
 

@@ -2,9 +2,9 @@
   <div class="header-portrait" style="background-image: url('{{actor.img}}')"></div>
   <div class="header-fade"></div>
   <div class="header-identity">
-    <input class="char-name" type="text" name="name" value="{{actor.name}}" placeholder="Character Name" />
-    <input class="char-concept" type="text" name="system.concept" value="{{system.concept}}" placeholder="One-sentence concept..." />
-    <div class="char-tags">
+    <input class="name-input" type="text" name="name" value="{{actor.name}}" placeholder="Character Name" />
+    <input class="concept-input" type="text" name="system.concept" value="{{system.concept}}" placeholder="One-sentence concept..." />
+    <div class="tags">
       {{#each system.backgrounds}}
         {{#if this}}<span class="tag tag-bg">{{this}}</span>{{/if}}
       {{/each}}

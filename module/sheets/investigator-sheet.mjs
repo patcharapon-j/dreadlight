@@ -153,15 +153,15 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
 
     // Track pip clicks (body/mind/soul) — these use Handlebars-generated pips
     // that don't have data-action, so we bind manually.
-    this.element.querySelectorAll(".track-body .pip, .track-mind .pip, .track-soul .pip").forEach((pip) => {
+    this.element.querySelectorAll(".track-btn.body .pip, .track-btn.mind .pip, .track-btn.soul .pip").forEach((pip) => {
       pip.style.cursor = "pointer";
       pip.addEventListener("click", (ev) => {
         const trackBtn = ev.currentTarget.closest(".track-btn");
         if (!trackBtn) return;
         let trackKey;
-        if (trackBtn.classList.contains("track-body")) trackKey = "body";
-        else if (trackBtn.classList.contains("track-mind")) trackKey = "mind";
-        else if (trackBtn.classList.contains("track-soul")) trackKey = "soul";
+        if (trackBtn.classList.contains("body")) trackKey = "body";
+        else if (trackBtn.classList.contains("mind")) trackKey = "mind";
+        else if (trackBtn.classList.contains("soul")) trackKey = "soul";
         else return;
         const pips = Array.from(trackBtn.querySelectorAll(".pip"));
         const pipIndex = pips.indexOf(ev.currentTarget);
@@ -174,10 +174,10 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     });
 
     // Supply pip clicks
-    this.element.querySelectorAll(".track-supply .pip").forEach((pip) => {
+    this.element.querySelectorAll(".track-btn.supply .pip").forEach((pip) => {
       pip.style.cursor = "pointer";
       pip.addEventListener("click", (ev) => {
-        const pips = Array.from(ev.currentTarget.closest(".track-supply").querySelectorAll(".pip"));
+        const pips = Array.from(ev.currentTarget.closest(".track-btn.supply").querySelectorAll(".pip"));
         const pipIndex = pips.indexOf(ev.currentTarget);
         if (pipIndex < 0) return;
         const currentValue = this.actor.system.supply.value;

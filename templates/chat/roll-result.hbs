@@ -18,7 +18,7 @@
   <div class="chat-dice">
     {{#if baseResults.length}}
       <div class="dice-group group-base">
-        <span class="dice-label base">{{localize "DREADLIGHT.Base"}}</span>
+        <span class="dice-label label-base">{{localize "DREADLIGHT.Base"}}</span>
         {{#each baseResults}}
           <div class="die die-base {{#if (eq this 6)}}six{{else}}{{#if (eq this 1)}}one{{else}}normal{{/if}}{{/if}} {{#if (and ../pushed (or (eq this 1) (eq this 6)))}}locked{{/if}}">{{this}}</div>
         {{/each}}
@@ -26,7 +26,7 @@
     {{/if}}
     {{#if dreadResults.length}}
       <div class="dice-group group-dread">
-        <span class="dice-label dread">{{localize "DREADLIGHT.Dread"}}</span>
+        <span class="dice-label label-dread">{{localize "DREADLIGHT.Dread"}}</span>
         {{#each dreadResults}}
           <div class="die die-dread {{#if (eq this 6)}}six{{else}}{{#if (eq this 1)}}one{{else}}normal{{/if}}{{/if}} {{#if (and ../pushed (or (eq this 1) (eq this 6)))}}locked{{/if}}">{{this}}</div>
         {{/each}}
@@ -34,7 +34,7 @@
     {{/if}}
     {{#if gearResults.length}}
       <div class="dice-group group-gear">
-        <span class="dice-label gear">{{localize "DREADLIGHT.Gear"}}</span>
+        <span class="dice-label label-gear">{{localize "DREADLIGHT.Gear"}}</span>
         {{#each gearResults}}
           <div class="die die-gear {{#if (eq this 6)}}six{{else}}{{#if (eq this 1)}}one{{else}}normal{{/if}}{{/if}} {{#if (and ../pushed (or (eq this 1) (eq this 6)))}}locked{{/if}}">{{this}}</div>
         {{/each}}

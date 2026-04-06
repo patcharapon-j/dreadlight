@@ -1630,3 +1630,317 @@
   font-size: 9px;
   font-family: var(--dl-font-italic);
 }
+
+/* ----------------------------------------------------------
+   23. SPIRAL / MARKS / XP (Fix 9)
+   ---------------------------------------------------------- */
+
+.dreadlight .spiral-section {
+  background: var(--dl-bg-card);
+  border: 1px solid var(--dl-border-subtle);
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.dreadlight .spiral-pips {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.dreadlight .spiral-pip {
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dreadlight .spiral-pip.filled {
+  background: rgba(224, 85, 85, 0.15);
+  border: 1px solid rgba(224, 85, 85, 0.4);
+}
+
+.dreadlight .spiral-pip.empty {
+  background: var(--dl-bg-elevated);
+  border: 1px solid var(--dl-border-subtle);
+}
+
+.dreadlight .spiral-pip.final {
+  border-color: rgba(224, 85, 85, 0.3);
+}
+
+.dreadlight .spiral-pip.final.filled {
+  background: rgba(224, 85, 85, 0.25);
+  border-color: rgba(224, 85, 85, 0.6);
+  box-shadow: 0 0 10px rgba(224, 85, 85, 0.2);
+}
+
+.dreadlight .spiral-state {
+  font-size: 8px;
+  color: var(--dl-accent-red);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.dreadlight .pip-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--dl-accent-red);
+}
+
+.dreadlight .pip-x {
+  font-size: 10px;
+  color: var(--dl-text-muted);
+}
+
+.dreadlight .mark-entry {
+  background: var(--dl-bg-elevated);
+  border: 1px solid var(--dl-border-subtle);
+  border-radius: 3px;
+  padding: 6px 8px;
+  margin-bottom: 4px;
+}
+
+.dreadlight .mark-entry.mark-body { border-left: 2px solid var(--dl-track-body); }
+.dreadlight .mark-entry.mark-mind { border-left: 2px solid var(--dl-track-mind); }
+.dreadlight .mark-entry.mark-soul { border-left: 2px solid var(--dl-track-soul); }
+
+.dreadlight .mark-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+}
+
+.dreadlight .mark-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.dreadlight .mark-dot.body { background: var(--dl-track-body); }
+.dreadlight .mark-dot.mind { background: var(--dl-track-mind); }
+.dreadlight .mark-dot.soul { background: var(--dl-track-soul); }
+
+.dreadlight .mark-name {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--dl-text-primary);
+  flex: 1;
+}
+
+.dreadlight .mark-type {
+  font-size: 7px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--dl-text-muted);
+}
+
+.dreadlight .mark-desc {
+  font-size: 8px;
+  color: var(--dl-text-secondary);
+  margin-top: 3px;
+}
+
+.dreadlight .mark-actions {
+  display: flex;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.dreadlight .mark-actions button {
+  flex: 1;
+  background: var(--dl-bg-elevated);
+  border: 1px solid var(--dl-border-subtle);
+  border-radius: 3px;
+  color: var(--dl-text-muted);
+  font-family: var(--dl-font-primary);
+  font-size: 8px;
+  padding: 4px 6px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dreadlight .mark-actions button:hover {
+  border-color: rgba(201, 169, 110, 0.25);
+  color: var(--dl-accent-gold);
+}
+
+.dreadlight .delete-mark {
+  width: 16px;
+  height: 16px;
+  border: none;
+  background: transparent;
+  color: var(--dl-text-muted);
+  cursor: pointer;
+  font-size: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dreadlight .delete-mark:hover {
+  color: var(--dl-accent-red);
+}
+
+.dreadlight .section-label {
+  font-size: 8px;
+  color: var(--dl-accent-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+}
+
+.dreadlight .xp-box {
+  background: var(--dl-bg-card);
+  border: 1px solid var(--dl-border-gold);
+  border-radius: 4px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dreadlight .xp-value input {
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--dl-accent-gold);
+  font-family: var(--dl-font-primary);
+}
+
+.dreadlight .xp-spent {
+  font-size: 8px;
+  color: var(--dl-text-muted);
+  text-align: center;
+}
+
+/* ----------------------------------------------------------
+   24. SUPPLY ROW (Fix 10)
+   ---------------------------------------------------------- */
+
+.dreadlight .supply-icon {
+  font-size: 14px;
+  color: var(--dl-accent-gold);
+}
+
+.dreadlight .supply-label {
+  font-size: 8px;
+  color: var(--dl-accent-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+}
+
+.dreadlight .supply-num {
+  font-weight: 700;
+  color: var(--dl-text-primary);
+  font-size: 9px;
+}
+
+/* ----------------------------------------------------------
+   25. PIP BLUE (Fix 12)
+   ---------------------------------------------------------- */
+
+.dreadlight .pip.filled.pip-blue { background: var(--dl-track-mind); }
+.dreadlight .pip.empty.pip-blue { border: 1px solid rgba(107, 157, 245, 0.2); background: transparent; }
+
+/* ----------------------------------------------------------
+   26. TAG VARIANTS (Fix 13)
+   ---------------------------------------------------------- */
+
+.dreadlight .tag-bg {
+  background: rgba(201, 169, 110, 0.08);
+  border: 1px solid rgba(201, 169, 110, 0.18);
+  color: var(--dl-accent-gold);
+}
+
+.dreadlight .tag-drive {
+  background: rgba(168, 139, 245, 0.08);
+  border: 1px solid rgba(168, 139, 245, 0.15);
+  color: var(--dl-track-soul);
+}
+
+.dreadlight .tag-red {
+  background: rgba(224, 85, 85, 0.08);
+  border: 1px solid rgba(224, 85, 85, 0.15);
+  color: var(--dl-accent-red);
+}
+
+.dreadlight .tag-gold {
+  background: rgba(201, 169, 110, 0.08);
+  border: 1px solid rgba(201, 169, 110, 0.18);
+  color: var(--dl-accent-gold);
+}
+
+/* ----------------------------------------------------------
+   27. WEAPON ROLL BUTTON (Fix 15)
+   ---------------------------------------------------------- */
+
+.dreadlight .weapon-roll-btn {
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--dl-border-gold);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--dl-accent-gold);
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dreadlight .weapon-roll-btn:hover {
+  border-color: rgba(201, 169, 110, 0.35);
+  box-shadow: 0 0 8px rgba(201, 169, 110, 0.12);
+}
+
+/* ----------------------------------------------------------
+   28. SUPPLY TRACK LABEL (Fix 16)
+   ---------------------------------------------------------- */
+
+.dreadlight .track-label.supply { color: var(--dl-accent-gold); }
+
+.dreadlight .track-btn.supply { border-color: rgba(201, 169, 110, 0.15); }
+
+.dreadlight .track-btn.supply:hover {
+  border-color: rgba(201, 169, 110, 0.4);
+  box-shadow: 0 0 10px rgba(201, 169, 110, 0.12);
+  transform: translateY(-1px);
+}
+
+/* ----------------------------------------------------------
+   29. TRACK PIP CONTAINERS + SUPPLY ICON (Fix 17)
+   ---------------------------------------------------------- */
+
+.dreadlight .track-pips,
+.dreadlight .dread-pips,
+.dreadlight .supply-pips {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+}
+
+.dreadlight .track-icon.supply {
+  background: rgba(201, 169, 110, 0.12);
+  color: var(--dl-accent-gold);
+}
+
+/* ----------------------------------------------------------
+   30. TAB CONTENT SHOW/HIDE (Fix 18)
+   ---------------------------------------------------------- */
+
+.dreadlight .tab-content > .tab { display: none; }
+.dreadlight .tab-content > .tab.active { display: block; }

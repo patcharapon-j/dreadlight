@@ -109,5 +109,24 @@
   "DREADLIGHT.CategoryStealth": "Stealth & Mobility",
   "DREADLIGHT.CategoryKnowledge": "Knowledge",
   "DREADLIGHT.CategoryResilience": "Resilience",
-  "DREADLIGHT.CategoryPractical": "Practical"
+  "DREADLIGHT.CategoryPractical": "Practical",
+
+  "DREADLIGHT.TypeTalent": "Talent",
+  "DREADLIGHT.TypeWeapon": "Weapon",
+  "DREADLIGHT.TypeArmor": "Armor",
+  "DREADLIGHT.TypeEquipment": "Equipment",
+  "DREADLIGHT.TalentDice": "dice",
+  "DREADLIGHT.TalentPrimaryAttributes": "Primary Attributes",
+  "DREADLIGHT.TalentPerkName": "Perk name...",
+  "DREADLIGHT.TalentMasteryName": "Mastery name...",
+  "DREADLIGHT.Description": "Description",
+  "DREADLIGHT.WeaponDamage": "Damage",
+  "DREADLIGHT.WeaponCrit": "Crit",
+  "DREADLIGHT.WeaponRange": "Range",
+  "DREADLIGHT.WeaponType": "Type",
+  "DREADLIGHT.WeaponMelee": "Melee",
+  "DREADLIGHT.WeaponRanged": "Ranged",
+  "DREADLIGHT.GearBonusMax": "max",
+  "DREADLIGHT.EquipmentCategory": "Category",
+  "DREADLIGHT.EquipmentAppliesTo": "Applies To"
 }

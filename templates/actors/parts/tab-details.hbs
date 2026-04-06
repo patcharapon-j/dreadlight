@@ -32,7 +32,7 @@
   <div class="connection-row" data-index="{{@index}}">
     <input type="text" name="system.details.connections.{{@index}}.name" value="{{this.name}}" placeholder="Name" class="conn-name" />
     <textarea name="system.details.connections.{{@index}}.text" rows="1" placeholder="Relationship..." class="conn-text">{{this.text}}</textarea>
-    <button type="button" class="delete-connection" data-action="deleteConnection" data-index="{{@index}}">✕</button>
+    <button type="button" class="delete-btn" data-action="deleteConnection" data-index="{{@index}}">✕</button>
   </div>
 {{/each}}
 <button type="button" class="add-connection" data-action="addConnection">+ Connection</button>

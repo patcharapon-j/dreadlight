@@ -14,7 +14,7 @@
 <div class="section-header"><span>{{localize "DREADLIGHT.Weapons"}}</span><div class="section-line"></div></div>
 {{#each weapons}}
   <div class="item-row weapon-row" data-item-id="{{this.id}}">
-    <div class="item-icon weapon-icon">⚔</div>
+    <div class="item-icon red">⚔</div>
     <div class="item-info">
       <div class="item-name" data-action="openItem">{{this.name}}</div>
       <div class="item-meta">
@@ -33,7 +33,7 @@
 <div class="section-header"><span>{{localize "DREADLIGHT.Armor"}}</span><div class="section-line"></div></div>
 {{#each armors}}
   <div class="item-row armor-row" data-item-id="{{this.id}}">
-    <div class="item-icon armor-icon">🛡</div>
+    <div class="item-icon mind">🛡</div>
     <div class="item-info">
       <div class="item-name" data-action="openItem">{{this.name}}</div>
       <div class="item-meta">{{#each this.system.properties}}<span class="tag">{{this}}</span>{{/each}}</div>
@@ -46,7 +46,7 @@
 <div class="section-header"><span>{{localize "DREADLIGHT.Gear"}}</span><div class="section-line"></div></div>
 {{#each equipment}}
   <div class="item-row gear-row" data-item-id="{{this.id}}">
-    <div class="item-icon gear-icon">⬡</div>
+    <div class="item-icon gold">⬡</div>
     <div class="item-info">
       <div class="item-name" data-action="openItem">{{this.name}}</div>
       <div class="item-meta">{{#each this.system.applicableTalents}}<span class="tag tag-gold">{{this}}</span>{{/each}}</div>

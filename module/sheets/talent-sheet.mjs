@@ -12,7 +12,15 @@ export class TalentSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
     form: {
       submitOnChange: true,
     },
+    actions: {
+      "set-level": TalentSheet.#setLevel,
+    },
   };
+
+  static #setLevel(event, target) {
+    const level = parseInt(target.dataset.level, 10);
+    if (!isNaN(level)) this.item.update({ "system.level": level });
+  }
 
   static PARTS = {
     sheet: { template: "systems/dreadlight/templates/items/talent-sheet.hbs" },
@@ -21,6 +29,7 @@ export class TalentSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
   /** @override */
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
+    context.item = this.item;
     context.system = this.item.system;
     context.editable = this.isEditable;
     return context;
