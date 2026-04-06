@@ -1,3 +1,91 @@
 <form class="dreadlight sheet item weapon" autocomplete="off">
-  <h1>{{item.name}} — Weapon (placeholder)</h1>
+
+  {{!-- Corner brackets --}}
+  <div class="corner tl"></div>
+  <div class="corner tr"></div>
+  <div class="corner bl"></div>
+  <div class="corner br"></div>
+
+  {{!-- Top accent line (red variant) --}}
+  <div class="accent-top accent-red" style="background: linear-gradient(90deg, transparent 0%, var(--dl-accent-red) 30%, transparent 100%);"></div>
+
+  <div class="item-body">
+
+    {{!-- Header: image, type label, name --}}
+    <div class="item-header">
+      <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" width="36" height="36" />
+      <div style="display:flex; flex-direction:column; gap:2px; flex:1; min-width:0;">
+        <div class="item-type-label red">
+          {{localize "DREADLIGHT.TypeWeapon"}}
+          {{#if (eq system.weaponType "ranged")}}— {{upper (localize "DREADLIGHT.WeaponRanged")}}{{else}}— {{upper (localize "DREADLIGHT.WeaponMelee")}}{{/if}}
+        </div>
+        <input class="item-name-input" type="text" name="name" value="{{item.name}}" {{#unless editable}}disabled{{/unless}} />
+      </div>
+    </div>
+
+    {{!-- Stat grid (3 columns) --}}
+    <div class="stat-grid stat-grid-3" style="margin-bottom:10px;">
+
+      {{!-- DAMAGE --}}
+      <div class="stat-box stat-red">
+        <div class="stat-label">{{localize "DREADLIGHT.WeaponDamage"}}</div>
+        <input class="stat-value" type="number" name="system.damage" value="{{system.damage}}" min="0" {{#unless editable}}disabled{{/unless}} />
+      </div>
+
+      {{!-- CRIT --}}
+      <div class="stat-box stat-gold">
+        <div class="stat-label">{{localize "DREADLIGHT.WeaponCrit"}}</div>
+        <input class="stat-value" type="number" name="system.critThreshold" value="{{system.critThreshold}}" min="1" max="6" {{#unless editable}}disabled{{/unless}} />
+      </div>
+
+      {{!-- RANGE --}}
+      <div class="stat-box">
+        <div class="stat-label">{{localize "DREADLIGHT.WeaponRange"}}</div>
+        <select name="system.range" style="width:100%; font-size:11px; text-align:center;" {{#unless editable}}disabled{{/unless}}>
+          <option value="engaged" {{#if (eq system.range "engaged")}}selected{{/if}}>{{localize "DREADLIGHT.RangeEngaged"}}</option>
+          <option value="short" {{#if (eq system.range "short")}}selected{{/if}}>{{localize "DREADLIGHT.RangeShort"}}</option>
+          <option value="medium" {{#if (eq system.range "medium")}}selected{{/if}}>{{localize "DREADLIGHT.RangeMedium"}}</option>
+          <option value="long" {{#if (eq system.range "long")}}selected{{/if}}>{{localize "DREADLIGHT.RangeLong"}}</option>
+          <option value="extreme" {{#if (eq system.range "extreme")}}selected{{/if}}>{{localize "DREADLIGHT.RangeExtreme"}}</option>
+        </select>
+      </div>
+
+    </div>
+
+    {{!-- Gear bonus pips --}}
+    <div class="field-group" style="display:flex; flex-direction:row; align-items:center; gap:8px; margin-bottom:10px;">
+      <div style="display:flex; flex-direction:row; gap:2px;">
+        {{{gearPips system.gearBonus system.gearBonusMax "gold"}}}
+      </div>
+      <div class="gear-label">
+        +{{system.gearBonus}} / {{system.gearBonusMax}} {{localize "DREADLIGHT.GearBonusMax"}}
+      </div>
+    </div>
+
+    {{!-- Weight + Weapon type row --}}
+    <div style="display:flex; flex-direction:row; gap:8px; margin-bottom:10px;">
+      <div class="field-group" style="flex:1;">
+        <div class="field-label">{{localize "DREADLIGHT.Weight"}}</div>
+        <input type="number" name="system.weight" value="{{system.weight}}" min="0" style="width:100%;" {{#unless editable}}disabled{{/unless}} />
+      </div>
+      <div class="field-group" style="flex:1;">
+        <div class="field-label">{{localize "DREADLIGHT.WeaponType"}}</div>
+        <select name="system.weaponType" style="width:100%;" {{#unless editable}}disabled{{/unless}}>
+          <option value="melee" {{#if (eq system.weaponType "melee")}}selected{{/if}}>{{localize "DREADLIGHT.WeaponMelee"}}</option>
+          <option value="ranged" {{#if (eq system.weaponType "ranged")}}selected{{/if}}>{{localize "DREADLIGHT.WeaponRanged"}}</option>
+        </select>
+      </div>
+    </div>
+
+    {{!-- Notes --}}
+    <div class="field-group">
+      <div class="field-label">{{localize "DREADLIGHT.Notes"}}</div>
+      <textarea name="system.notes" style="width:100%; height:72px; resize:vertical;" {{#unless editable}}disabled{{/unless}}>{{system.notes}}</textarea>
+    </div>
+
+  </div>
+
+  {{!-- Bottom accent --}}
+  <div class="accent-bottom"></div>
+
 </form>

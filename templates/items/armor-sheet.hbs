@@ -1,3 +1,51 @@
 <form class="dreadlight sheet item armor" autocomplete="off">
-  <h1>{{item.name}} — Armor (placeholder)</h1>
+
+  {{!-- Corner brackets --}}
+  <div class="corner tl"></div>
+  <div class="corner tr"></div>
+  <div class="corner bl"></div>
+  <div class="corner br"></div>
+
+  {{!-- Top accent line --}}
+  <div class="accent-top"></div>
+
+  <div class="item-body">
+
+    {{!-- Header: image, type label, name --}}
+    <div class="item-header">
+      <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" width="36" height="36" />
+      <div style="display:flex; flex-direction:column; gap:2px; flex:1; min-width:0;">
+        <div class="item-type-label blue">{{localize "DREADLIGHT.TypeArmor"}}</div>
+        <input class="item-name-input" type="text" name="name" value="{{item.name}}" {{#unless editable}}disabled{{/unless}} />
+      </div>
+    </div>
+
+    {{!-- Stat grid (2 columns) --}}
+    <div class="stat-grid stat-grid-2" style="margin-bottom:10px;">
+
+      {{!-- ARMOR RATING --}}
+      <div class="stat-box stat-blue">
+        <div class="stat-label">{{localize "DREADLIGHT.ArmorRating"}}</div>
+        <input class="stat-value" type="number" name="system.armorRating" value="{{system.armorRating}}" min="0" max="8" {{#unless editable}}disabled{{/unless}} />
+      </div>
+
+      {{!-- WEIGHT --}}
+      <div class="stat-box">
+        <div class="stat-label">{{localize "DREADLIGHT.Weight"}}</div>
+        <input class="stat-value" type="number" name="system.weight" value="{{system.weight}}" min="0" {{#unless editable}}disabled{{/unless}} />
+      </div>
+
+    </div>
+
+    {{!-- Notes --}}
+    <div class="field-group">
+      <div class="field-label">{{localize "DREADLIGHT.Notes"}}</div>
+      <textarea name="system.notes" style="width:100%; height:120px; resize:vertical;" {{#unless editable}}disabled{{/unless}}>{{system.notes}}</textarea>
+    </div>
+
+  </div>
+
+  {{!-- Bottom accent --}}
+  <div class="accent-bottom"></div>
+
 </form>
