@@ -47,23 +47,22 @@ Hooks.once("init", () => {
   });
 
   // Register Sheet Classes
-  // Use the v13 namespaced collections (accessed inside init when they're available)
-  const actors = foundry.documents.collections.Actors;
-  const items = foundry.documents.collections.Items;
-
-  actors.registerSheet("dreadlight", InvestigatorSheet, {
+  // Note: Using deprecated globals (Actors/Items) — the v13 namespaced collections
+  // don't register AppV2 sheets correctly. These globals work until v15.
+  Actors.unregisterSheet("core", ActorSheet);
+  Actors.registerSheet("dreadlight", InvestigatorSheet, {
     types: ["investigator"],
     makeDefault: true,
     label: "DREADLIGHT.SheetInvestigator",
   });
 
-  items.registerSheet("dreadlight", TalentSheet, {
+  Items.unregisterSheet("core", ItemSheet);
+  Items.registerSheet("dreadlight", TalentSheet, {
     types: ["talent"],
     makeDefault: true,
     label: "DREADLIGHT.SheetTalent",
   });
-
-  items.registerSheet("dreadlight", DreadlightItemSheet, {
+  Items.registerSheet("dreadlight", DreadlightItemSheet, {
     types: ["weapon", "armor", "equipment"],
     makeDefault: true,
     label: "DREADLIGHT.SheetItem",
