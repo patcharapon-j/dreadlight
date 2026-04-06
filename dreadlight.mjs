@@ -6,7 +6,7 @@ import { ArmorData } from "./module/data/armor.mjs";
 import { EquipmentData } from "./module/data/equipment.mjs";
 import { InvestigatorSheet } from "./module/sheets/investigator-sheet.mjs";
 import { TalentSheet } from "./module/sheets/talent-sheet.mjs";
-import { DreadlightItemSheet } from "./module/sheets/item-sheet.mjs";
+import { WeaponSheet, ArmorSheet, EquipmentSheet } from "./module/sheets/item-sheet.mjs";
 import { registerDSN } from "./module/dice/dsn-integration.mjs";
 import { registerChatListeners } from "./module/dice/chat-message.mjs";
 import { registerHandlebarsHelpers } from "./module/helpers/handlebars.mjs";
@@ -62,10 +62,20 @@ Hooks.once("init", () => {
     makeDefault: true,
     label: "DREADLIGHT.SheetTalent",
   });
-  Items.registerSheet("dreadlight", DreadlightItemSheet, {
-    types: ["weapon", "armor", "equipment"],
+  Items.registerSheet("dreadlight", WeaponSheet, {
+    types: ["weapon"],
     makeDefault: true,
-    label: "DREADLIGHT.SheetItem",
+    label: "DREADLIGHT.SheetWeapon",
+  });
+  Items.registerSheet("dreadlight", ArmorSheet, {
+    types: ["armor"],
+    makeDefault: true,
+    label: "DREADLIGHT.SheetArmor",
+  });
+  Items.registerSheet("dreadlight", EquipmentSheet, {
+    types: ["equipment"],
+    makeDefault: true,
+    label: "DREADLIGHT.SheetEquipment",
   });
 
   // Preload Handlebars partials
@@ -78,6 +88,7 @@ Hooks.once("init", () => {
     "systems/dreadlight/templates/actors/parts/tab-equipment.hbs",
     "systems/dreadlight/templates/actors/parts/tab-details.hbs",
     "systems/dreadlight/templates/chat/roll-result.hbs",
+    "systems/dreadlight/templates/chat/armor-result.hbs",
     "systems/dreadlight/templates/dialogs/roll-dialog.hbs",
   ]);
 

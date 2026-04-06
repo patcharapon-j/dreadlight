@@ -63,6 +63,9 @@ export function registerChatListeners() {
 
       await roll.push();
 
+      // Show Dice So Nice 3D dice for the re-rolled dice, then update the card
+      await roll.showDSN();
+
       const templateData = roll.toTemplateData();
       const content = await foundry.applications.handlebars.renderTemplate("systems/dreadlight/templates/chat/roll-result.hbs", templateData);
 

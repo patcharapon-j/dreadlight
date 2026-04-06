@@ -1,7 +1,7 @@
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ItemSheetV2 } = foundry.applications.sheets;
 
-export class DreadlightItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
+class DreadlightItemSheetBase extends HandlebarsApplicationMixin(ItemSheetV2) {
 
   static DEFAULT_OPTIONS = {
     classes: ["dreadlight", "sheet", "item"],
@@ -12,10 +12,6 @@ export class DreadlightItemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
     form: {
       submitOnChange: true,
     },
-  };
-
-  static PARTS = {
-    sheet: { template: "systems/dreadlight/templates/items/equipment-sheet.hbs" },
   };
 
   /** @override */
@@ -29,11 +25,25 @@ export class DreadlightItemSheet extends HandlebarsApplicationMixin(ItemSheetV2)
     context.isEquipment = this.item.type === "equipment";
     return context;
   }
-
-  /** @override - set template dynamically per item type before each render */
-  _configureRenderOptions(options) {
-    super._configureRenderOptions(options);
-    this.constructor.PARTS.sheet.template =
-      `systems/dreadlight/templates/items/${this.document.type}-sheet.hbs`;
-  }
 }
+
+export class WeaponSheet extends DreadlightItemSheetBase {
+  static PARTS = {
+    sheet: { template: "systems/dreadlight/templates/items/weapon-sheet.hbs" },
+  };
+}
+
+export class ArmorSheet extends DreadlightItemSheetBase {
+  static PARTS = {
+    sheet: { template: "systems/dreadlight/templates/items/armor-sheet.hbs" },
+  };
+}
+
+export class EquipmentSheet extends DreadlightItemSheetBase {
+  static PARTS = {
+    sheet: { template: "systems/dreadlight/templates/items/equipment-sheet.hbs" },
+  };
+}
+
+// Backwards-compatible alias
+export const DreadlightItemSheet = EquipmentSheet;

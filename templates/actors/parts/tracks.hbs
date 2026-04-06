@@ -3,7 +3,7 @@
     <div class="track-icon body">♥</div>
     <div class="track-info">
       <div class="track-label body">{{localize "DREADLIGHT.TrackBody"}}</div>
-      <div class="track-pips">{{{segmentedPips system.tracks.body.value system.tracks.body.max "body"}}}</div>
+      <div class="track-pips">{{{trackPips system.tracks.body.value system.tracks.body.max "body"}}}</div>
     </div>
     <span class="track-num">{{system.tracks.body.value}}</span>
   </div>
@@ -12,7 +12,7 @@
     <div class="track-icon mind">◈</div>
     <div class="track-info">
       <div class="track-label mind">{{localize "DREADLIGHT.TrackMind"}}</div>
-      <div class="track-pips">{{{segmentedPips system.tracks.mind.value system.tracks.mind.max "mind"}}}</div>
+      <div class="track-pips">{{{trackPips system.tracks.mind.value system.tracks.mind.max "mind"}}}</div>
     </div>
     <span class="track-num">{{system.tracks.mind.value}}</span>
   </div>
@@ -21,7 +21,7 @@
     <div class="track-icon soul">◉</div>
     <div class="track-info">
       <div class="track-label soul">{{localize "DREADLIGHT.TrackSoul"}}</div>
-      <div class="track-pips">{{{segmentedPips system.tracks.soul.value system.tracks.soul.max "soul"}}}</div>
+      <div class="track-pips">{{{trackPips system.tracks.soul.value system.tracks.soul.max "soul"}}}</div>
     </div>
     <span class="track-num">{{system.tracks.soul.value}}</span>
   </div>
@@ -42,8 +42,7 @@
     <div class="track-icon supply">⬡</div>
     <div class="track-info">
       <div class="track-label supply">{{localize "DREADLIGHT.Supply"}}</div>
-      <div class="supply-pips">{{{segmentedPips system.supply.value 10 "gold"}}}</div>
+      <div class="track-value">{{system.supply.value}}</div>
     </div>
-    <span class="track-num">{{system.supply.value}}</span>
   </div>
 </div>

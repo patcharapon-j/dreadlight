@@ -1,22 +1,15 @@
 <div class="carry-bar">
   <span class="carry-label">{{localize "DREADLIGHT.Carry"}}</span>
-  {{{segmentedPips carryUsed carryLimit "gold"}}}
-  <span class="carry-num">{{carryUsed}} / {{carryLimit}}</span>
-</div>
-
-<div class="supply-row">
-  <div class="supply-icon">⬡</div>
-  <span class="supply-label">{{localize "DREADLIGHT.Supply"}}</span>
-  {{{segmentedPips system.supply.value 10 "gold"}}}
-  <span class="supply-num">{{system.supply.value}}</span>
+  <div class="carry-pips">{{{carryPips carryUsed carryLimit}}}</div>
+  <span class="carry-num">{{weightLabel carryUsed}} / {{carryLimit}}</span>
 </div>
 
 <div class="section-header"><span>{{localize "DREADLIGHT.Weapons"}}</span><div class="section-line"></div></div>
 {{#each weapons}}
   <div class="item-row weapon-row" data-item-id="{{this.id}}">
     <div class="item-icon red">⚔</div>
-    <div class="item-info">
-      <div class="item-name" data-action="openItem">{{this.name}}</div>
+    <div class="item-info" data-action="toggleExpand">
+      <div class="item-name">{{this.name}}</div>
       <div class="item-meta">
         {{#if (eq this.system.weaponType "melee")}}Melee{{else}}Ranged{{/if}}
         · {{capitalize this.system.range}}
@@ -25,8 +18,17 @@
     </div>
     <div class="item-stat stat-red">DMG {{this.system.damage}}</div>
     <div class="item-stat stat-gold">CRIT {{this.system.critThreshold}}</div>
-    {{{gearPips this.system.gearBonus this.system.gearBonusMax "gold"}}}
+    {{#if this.system.gearBonusMax}}
+      <div class="item-pips" data-item-id="{{this.id}}" data-field="system.gearBonus" data-max="{{this.system.gearBonusMax}}">
+        {{{gearPips this.system.gearBonus this.system.gearBonusMax "gold"}}}
+      </div>
+    {{/if}}
     <button type="button" class="weapon-roll-btn" data-action="rollWeapon">⬡</button>
+  </div>
+  <div class="item-expand" data-expand-id="{{this.id}}">
+    <div class="expand-inner">
+      {{#if this.system.notes}}<div class="expand-description">{{{this.system.notes}}}</div>{{/if}}
+    </div>
   </div>
 {{/each}}
 
@@ -34,12 +36,22 @@
 {{#each armors}}
   <div class="item-row armor-row" data-item-id="{{this.id}}">
     <div class="item-icon mind">🛡</div>
-    <div class="item-info">
-      <div class="item-name" data-action="openItem">{{this.name}}</div>
+    <div class="item-info" data-action="toggleExpand">
+      <div class="item-name">{{this.name}}</div>
       <div class="item-meta">{{#each this.system.properties}}<span class="tag">{{this}}</span>{{/each}}</div>
     </div>
     <div class="item-stat stat-blue">AR {{this.system.armorRating}}</div>
-    {{{gearPips this.system.armorRating 6 "blue"}}}
+    {{#if this.system.armorRating}}
+      <div class="item-pips" data-item-id="{{this.id}}" data-field="system.armorCurrent" data-max="{{this.system.armorRating}}">
+        {{{gearPips this.system.armorCurrent this.system.armorRating "blue"}}}
+      </div>
+    {{/if}}
+    <button type="button" class="armor-roll-btn" data-action="rollArmor">🛡</button>
+  </div>
+  <div class="item-expand" data-expand-id="{{this.id}}">
+    <div class="expand-inner">
+      {{#if this.system.notes}}<div class="expand-description">{{{this.system.notes}}}</div>{{/if}}
+    </div>
   </div>
 {{/each}}
 
@@ -47,11 +59,20 @@
 {{#each equipment}}
   <div class="item-row gear-row" data-item-id="{{this.id}}">
     <div class="item-icon gold">⬡</div>
-    <div class="item-info">
-      <div class="item-name" data-action="openItem">{{this.name}}</div>
+    <div class="item-info" data-action="toggleExpand">
+      <div class="item-name">{{this.name}}</div>
       <div class="item-meta">{{#each this.system.applicableTalents}}<span class="tag tag-gold">{{this}}</span>{{/each}}</div>
     </div>
-    {{{gearPips this.system.gearBonus this.system.gearBonusMax "gold"}}}
+    {{#if this.system.gearBonusMax}}
+      <div class="item-pips" data-item-id="{{this.id}}" data-field="system.gearBonus" data-max="{{this.system.gearBonusMax}}">
+        {{{gearPips this.system.gearBonus this.system.gearBonusMax "gold"}}}
+      </div>
+    {{/if}}
+  </div>
+  <div class="item-expand" data-expand-id="{{this.id}}">
+    <div class="expand-inner">
+      {{#if this.system.description}}<div class="expand-description">{{{this.system.description}}}</div>{{/if}}
+    </div>
   </div>
 {{/each}}
 

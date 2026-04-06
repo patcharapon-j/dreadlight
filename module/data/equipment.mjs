@@ -9,7 +9,7 @@ export class EquipmentData extends foundry.abstract.TypeDataModel {
 
       category: new fields.StringField({ required: true, initial: "general" }),
 
-      weight: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+      weight: new fields.NumberField({ required: true, initial: 0.25, min: 0 }),
 
       applicableTalents: new fields.ArrayField(
         new fields.StringField({ required: true, initial: "" })

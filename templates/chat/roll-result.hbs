@@ -2,17 +2,19 @@
   <div class="chat-accent"></div>
 
   <div class="chat-header">
-    <div class="chat-portrait" style="background-image: url('{{actorImg}}')"></div>
+    <div class="chat-portrait" style="background-image: url('{{actorImg}}'); transform: translate({{portraitChat.offsetX}}px, {{portraitChat.offsetY}}px) scale({{portraitChat.zoom}});"></div>
     <div class="chat-portrait-fade"></div>
-    <div class="chat-identity">
-      <div class="chat-name">{{actorName}}</div>
-      <div class="chat-action">
-        {{#if talentName}}<span class="chat-talent">{{talentName}}</span> — {{/if}}
-        {{attrName attribute}}
-        ({{capitalize difficulty}})
-        {{#if pushed}}<span class="chat-pushed">⟳ {{localize "DREADLIGHT.ResultPushed"}}</span>{{/if}}
-      </div>
+    <div class="chat-name">{{actorName}}</div>
+  </div>
+
+  <div class="chat-info">
+    <div class="chat-action">
+      {{#if talentName}}<span class="chat-talent">{{talentName}}</span> — {{/if}}
+      {{attrName attribute}}
+      ({{capitalize difficulty}})
+      {{#if pushed}}<span class="chat-pushed">⟳ {{localize "DREADLIGHT.ResultPushed"}}</span>{{/if}}
     </div>
+    {{#if gearName}}<div class="chat-gear-used">⚙ {{gearName}}</div>{{/if}}
   </div>
 
   <div class="chat-dice">
@@ -20,7 +22,7 @@
       <div class="dice-group group-base">
         <span class="dice-label label-base">{{localize "DREADLIGHT.Base"}}</span>
         {{#each baseResults}}
-          <div class="die die-base {{#if (eq this 6)}}six{{else}}{{#if (eq this 1)}}one{{else}}normal{{/if}}{{/if}} {{#if (and ../pushed (or (eq this 1) (eq this 6)))}}locked{{/if}}">{{this}}</div>
+          <div class="die die-base {{#if (eq this 6)}}six{{else}}{{#if (eq this 1)}}one{{else}}normal{{/if}}{{/if}} {{#if (and ../pushed (or (eq this 1) (eq this 6)))}}locked{{/if}}">{{#if (eq this 6)}}<img src="systems/dreadlight/assets/dice/success.png" class="die-icon">{{else if (eq this 1)}}<img src="systems/dreadlight/assets/dice/bane.png" class="die-icon">{{/if}}</div>
         {{/each}}
       </div>
     {{/if}}
@@ -28,7 +30,7 @@
       <div class="dice-group group-dread">
         <span class="dice-label label-dread">{{localize "DREADLIGHT.Dread"}}</span>
         {{#each dreadResults}}
-          <div class="die die-dread {{#if (eq this 6)}}six{{else}}{{#if (eq this 1)}}one{{else}}normal{{/if}}{{/if}} {{#if (and ../pushed (or (eq this 1) (eq this 6)))}}locked{{/if}}">{{this}}</div>
+          <div class="die die-dread {{#if (eq this 6)}}six{{else}}{{#if (eq this 1)}}one{{else}}normal{{/if}}{{/if}} {{#if (and ../pushed (or (eq this 1) (eq this 6)))}}locked{{/if}}">{{#if (eq this 6)}}<img src="systems/dreadlight/assets/dice/success.png" class="die-icon">{{else if (eq this 1)}}<img src="systems/dreadlight/assets/dice/bane.png" class="die-icon">{{/if}}</div>
         {{/each}}
       </div>
     {{/if}}
@@ -36,7 +38,7 @@
       <div class="dice-group group-gear">
         <span class="dice-label label-gear">{{localize "DREADLIGHT.Gear"}}</span>
         {{#each gearResults}}
-          <div class="die die-gear {{#if (eq this 6)}}six{{else}}{{#if (eq this 1)}}one{{else}}normal{{/if}}{{/if}} {{#if (and ../pushed (or (eq this 1) (eq this 6)))}}locked{{/if}}">{{this}}</div>
+          <div class="die die-gear {{#if (eq this 6)}}six{{else}}{{#if (eq this 1)}}one{{else}}normal{{/if}}{{/if}} {{#if (and ../pushed (or (eq this 1) (eq this 6)))}}locked{{/if}}">{{#if (eq this 6)}}<img src="systems/dreadlight/assets/dice/success.png" class="die-icon">{{else if (eq this 1)}}<img src="systems/dreadlight/assets/dice/bane.png" class="die-icon">{{/if}}</div>
         {{/each}}
       </div>
     {{/if}}

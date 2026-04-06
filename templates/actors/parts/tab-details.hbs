@@ -1,38 +1,74 @@
 <div class="section-header"><span>{{localize "DREADLIGHT.Backgrounds"}}</span><div class="section-line"></div></div>
 <div class="bg-cards">
+  {{#each system.backgrounds}}
   <div class="bg-card">
-    <div class="field-label">{{localize "DREADLIGHT.Background1"}}</div>
-    <input type="text" name="system.backgrounds.0" value="{{lookup system.backgrounds 0}}" />
+    <div class="field-label">{{#if (eq @index 0)}}{{localize "DREADLIGHT.Background1"}}{{else}}{{localize "DREADLIGHT.Background2"}}{{/if}}</div>
+    {{#if ../editMode}}
+      <input type="text" name="system.backgrounds.{{@index}}.name" value="{{this.name}}" placeholder="Background name..." />
+      <textarea name="system.backgrounds.{{@index}}.desc" rows="2" placeholder="Skills, knowledge...">{{this.desc}}</textarea>
+    {{else}}
+      <div class="bg-name">{{this.name}}</div>
+      {{#if this.desc}}
+        <div class="bg-desc">{{this.desc}}</div>
+      {{/if}}
+    {{/if}}
   </div>
-  <div class="bg-card">
-    <div class="field-label">{{localize "DREADLIGHT.Background2"}}</div>
-    <input type="text" name="system.backgrounds.1" value="{{lookup system.backgrounds 1}}" />
-  </div>
+  {{/each}}
 </div>
 
-<div class="section-header"><span>{{localize "DREADLIGHT.Personal"}}</span><div class="section-line"></div></div>
+<div class="section-header personal-header"><span>{{localize "DREADLIGHT.Personal"}}</span><div class="section-line"></div></div>
 
 <div class="field-group">
   <div class="field-label">{{localize "DREADLIGHT.Anchor"}} <span class="hint-green">♥ {{localize "DREADLIGHT.AnchorHint"}}</span></div>
-  <textarea name="system.details.anchor" rows="2">{{system.details.anchor}}</textarea>
+  {{#if editMode}}
+    <textarea name="system.details.anchor" rows="2">{{system.details.anchor}}</textarea>
+  {{else}}
+    <div class="detail-box anchor-box">{{system.details.anchor}}</div>
+  {{/if}}
 </div>
 
 <div class="field-group">
   <div class="field-label">{{localize "DREADLIGHT.Drive"}}</div>
-  <input type="text" name="system.details.drive" value="{{system.details.drive}}" />
+  {{#if editMode}}
+    <input type="text" name="system.details.drive" value="{{system.details.drive}}" placeholder="Drive name..." />
+    <textarea name="system.details.driveDesc" rows="1" placeholder="Description...">{{system.details.driveDesc}}</textarea>
+  {{else}}
+    {{#if system.details.drive}}
+      <div class="detail-box drive-box">
+        <span class="tag tag-drive">{{system.details.drive}}</span>
+        {{#if system.details.driveDesc}}
+          <span class="drive-desc">{{system.details.driveDesc}}</span>
+        {{/if}}
+      </div>
+    {{/if}}
+  {{/if}}
 </div>
 
 <div class="field-group">
   <div class="field-label">{{localize "DREADLIGHT.Fear"}} <span class="hint-red">⚠ {{localize "DREADLIGHT.FearHint"}}</span></div>
-  <textarea name="system.details.fear" rows="2" class="fear-field">{{system.details.fear}}</textarea>
+  {{#if editMode}}
+    <textarea name="system.details.fear" rows="2" class="fear-field">{{system.details.fear}}</textarea>
+  {{else}}
+    <div class="detail-box fear-box">{{system.details.fear}}</div>
+  {{/if}}
 </div>
 
 <div class="section-header"><span>{{localize "DREADLIGHT.Connections"}}</span><div class="section-line"></div></div>
 {{#each system.details.connections}}
-  <div class="connection-row" data-index="{{@index}}">
-    <input type="text" name="system.details.connections.{{@index}}.name" value="{{this.name}}" placeholder="Name" class="conn-name" />
-    <textarea name="system.details.connections.{{@index}}.text" rows="1" placeholder="Relationship..." class="conn-text">{{this.text}}</textarea>
-    <button type="button" class="delete-btn" data-action="deleteConnection" data-index="{{@index}}">✕</button>
+  <div class="connection-row {{#unless ../editMode}}play-mode{{/unless}}" data-index="{{@index}}">
+    {{#if ../editMode}}
+      <input type="text" name="system.details.connections.{{@index}}.name" value="{{this.name}}" placeholder="Name" class="conn-name" />
+      <textarea name="system.details.connections.{{@index}}.text" rows="1" placeholder="Relationship..." class="conn-text">{{this.text}}</textarea>
+      <button type="button" class="delete-btn" data-action="deleteConnection" data-index="{{@index}}">✕</button>
+    {{else}}
+      <div class="conn-icon">PC</div>
+      <div class="conn-info">
+        <div class="conn-display-name">{{this.name}}</div>
+        <div class="conn-display-text">{{this.text}}</div>
+      </div>
+    {{/if}}
   </div>
 {{/each}}
-<button type="button" class="add-connection" data-action="addConnection">+ Connection</button>
+{{#if editMode}}
+  <button type="button" class="add-connection" data-action="addConnection">+ Connection</button>
+{{/if}}

@@ -1,75 +1,325 @@
 import { DreadlightRoll, buildPool } from "./dreadlight-roll.mjs";
 import { sendRollToChat } from "./chat-message.mjs";
 
-export class DreadlightRollDialog {
-  static async create({ actor, attribute, talent = null, gearItem = null }) {
-    const system = actor.system;
-    const talents = actor.items
+const { HandlebarsApplicationMixin, ApplicationV2 } = foundry.applications.api;
+
+/**
+ * Dreadlight Roll Dialog — AppV2 implementation.
+ * v3 design: source rows with pips, unified pool bar with dread biting into base,
+ * bracket labels, mark invocation, and live pool updates.
+ */
+export class DreadlightRollDialog extends HandlebarsApplicationMixin(ApplicationV2) {
+
+  static DEFAULT_OPTIONS = {
+    id: "dreadlight-roll-dialog-{id}",
+    classes: ["dreadlight", "roll-dialog"],
+    position: { width: 340 },
+    window: {
+      title: "DREADLIGHT.RollTitle",
+      minimizable: false,
+    },
+    actions: {
+      roll: DreadlightRollDialog.#onRoll,
+    },
+  };
+
+  static PARTS = {
+    form: { template: "systems/dreadlight/templates/dialogs/roll-dialog.hbs" },
+  };
+
+  /** @type {Actor} */
+  #actor;
+  /** @type {string} */
+  #attribute;
+  /** @type {Item|null} */
+  #talent;
+  /** @type {Item|null} */
+  #gearItem;
+  /** @type {Function|null} */
+  #resolve;
+
+  constructor({ actor, attribute, talent = null, gearItem = null, resolve = null }, options = {}) {
+    super(options);
+    this.#actor = actor;
+    this.#attribute = attribute;
+    this.#talent = talent;
+    this.#gearItem = gearItem;
+    this.#resolve = resolve;
+  }
+
+  /** @override */
+  get title() {
+    const attrLabel = game.i18n.localize(CONFIG.DREADLIGHT.attributeLabels[this.#attribute]);
+    return `${game.i18n.localize("DREADLIGHT.RollTitle")} — ${attrLabel}`;
+  }
+
+  /** @override */
+  async _prepareContext(options) {
+    const context = await super._prepareContext(options);
+    const system = this.#actor.system;
+
+    context.actor = this.#actor;
+    context.attribute = this.#attribute;
+    context.attrValue = system.attributes[this.#attribute].value;
+
+    // Talent options
+    context.talents = this.#actor.items
       .filter(i => i.type === "talent")
       .map(t => ({ id: t.id, name: t.name, level: t.system.level, attrs: t.system.primaryAttributes }));
-    const gearItems = actor.items
+
+    // Gear options
+    context.gearItems = this.#actor.items
       .filter(i => ["weapon", "equipment"].includes(i.type) && (i.system.gearBonus || 0) > 0)
       .map(g => ({ id: g.id, name: g.name, bonus: g.system.gearBonus }));
 
-    const templateData = {
-      actor, attribute,
-      attrValue: system.attributes[attribute].value,
-      talents, gearItems,
-      selectedTalentId: talent?.id || "",
-      selectedGearId: gearItem?.id || "",
-      difficulties: CONFIG.DREADLIGHT.difficulties,
-    };
+    context.selectedTalentId = this.#talent?.id || "";
+    context.selectedTalentName = this.#talent?.name || "";
+    context.selectedTalentLevel = this.#talent?.system.level || 0;
+    context.selectedGearId = this.#gearItem?.id || "";
+    context.selectedGearName = this.#gearItem?.name || "";
+    context.selectedGearBonus = this.#gearItem?.system.gearBonus || 0;
+    context.difficulties = CONFIG.DREADLIGHT.difficulties;
+    context.dreadValue = system.dread.value;
 
-    const html = await foundry.applications.handlebars.renderTemplate("systems/dreadlight/templates/dialogs/roll-dialog.hbs", templateData);
+    // Marks for invocation
+    const marks = [];
+    for (const track of ["body", "mind", "soul"]) {
+      const trackMarks = system.marks[track] || [];
+      trackMarks.forEach((m, idx) => {
+        if (m.name) marks.push({ track, index: idx, name: m.name, effect: m.effect });
+      });
+    }
+    context.marks = marks;
+    context.hasMarks = marks.length > 0;
 
+    // Build initial pool preview
+    const talentLevel = this.#talent?.system.level || 0;
+    const gearBonus = this.#gearItem?.system.gearBonus || 0;
+    const pool = buildPool({
+      actor: this.#actor,
+      attribute: this.#attribute,
+      talentLevel,
+      gearBonus,
+      difficultyMod: 0,
+      markPenalty: 0,
+    });
+    context.pool = pool;
+
+    return context;
+  }
+
+  /** @override — attach live-update listeners after render */
+  _onRender(context, options) {
+    super._onRender(context, options);
+    const el = this.element;
+
+    // Talent select → update display + pool
+    el.querySelector("[name=talent]")?.addEventListener("change", (e) => {
+      this.#updateTalentDisplay(e.target);
+      this.#updatePoolPreview();
+    });
+
+    // Gear select → update display + pool
+    el.querySelector("[name=gear]")?.addEventListener("change", (e) => {
+      this.#updateGearDisplay(e.target);
+      this.#updatePoolPreview();
+    });
+
+    // Difficulty radios → update pool
+    el.querySelectorAll("[name=difficulty]").forEach(r =>
+      r.addEventListener("change", () => this.#updatePoolPreview())
+    );
+
+    // Mark checkboxes → update pool
+    el.querySelectorAll(".mark-checkbox").forEach(cb =>
+      cb.addEventListener("change", () => this.#updatePoolPreview())
+    );
+
+    // Initial pool render to apply "first" class on dread blocks
+    this.#updatePoolPreview();
+  }
+
+  /** Update the talent source-row display from the select */
+  #updateTalentDisplay(select) {
+    const option = select.selectedOptions[0];
+    const name = option?.dataset.name || "";
+    const level = parseInt(option?.dataset.level || "0");
+    const row = this.element.querySelector(".talent-row");
+    if (!row) return;
+
+    row.querySelector(".talent-name").textContent = name || game.i18n.localize("DREADLIGHT.RollNone");
+    row.querySelector(".talent-meta").textContent = level ? `Level ${level}` : "";
+    row.querySelector(".talent-pips").innerHTML = Array(level).fill('<div class="pip pip-base"></div>').join("");
+    row.querySelector(".talent-count").textContent = level || "";
+  }
+
+  /** Update the gear source-row display from the select */
+  #updateGearDisplay(select) {
+    const option = select.selectedOptions[0];
+    const name = option?.dataset.name || "";
+    const bonus = parseInt(option?.dataset.bonus || "0");
+    const row = this.element.querySelector(".gear-row");
+    if (!row) return;
+
+    const nameEl = row.querySelector(".gear-name");
+    nameEl.textContent = name || game.i18n.localize("DREADLIGHT.RollNone");
+    nameEl.classList.toggle("muted", !name);
+    row.querySelector(".gear-meta").textContent = bonus ? "Gear bonus" : "";
+    row.querySelector(".gear-pips").innerHTML = Array(bonus).fill('<div class="pip pip-gear"></div>').join("");
+    const countEl = row.querySelector(".gear-count");
+    countEl.textContent = bonus || "";
+    countEl.classList.toggle("gear-color", bonus > 0);
+  }
+
+  /** Read current form state and rebuild the pool preview */
+  #updatePoolPreview() {
+    const form = this.element;
+    if (!form) return;
+
+    const talentId = form.querySelector("[name=talent]")?.value || "";
+    const gearId = form.querySelector("[name=gear]")?.value || "";
+    const diffMod = parseInt(form.querySelector("[name=difficulty]:checked")?.value || "0");
+    const markCount = form.querySelectorAll(".mark-checkbox:checked").length;
+
+    const selectedTalent = talentId ? this.#actor.items.get(talentId) : null;
+    const selectedGear = gearId ? this.#actor.items.get(gearId) : null;
+
+    const pool = buildPool({
+      actor: this.#actor,
+      attribute: this.#attribute,
+      talentLevel: selectedTalent?.system.level || 0,
+      gearBonus: selectedGear?.system.gearBonus || 0,
+      difficultyMod: diffMod,
+      markPenalty: markCount,
+    });
+
+    this.#renderPoolDOM(pool);
+  }
+
+  /** Rebuild the pool-preview DOM from a pool object */
+  #renderPoolDOM(pool) {
+    const preview = this.element.querySelector(".pool-preview");
+    if (!preview) return;
+
+    // Pool bar blocks
+    let barHtml = "";
+    for (let i = 0; i < pool.baseDice; i++) barHtml += '<div class="pool-block pool-block-base"></div>';
+    for (let i = 0; i < pool.dreadDice; i++) {
+      barHtml += `<div class="pool-block pool-block-dread${i === 0 && pool.baseDice > 0 ? " first" : ""}"></div>`;
+    }
+    if (pool.gearDice > 0) barHtml += '<div class="pool-gap"></div>';
+    for (let i = 0; i < pool.gearDice; i++) barHtml += '<div class="pool-block pool-block-gear"></div>';
+    preview.querySelector(".pool-bar").innerHTML = barHtml;
+
+    // Bracket labels
+    let labelsHtml = "";
+    if (pool.baseDice > 0) {
+      labelsHtml += `<div class="pool-range" data-type="base" style="width:calc(${pool.baseDice} * 26px);">
+        <div class="pool-range-line range-line-base"></div>
+        <span class="pool-range-text range-text-base">BASE <strong>${pool.baseDice}</strong></span>
+      </div>`;
+    }
+    if (pool.dreadDice > 0) {
+      labelsHtml += `<div class="pool-range" data-type="dread" style="width:calc(${pool.dreadDice} * 26px);">
+        <div class="pool-range-line range-line-dread"></div>
+        <span class="pool-range-text range-text-dread">DREAD <strong>${pool.dreadDice}</strong></span>
+      </div>`;
+    }
+    if (pool.gearDice > 0) {
+      labelsHtml += `<div class="pool-range-gap"></div>
+      <div class="pool-range" data-type="gear" style="width:calc(${pool.gearDice} * 26px);">
+        <div class="pool-range-line range-line-gear"></div>
+        <span class="pool-range-text range-text-gear">GEAR <strong>${pool.gearDice}</strong></span>
+      </div>`;
+    }
+    preview.querySelector(".pool-labels").innerHTML = labelsHtml;
+
+    // Summary
+    let summaryHtml = "";
+    if (pool.baseDice > 0) {
+      summaryHtml += `<div class="pool-stat"><div class="stat-pip stat-pip-base"></div><span class="stat-count">${pool.baseDice}</span><span class="stat-label">base</span></div>`;
+    }
+    if (pool.dreadDice > 0) {
+      summaryHtml += `<div class="pool-stat"><div class="stat-pip stat-pip-dread"></div><span class="stat-count stat-count-dread">${pool.dreadDice}</span><span class="stat-label">dread</span></div>`;
+    }
+    if (pool.gearDice > 0) {
+      summaryHtml += `<div class="pool-stat"><div class="stat-pip stat-pip-gear"></div><span class="stat-count stat-count-gear">${pool.gearDice}</span><span class="stat-label">gear</span></div>`;
+    }
+    summaryHtml += `<div class="pool-total-final"><strong class="pool-total-number">${pool.totalPool}</strong> dice</div>`;
+    preview.querySelector(".pool-summary").innerHTML = summaryHtml;
+  }
+
+  /** Handle Roll button click */
+  static async #onRoll(event, target) {
+    const form = this.element.querySelector("form");
+    if (!form) return;
+
+    const talentId = form.querySelector("[name=talent]")?.value || "";
+    const gearId = form.querySelector("[name=gear]")?.value || "";
+    const diffChecked = form.querySelector("[name=difficulty]:checked");
+    const diffMod = parseInt(diffChecked?.value || "0");
+    const markCount = form.querySelectorAll(".mark-checkbox:checked").length;
+
+    const selectedTalent = talentId ? this.#actor.items.get(talentId) : null;
+    const selectedGear = gearId ? this.#actor.items.get(gearId) : null;
+
+    const pool = buildPool({
+      actor: this.#actor,
+      attribute: this.#attribute,
+      talentLevel: selectedTalent?.system.level || 0,
+      gearBonus: selectedGear?.system.gearBonus || 0,
+      difficultyMod: diffMod,
+      markPenalty: markCount,
+    });
+
+    const diffName = Object.keys(CONFIG.DREADLIGHT.difficulties)
+      .find(k => CONFIG.DREADLIGHT.difficulties[k] === diffMod) || "normal";
+
+    // Collect invoked mark names
+    const invokedMarks = [...form.querySelectorAll(".mark-checkbox:checked")].map(cb => {
+      const row = cb.closest(".mark-row");
+      return row?.querySelector(".mark-name")?.textContent || "";
+    }).filter(Boolean);
+
+    const roll = new DreadlightRoll({
+      ...pool,
+      attribute: this.#attribute,
+      talentName: selectedTalent?.name || null,
+      gearName: selectedGear?.name || null,
+      difficulty: diffName,
+      actor: this.#actor,
+      invokedMarks,
+    });
+
+    await roll.evaluate();
+    await roll.showDSN();
+    await sendRollToChat(roll);
+
+    if (this.#resolve) {
+      this.#resolve(roll);
+      this.#resolve = null;
+    }
+    this.close();
+  }
+
+  /** @override */
+  async close(options = {}) {
+    if (this.#resolve) {
+      this.#resolve(null);
+      this.#resolve = null;
+    }
+    return super.close(options);
+  }
+
+  /**
+   * Static factory — opens the dialog and returns a promise that resolves
+   * with the DreadlightRoll result (or null if closed).
+   */
+  static create({ actor, attribute, talent = null, gearItem = null }) {
     return new Promise((resolve) => {
-      const dlg = new Dialog({
-        title: `${game.i18n.localize("DREADLIGHT.RollTitle")} — ${game.i18n.localize(CONFIG.DREADLIGHT.attributeLabels[attribute])}`,
-        content: html,
-        buttons: {
-          roll: {
-            icon: '<span class="roll-icon">⬡</span>',
-            label: game.i18n.localize("DREADLIGHT.RollButton"),
-            callback: async (dialogHtml) => {
-              // dialogHtml is a jQuery object in Dialog
-              const form = dialogHtml[0].querySelector("form") || dialogHtml[0];
-              const talentId = form.querySelector("[name=talent]")?.value || "";
-              const gearId = form.querySelector("[name=gear]")?.value || "";
-              const diffChecked = form.querySelector("[name=difficulty]:checked");
-              const diffMod = parseInt(diffChecked?.value || "0");
-
-              const selectedTalent = talentId ? actor.items.get(talentId) : null;
-              const selectedGear = gearId ? actor.items.get(gearId) : null;
-
-              const pool = buildPool({
-                actor, attribute,
-                talentLevel: selectedTalent?.system.level || 0,
-                gearBonus: selectedGear?.system.gearBonus || 0,
-                difficultyMod: diffMod,
-              });
-
-              const diffName = Object.keys(CONFIG.DREADLIGHT.difficulties)
-                .find(k => CONFIG.DREADLIGHT.difficulties[k] === diffMod) || "normal";
-
-              const roll = new DreadlightRoll({
-                ...pool, attribute,
-                talentName: selectedTalent?.name || null,
-                gearName: selectedGear?.name || null,
-                difficulty: diffName,
-                actor,
-              });
-
-              await roll.evaluate();
-              await roll.showDSN();
-              await sendRollToChat(roll);
-              resolve(roll);
-            },
-          },
-        },
-        default: "roll",
-        close: () => resolve(null),
-      }, { classes: ["dreadlight", "roll-dialog"], width: 340 });
-
+      const dlg = new DreadlightRollDialog(
+        { actor, attribute, talent, gearItem, resolve },
+      );
       dlg.render(true);
     });
   }

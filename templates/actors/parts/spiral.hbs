@@ -2,7 +2,7 @@
   <div class="section-header">
     <span>{{localize "DREADLIGHT.TheSpiral"}}</span>
     <div class="section-line"></div>
-    <span class="spiral-state">{{spiralState totalMarks}}</span>
+    <span class="spiral-state {{#if (gte totalMarks 1)}}has-marks{{/if}}">{{spiralState totalMarks}}</span>
   </div>
 
   <div class="spiral-pips">
@@ -25,23 +25,45 @@
     </div>
   </div>
 
-  {{#each allMarks}}
-    <div class="mark-entry mark-{{this.track}}" data-track="{{this.track}}" data-index="{{this.index}}">
-      <div class="mark-header">
-        <div class="mark-dot {{this.track}}"></div>
-        <span class="mark-name">{{this.name}}</span>
-        <span class="mark-type">{{this.track}}</span>
-        <button type="button" class="delete-mark" data-action="deleteMark" data-track="{{this.track}}" data-index="{{this.index}}">✕</button>
+  {{#if editMode}}
+    {{!-- EDIT MODE: editable mark entries --}}
+    {{#each allMarks}}
+      <div class="mark-entry mark-{{this.track}}" data-track="{{this.track}}" data-index="{{this.index}}">
+        <div class="mark-header">
+          <div class="mark-dot {{this.track}}"></div>
+          <input type="text" class="mark-name-input"
+                 name="system.marks.{{this.track}}.{{this.index}}.name"
+                 value="{{this.name}}" placeholder="Mark name..." />
+          <span class="mark-type">{{this.track}}</span>
+          <button type="button" class="delete-mark" data-action="deleteMark" data-track="{{this.track}}" data-index="{{this.index}}">✕</button>
+        </div>
+        <input type="text" class="mark-desc-input"
+               name="system.marks.{{this.track}}.{{this.index}}.trigger"
+               value="{{this.trigger}}" placeholder="Trigger: when..." />
+        <input type="text" class="mark-desc-input"
+               name="system.marks.{{this.track}}.{{this.index}}.effect"
+               value="{{this.effect}}" placeholder="Effect: −1 die to..." />
       </div>
-      {{#if this.trigger}}
-        <div class="mark-desc">{{this.trigger}}: {{this.effect}}</div>
-      {{/if}}
-    </div>
-  {{/each}}
+    {{/each}}
 
-  <div class="mark-actions">
-    <button type="button" class="add-mark" data-action="addMark" data-track="body">+ Body</button>
-    <button type="button" class="add-mark" data-action="addMark" data-track="mind">+ Mind</button>
-    <button type="button" class="add-mark" data-action="addMark" data-track="soul">+ Soul</button>
-  </div>
+    <div class="mark-actions">
+      <button type="button" class="add-mark" data-action="addMark" data-track="body">+ Body</button>
+      <button type="button" class="add-mark" data-action="addMark" data-track="mind">+ Mind</button>
+      <button type="button" class="add-mark" data-action="addMark" data-track="soul">+ Soul</button>
+    </div>
+  {{else}}
+    {{!-- PLAY MODE: static display matching v2 design --}}
+    {{#each allMarks}}
+      <div class="mark-entry mark-{{this.track}}" data-track="{{this.track}}" data-index="{{this.index}}">
+        <div class="mark-header">
+          <div class="mark-dot {{this.track}}"></div>
+          <span class="mark-name">{{this.name}}</span>
+          <span class="mark-type">{{this.track}}</span>
+        </div>
+        {{#if (or this.trigger this.effect)}}
+          <div class="mark-desc">{{#if this.trigger}}{{this.trigger}}{{/if}}{{#if (and this.trigger this.effect)}}: {{/if}}{{#if this.effect}}{{this.effect}}{{/if}}</div>
+        {{/if}}
+      </div>
+    {{/each}}
+  {{/if}}
 </div>

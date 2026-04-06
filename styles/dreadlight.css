@@ -59,19 +59,64 @@
    2. BASE SHEET (.dreadlight.sheet)
    ---------------------------------------------------------- */
 
-.dreadlight.sheet {
-  background: var(--dl-bg-primary);
-  border: 1px solid var(--dl-border-gold);
-  border-radius: 6px;
-  overflow: hidden;
-  position: relative;
+/* Base styling for all Dreadlight AppV2 windows (sheets + dialogs) */
+.dreadlight {
   font-family: var(--dl-font-primary);
   color: var(--dl-text-primary);
 }
 
+.dreadlight.sheet,
+.dreadlight.roll-dialog {
+  background: var(--dl-bg-primary);
+  border: 1px solid var(--dl-border-gold);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+/* AppV2 window header — dark theme for all Dreadlight windows */
+.dreadlight .window-header {
+  background: var(--dl-bg-surface);
+  border-bottom: 1px solid rgba(201, 169, 110, 0.06);
+  padding: 6px 10px;
+  gap: 6px;
+}
+
+.dreadlight .window-header .window-title {
+  color: var(--dl-text-primary);
+  font-family: var(--dl-font-primary);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-shadow: none;
+}
+
+.dreadlight .window-header .header-control {
+  color: var(--dl-text-muted);
+  background: none;
+  border: none;
+}
+
+.dreadlight .window-header .header-control:hover {
+  color: var(--dl-accent-gold);
+}
+
+/* Window content area — scrollable, dark background */
+.dreadlight .window-content {
+  background: var(--dl-bg-primary);
+  position: relative;
+}
+
+/* Remove any default Foundry styling leaking through */
+.dreadlight .window-content > * {
+  border: none;
+}
+
 .dreadlight.sheet input,
 .dreadlight.sheet select,
-.dreadlight.sheet textarea {
+.dreadlight.sheet textarea,
+.dreadlight.roll-dialog input,
+.dreadlight.roll-dialog select,
+.dreadlight.roll-dialog textarea {
   background: var(--dl-bg-card);
   border: 1px solid var(--dl-border-subtle);
   color: var(--dl-text-primary);
@@ -85,7 +130,10 @@
 
 .dreadlight.sheet input:focus,
 .dreadlight.sheet select:focus,
-.dreadlight.sheet textarea:focus {
+.dreadlight.sheet textarea:focus,
+.dreadlight.roll-dialog input:focus,
+.dreadlight.roll-dialog select:focus,
+.dreadlight.roll-dialog textarea:focus {
   border-color: rgba(201, 169, 110, 0.25);
   box-shadow: 0 0 6px rgba(201, 169, 110, 0.08);
 }
@@ -155,36 +203,30 @@
   overflow: hidden;
 }
 
-.dreadlight .header-portrait {
+.dreadlight .header-bg {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-size: cover;
-  background-position: center;
+  inset: 0;
+  background: linear-gradient(135deg, #1a1520 0%, #12101a 40%, #0a0a12 100%);
 }
 
-.dreadlight .header-fade {
+.dreadlight .header-bg::before {
+  content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background:
-    linear-gradient(to right, var(--dl-bg-primary) 0%, transparent 30%),
-    linear-gradient(to left, var(--dl-bg-primary) 0%, transparent 20%),
-    linear-gradient(to top, var(--dl-bg-primary) 0%, transparent 50%);
+    radial-gradient(ellipse at 30% 50%, rgba(168, 139, 245, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 30%, rgba(107, 157, 245, 0.05) 0%, transparent 50%);
 }
 
 .dreadlight .header-identity {
   position: absolute;
   bottom: 10px;
-  left: 14px;
+  left: 200px;
+  right: 18px;
   z-index: 5;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 0;
 }
 
 .dreadlight .header-identity .name-input {
@@ -192,10 +234,12 @@
   border: none;
   color: var(--dl-text-primary);
   font-family: var(--dl-font-primary);
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 700;
   padding: 0;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
 }
 
 .dreadlight .header-identity .concept-input {
@@ -203,25 +247,254 @@
   border: none;
   color: var(--dl-text-secondary);
   font-family: var(--dl-font-italic);
-  font-size: 9px;
+  font-size: 10px;
+  font-style: italic;
   padding: 0;
+  margin-top: 1px;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8);
 }
 
 .dreadlight .header-identity .tags {
   display: flex;
-  gap: 4px;
+  gap: 6px;
   flex-wrap: wrap;
+  margin-top: 2px;
 }
 
 .dreadlight .header-identity .tag {
-  font-size: 7px;
+  font-size: 9px;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--dl-accent-gold);
-  background: rgba(201, 169, 110, 0.06);
-  border: 1px solid rgba(201, 169, 110, 0.1);
-  padding: 1px 5px;
+  letter-spacing: 0.05em;
+  padding: 2px 8px;
   border-radius: 2px;
+}
+
+.dreadlight .header-identity .tag-bg {
+  color: var(--dl-accent-gold);
+  background: rgba(201, 169, 110, 0.08);
+  border: 1px solid rgba(201, 169, 110, 0.18);
+}
+
+.dreadlight .header-identity .tag-drive {
+  color: var(--dl-track-soul);
+  background: rgba(168, 139, 245, 0.08);
+  border: 1px solid rgba(168, 139, 245, 0.15);
+}
+
+.dreadlight .portrait-figure {
+  position: absolute;
+  left: 20px;
+  top: 0;
+  bottom: 0;
+  width: 180px;
+  z-index: 4;
+  margin: 0;
+  overflow: hidden;
+  mask-image:
+    linear-gradient(to bottom, black 60%, transparent 100%),
+    linear-gradient(to right, transparent 0%, black 10%, black 85%, transparent 100%);
+  -webkit-mask-image:
+    linear-gradient(to bottom, black 60%, transparent 100%),
+    linear-gradient(to right, transparent 0%, black 10%, black 85%, transparent 100%);
+  mask-composite: intersect;
+  -webkit-mask-composite: source-in;
+}
+
+.dreadlight .portrait-figure img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center center;
+  transform-origin: center center;
+}
+
+.dreadlight .portrait-figure {
+  cursor: pointer;
+}
+
+.dreadlight .portrait-edit-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  color: var(--dl-accent-gold);
+  font-size: 24px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.dreadlight .portrait-figure:hover .portrait-edit-overlay {
+  opacity: 1;
+}
+
+/* Portrait context menu */
+.dl-context-menu {
+  position: fixed;
+  z-index: 1000;
+  background: var(--dl-bg-primary, #1a1625);
+  border: 1px solid rgba(168, 139, 245, 0.3);
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  min-width: 160px;
+}
+
+.dl-context-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+}
+
+.dl-context-menu li {
+  padding: 6px 14px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  transition: background 0.1s ease;
+}
+
+.dl-context-menu li:hover {
+  background: rgba(168, 139, 245, 0.2);
+  color: var(--dl-accent-gold, #e8c874);
+}
+
+/* Portrait reposition mode */
+.dreadlight .portrait-figure.repositioning {
+  cursor: grab;
+  outline: 2px solid var(--dl-accent-gold, #e8c874);
+  outline-offset: -2px;
+}
+
+.dreadlight .portrait-figure.repositioning:active {
+  cursor: grabbing;
+}
+
+.dreadlight .portrait-figure.repositioning .portrait-edit-overlay {
+  display: none;
+}
+
+.dreadlight .reposition-label {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  z-index: 10;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--dl-accent-gold, #e8c874);
+  background: rgba(0, 0, 0, 0.7);
+  padding: 2px 6px;
+  border-radius: 3px;
+  pointer-events: none;
+}
+
+.dreadlight .reposition-done {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  z-index: 10;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid var(--dl-accent-gold, #e8c874);
+  border-radius: 50%;
+  color: var(--dl-accent-gold, #e8c874);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.dreadlight .reposition-done:hover {
+  background: rgba(168, 139, 245, 0.3);
+}
+
+/* Chat portrait setup dialog */
+.chat-portrait-dialog .window-content {
+  padding: 0;
+}
+
+.chat-portrait-setup {
+  padding: 12px;
+}
+
+.chat-portrait-setup .setup-hint {
+  margin: 0 0 10px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+}
+
+.chat-portrait-setup .dreadlight-chat {
+  pointer-events: auto;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.chat-portrait-setup .chat-header {
+  cursor: grab;
+  user-select: none;
+}
+
+.chat-portrait-setup .push-bar {
+  display: none;
+}
+
+/* Edit mode toggle button */
+.dreadlight .edit-toggle-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 20;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--dl-bg-elevated);
+  border: 1px solid rgba(201, 169, 110, 0.15);
+  border-radius: 4px;
+  color: var(--dl-accent-gold);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dreadlight .edit-toggle-btn:hover {
+  background: rgba(201, 169, 110, 0.1);
+  border-color: rgba(201, 169, 110, 0.35);
+  box-shadow: 0 0 10px rgba(201, 169, 110, 0.15);
+}
+
+.dreadlight.is-editing .edit-toggle-btn {
+  background: rgba(201, 169, 110, 0.12);
+  border-color: rgba(201, 169, 110, 0.3);
+  color: var(--dl-accent-gold);
+}
+
+/* Attribute value input in edit mode */
+.dreadlight .attr-value-input {
+  width: 48px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--dl-text-primary);
+  background: var(--dl-bg-elevated);
+  border: 1px solid rgba(201, 169, 110, 0.25);
+  border-radius: 3px;
+  padding: 2px;
+  font-family: var(--dl-font-primary);
+  line-height: 1;
+}
+
+.dreadlight .attr-value-input:focus {
+  border-color: rgba(201, 169, 110, 0.5);
+  box-shadow: 0 0 6px rgba(201, 169, 110, 0.2);
+  outline: none;
 }
 
 /* ----------------------------------------------------------
@@ -243,12 +516,15 @@
   flex-direction: row;
   align-items: center;
   gap: 6px;
+  flex: 1;
+  min-width: 0;
   background: var(--dl-bg-card);
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 4px;
   padding: 5px 8px;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  overflow: hidden;
 }
 
 .dreadlight .track-btn.body { border-color: rgba(85, 184, 122, 0.15); }
@@ -298,6 +574,8 @@
 .dreadlight .track-info {
   display: flex;
   flex-direction: column;
+  min-width: 0;
+  flex: 1;
   gap: 1px;
 }
 
@@ -312,6 +590,36 @@
 .dreadlight .track-label.mind { color: var(--dl-track-mind); }
 .dreadlight .track-label.soul { color: var(--dl-track-soul); }
 .dreadlight .track-label.dread { color: var(--dl-track-dread); }
+
+.dreadlight .track-value {
+  font-size: 10px;
+  color: var(--dl-text-primary);
+  font-weight: 700;
+}
+
+.dreadlight .track-value span {
+  color: var(--dl-text-muted);
+  font-weight: 400;
+}
+
+.dreadlight .track-bar-mini {
+  width: 48px;
+  height: 3px;
+  background: #1a1a24;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 2px;
+}
+
+.dreadlight .track-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.dreadlight .track-bar-fill.body { background: var(--dl-track-body); }
+.dreadlight .track-bar-fill.mind { background: var(--dl-track-mind); }
+.dreadlight .track-bar-fill.soul { background: var(--dl-track-soul); }
 
 .dreadlight .track-num {
   font-size: 9px;
@@ -337,8 +645,8 @@
 }
 
 .dreadlight .pip {
-  width: 7px;
-  height: 11px;
+  width: 8px;
+  height: 8px;
   border-radius: 1.5px;
   transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -492,7 +800,7 @@
   text-transform: uppercase;
   letter-spacing: 0.15em;
   font-weight: 700;
-  margin-bottom: 6px;
+  margin-bottom: 3px;
 }
 
 .dreadlight .section-line {
@@ -510,6 +818,11 @@
   flex-direction: row;
   border-bottom: 1px solid rgba(201, 169, 110, 0.08);
   margin-bottom: 10px;
+}
+
+/* Override FoundryVTT global .tab { display: none } for nav tabs */
+.dreadlight .tab-bar > .tab {
+  display: inline-block !important;
 }
 
 .dreadlight .tab {
@@ -544,15 +857,21 @@
    12. TALENT ROWS
    ---------------------------------------------------------- */
 
+.dreadlight .talent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
 .dreadlight .talent-row {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   background: var(--dl-bg-card);
   border: 1px solid var(--dl-border-subtle);
   border-radius: 4px;
-  padding: 6px 8px;
+  padding: 5px 8px;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -642,6 +961,90 @@
   box-shadow: 0 0 8px rgba(201, 169, 110, 0.12);
 }
 
+/* Talent & Item Expand Panels */
+
+.dreadlight .talent-expand,
+.dreadlight .item-expand {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 0.15s cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 0.12s cubic-bezier(0.22, 1, 0.36, 1);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid transparent;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  margin-top: -1px;
+  padding: 0;
+}
+
+.dreadlight .talent-expand > .expand-inner,
+.dreadlight .item-expand > .expand-inner {
+  overflow: hidden;
+  min-height: 0;
+  padding: 6px 10px 8px 22px;
+}
+
+.dreadlight .talent-expand.open,
+.dreadlight .item-expand.open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  border-color: var(--dl-border-subtle);
+}
+
+.dreadlight .talent-row.expanded,
+.dreadlight .item-row.expanded {
+  border-radius: 4px 4px 0 0;
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.dreadlight .expand-description {
+  font-size: 9px;
+  color: var(--dl-text-secondary);
+  line-height: 1.5;
+  margin-bottom: 4px;
+}
+
+.dreadlight .expand-description:last-child {
+  margin-bottom: 0;
+}
+
+.dreadlight .expand-ability {
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid var(--dl-border-subtle);
+}
+
+.dreadlight .expand-ability-label {
+  font-size: 7px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--dl-accent-gold);
+  font-weight: 700;
+  margin-right: 4px;
+}
+
+.dreadlight .expand-ability-name {
+  font-size: 9px;
+  color: var(--dl-text-primary);
+  font-weight: 700;
+}
+
+.dreadlight .expand-ability-desc {
+  font-size: 9px;
+  color: var(--dl-text-secondary);
+  line-height: 1.5;
+  margin-top: 2px;
+}
+
+/* Item Context Menu */
+
+.dl-context-menu li i {
+  width: 14px;
+  margin-right: 4px;
+  text-align: center;
+}
+
 /* ----------------------------------------------------------
    13. EQUIPMENT TAB
    ---------------------------------------------------------- */
@@ -663,22 +1066,27 @@
   text-transform: uppercase;
   letter-spacing: 0.1em;
   font-weight: 700;
+  flex-shrink: 0;
+}
+
+.dreadlight .carry-pips {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+  flex: 1;
+  flex-wrap: wrap;
 }
 
 .dreadlight .carry-num {
+  font-size: 10px;
   font-weight: 700;
   color: var(--dl-text-primary);
+  flex-shrink: 0;
 }
 
-.dreadlight .supply-row {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 8px;
-  background: var(--dl-bg-surface);
-  border: 1px solid var(--dl-border-gold);
-  border-radius: 4px;
-  padding: 6px 10px;
+.dreadlight .pip.pip-gold.partial {
+  background: linear-gradient(90deg, var(--dl-accent-gold) 50%, transparent 50%);
+  border: 1px solid rgba(201, 169, 110, 0.3);
 }
 
 .dreadlight .item-row {
@@ -689,8 +1097,13 @@
   background: var(--dl-bg-card);
   border: 1px solid var(--dl-border-subtle);
   border-radius: 4px;
-  padding: 6px 8px;
+  padding: 6px 10px;
   transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dreadlight .item-info {
+  flex: 1;
+  min-width: 0;
 }
 
 .dreadlight .item-row:hover {
@@ -705,6 +1118,7 @@
   align-items: center;
   justify-content: center;
   font-size: 12px;
+  flex-shrink: 0;
 }
 
 .dreadlight .item-icon.body { background: rgba(85, 184, 122, 0.08); color: var(--dl-track-body); }
@@ -722,6 +1136,10 @@
 .dreadlight .item-meta {
   font-size: 8px;
   color: var(--dl-text-muted);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  align-items: center;
 }
 
 .dreadlight .item-stat {
@@ -729,6 +1147,20 @@
   font-weight: 700;
   padding: 2px 6px;
   border-radius: 3px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.dreadlight .item-pips {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.dreadlight .item-row .pip {
+  flex-shrink: 0;
 }
 
 .dreadlight .item-stat.stat-red {
@@ -749,7 +1181,7 @@
 .dreadlight .drop-zone {
   border: 1px dashed rgba(201, 169, 110, 0.12);
   border-radius: 4px;
-  padding: 16px;
+  padding: 8px;
   text-align: center;
   color: var(--dl-text-muted);
   font-size: 9px;
@@ -773,8 +1205,16 @@
   padding: 8px;
 }
 
+.dreadlight .bg-card input + textarea {
+  margin-top: 4px;
+}
+
 .dreadlight .field-group {
   margin-bottom: 10px;
+}
+
+.dreadlight .field-group input + textarea {
+  margin-top: 4px;
 }
 
 .dreadlight .field-label {
@@ -833,6 +1273,109 @@
 .dreadlight .connection-row .delete-btn:hover {
   color: var(--dl-accent-red);
   border-color: rgba(224, 85, 85, 0.25);
+}
+
+/* Personal section extra top space */
+.dreadlight .personal-header {
+  margin-top: 14px;
+}
+
+/* Play-mode detail text */
+.dreadlight .bg-name {
+  font-size: 11px;
+  color: var(--dl-text-primary);
+  font-weight: 700;
+}
+
+.dreadlight .bg-desc {
+  font-size: 8px;
+  color: var(--dl-text-muted);
+  font-family: var(--dl-font-secondary, var(--dl-font-primary));
+  margin-top: 2px;
+}
+
+/* Detail boxes (anchor, drive, fear) */
+.dreadlight .detail-box {
+  padding: 7px 10px;
+  background: var(--dl-bg-card);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+  font-size: 10px;
+  font-family: var(--dl-font-secondary, var(--dl-font-primary));
+  line-height: 1.5;
+  min-height: 36px;
+}
+
+.dreadlight .anchor-box {
+  color: var(--dl-text-primary);
+  font-style: italic;
+}
+
+.dreadlight .drive-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: auto;
+  padding: 6px 10px;
+}
+
+.dreadlight .drive-box .tag-drive {
+  padding: 2px 8px;
+  flex-shrink: 0;
+}
+
+.dreadlight .drive-desc {
+  font-size: 9px;
+  color: var(--dl-text-muted);
+  font-family: var(--dl-font-secondary, var(--dl-font-primary));
+}
+
+.dreadlight .fear-box {
+  color: var(--dl-accent-red);
+  background: rgba(224, 85, 85, 0.02);
+  border-color: rgba(224, 85, 85, 0.08);
+}
+
+/* Play-mode connection cards */
+.dreadlight .conn-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 3px;
+  background: var(--dl-bg-elevated);
+  border: 1px solid var(--dl-border-subtle);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 6px;
+  color: var(--dl-text-muted);
+}
+
+.dreadlight .conn-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.dreadlight .conn-display-name {
+  font-size: 9px;
+  color: var(--dl-text-primary);
+  font-weight: 700;
+}
+
+.dreadlight .conn-display-text {
+  font-size: 8px;
+  color: var(--dl-text-muted);
+  font-family: var(--dl-font-secondary, var(--dl-font-primary));
+  margin-top: 1px;
+}
+
+/* Connection row play-mode styling */
+.dreadlight .connection-row.play-mode {
+  padding: 6px 8px;
+  background: var(--dl-bg-card);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: 3px;
+  align-items: flex-start;
 }
 
 /* ----------------------------------------------------------
@@ -982,7 +1525,82 @@
 }
 
 .dreadlight .mastery-box.locked {
+  background: var(--dl-bg-card);
+  border-color: rgba(255, 255, 255, 0.03);
   opacity: 0.4;
+}
+
+.dreadlight .talent-level-text {
+  font-size: 10px;
+  color: var(--dl-text-primary);
+  font-weight: 700;
+}
+
+.dreadlight .talent-dice-text {
+  font-size: 9px;
+  color: var(--dl-text-muted);
+}
+
+.dreadlight .talent-attr-tags {
+  display: flex;
+  gap: 4px;
+}
+
+.dreadlight .field-textarea {
+  width: 100%;
+  padding: 7px 10px;
+  min-height: 48px;
+  background: var(--dl-bg-card);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+  color: var(--dl-text-primary);
+  font-family: var(--dl-font-secondary);
+  font-size: 10px;
+  line-height: 1.5;
+  resize: vertical;
+  transition: border-color 0.15s;
+}
+
+.dreadlight .field-textarea:hover {
+  border-color: rgba(201, 169, 110, 0.15);
+}
+
+.dreadlight .tag {
+  display: inline-block;
+  font-size: 9px;
+  padding: 2px 8px;
+  border-radius: 2px;
+  letter-spacing: 0.04em;
+}
+
+.dreadlight .tag-gold {
+  background: rgba(201, 169, 110, 0.08);
+  border: 1px solid rgba(201, 169, 110, 0.18);
+  color: var(--dl-accent-gold);
+}
+
+.dreadlight .tag-purple {
+  background: rgba(168, 139, 245, 0.08);
+  border: 1px solid rgba(168, 139, 245, 0.15);
+  color: var(--dl-accent-purple, #a88bf5);
+}
+
+.dreadlight .tag-blue {
+  background: rgba(107, 157, 245, 0.08);
+  border: 1px solid rgba(107, 157, 245, 0.15);
+  color: var(--dl-track-mind);
+}
+
+.dreadlight .tag-red {
+  background: rgba(224, 85, 85, 0.08);
+  border: 1px solid rgba(224, 85, 85, 0.15);
+  color: var(--dl-accent-red);
+}
+
+.dreadlight .tag-green {
+  background: rgba(85, 184, 122, 0.08);
+  border: 1px solid rgba(85, 184, 122, 0.15);
+  color: var(--dl-track-body);
 }
 
 .dreadlight .gear-label {
@@ -991,160 +1609,515 @@
 }
 
 /* ----------------------------------------------------------
-   16. ROLL DIALOG
+   16. ROLL DIALOG (AppV2)
    ---------------------------------------------------------- */
 
-.dreadlight.roll-dialog,
 .dreadlight-roll-form {
-  background: var(--dl-bg-primary);
-  border: 1px solid var(--dl-border-gold);
-  color: var(--dl-text-primary);
-  font-family: var(--dl-font-primary);
+  padding: 12px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
+/* ── Roll Dialog Fields ── */
 .dreadlight-roll-form .dialog-field {
-  margin-bottom: 10px;
+  margin-bottom: 2px;
 }
 
-.dreadlight-roll-form .dialog-label {
+.dreadlight-roll-form .field-label {
   font-size: 8px;
   color: var(--dl-accent-gold);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   font-weight: 700;
-  margin-bottom: 4px;
+  margin-bottom: 5px;
 }
 
+/* ── Source Rows (attribute, talent, equipment) ── */
 .dreadlight-roll-form .source-row {
   display: flex;
-  flex-direction: row;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+  padding: 8px 10px;
   background: var(--dl-bg-card);
-  border: 1px solid var(--dl-border-subtle);
+  border: 1px solid rgba(201, 169, 110, 0.08);
   border-radius: 4px;
-  padding: 6px 8px;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.dreadlight-roll-form .source-row:hover {
-  border-color: rgba(255, 255, 255, 0.14);
+  transition: border-color 0.2s;
+  position: relative;
 }
 
 .dreadlight-roll-form .source-row.static {
   cursor: default;
 }
 
-.dreadlight-roll-form .source-row.static:hover {
-  border-color: var(--dl-border-subtle);
+.dreadlight-roll-form .source-row:not(.static):hover {
+  border-color: rgba(201, 169, 110, 0.2);
+}
+
+.dreadlight-roll-form .source-info {
+  flex: 1;
+  min-width: 0;
 }
 
 .dreadlight-roll-form .source-name {
-  font-size: 10px;
   color: var(--dl-text-primary);
+  font-size: 11px;
   font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dreadlight-roll-form .source-name.muted {
+  color: var(--dl-text-muted);
+}
+
+.dreadlight-roll-form .source-meta {
+  color: var(--dl-text-muted);
+  font-size: 8px;
+  margin-top: 1px;
 }
 
 .dreadlight-roll-form .source-pips {
   display: flex;
-  flex-direction: row;
   gap: 2px;
+  flex-shrink: 0;
+}
+
+.dreadlight-roll-form .pip {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  transition: all 0.2s;
 }
 
 .dreadlight-roll-form .pip-base {
-  background: rgba(255, 255, 255, 0.45);
+  background: rgba(220, 220, 230, 0.5);
+}
+
+.dreadlight-roll-form .pip-gear {
+  background: var(--dl-accent-gold);
 }
 
 .dreadlight-roll-form .source-count {
+  font-size: 10px;
   color: var(--dl-text-primary);
   font-weight: 700;
-  font-size: 10px;
+  width: 16px;
+  text-align: right;
+  flex-shrink: 0;
 }
 
-.dreadlight-roll-form .dialog-select {
+.dreadlight-roll-form .source-count.gear-color {
+  color: var(--dl-accent-gold);
+}
+
+.dreadlight-roll-form .source-chevron {
+  color: var(--dl-text-muted);
+  font-size: 8px;
+  flex-shrink: 0;
+}
+
+/* Hidden select overlaying the source-row */
+.dreadlight-roll-form .source-select {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
   width: 100%;
-  background: var(--dl-bg-card);
-  border: 1px solid var(--dl-border-subtle);
-  color: var(--dl-text-primary);
-  font-family: inherit;
-  font-size: 10px;
-  padding: 5px 8px;
-  border-radius: 3px;
+  height: 100%;
+  font-size: 12px;
 }
 
+/* ── Difficulty Buttons ── */
 .dreadlight-roll-form .difficulty-row {
   display: flex;
-  flex-direction: row;
   gap: 2px;
 }
 
 .dreadlight-roll-form .diff-btn {
   flex: 1;
+  padding: 5px 2px;
   background: var(--dl-bg-card);
-  border: 1px solid var(--dl-border-subtle);
+  border: 1px solid rgba(201, 169, 110, 0.06);
+  border-radius: 2px;
   text-align: center;
-  font-size: 8px;
   color: var(--dl-text-muted);
-  padding: 6px 4px;
-  border-radius: 3px;
   cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
   font-family: var(--dl-font-primary);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dreadlight-roll-form .diff-btn:hover {
+  border-color: rgba(201, 169, 110, 0.2);
+  color: var(--dl-text-secondary);
 }
 
 .dreadlight-roll-form .diff-btn input[type="radio"] {
   display: none;
 }
 
-.dreadlight-roll-form .diff-btn:has(:checked),
-.dreadlight-roll-form .diff-btn.active {
+.dreadlight-roll-form .diff-abbr {
+  font-size: 7px;
+  letter-spacing: 0.05em;
+}
+
+.dreadlight-roll-form .diff-mod {
+  font-size: 8px;
+  display: block;
+  margin-top: 1px;
+}
+
+.dreadlight-roll-form .diff-btn:has(:checked) {
   background: rgba(201, 169, 110, 0.1);
-  border-color: rgba(201, 169, 110, 0.25);
+  border-color: rgba(201, 169, 110, 0.3);
   color: var(--dl-accent-gold);
+  font-weight: 700;
+}
+
+/* ── Marks Section ── */
+.dreadlight-roll-form .marks-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dreadlight-roll-form .mark-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: var(--dl-bg-card);
+  border: 1px solid rgba(201, 169, 110, 0.06);
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.dreadlight-roll-form .mark-row:hover {
+  border-color: rgba(201, 169, 110, 0.15);
+}
+
+.dreadlight-roll-form .mark-row:has(:checked) {
+  border-color: rgba(200, 48, 48, 0.3);
+  background: rgba(180, 40, 40, 0.08);
+}
+
+.dreadlight-roll-form .mark-checkbox {
+  display: none;
+}
+
+.dreadlight-roll-form .mark-pip {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.15s;
+}
+
+.dreadlight-roll-form .mark-row:has(:checked) .mark-pip {
+  border-color: transparent;
+}
+
+.dreadlight-roll-form .mark-pip-body { background: var(--dl-track-body); }
+.dreadlight-roll-form .mark-pip-mind { background: var(--dl-track-mind); }
+.dreadlight-roll-form .mark-pip-soul { background: var(--dl-track-soul); }
+
+.dreadlight-roll-form .mark-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.dreadlight-roll-form .mark-name {
+  font-size: 10px;
+  color: var(--dl-text-primary);
+  font-weight: 700;
+}
+
+.dreadlight-roll-form .mark-effect {
+  font-size: 8px;
+  color: var(--dl-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dreadlight-roll-form .mark-penalty {
+  font-size: 9px;
+  color: var(--dl-accent-red);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ── Pool Preview ── */
+.dreadlight-roll-form .pool-preview {
+  background: var(--dl-bg-surface);
+  border: 1px solid rgba(201, 169, 110, 0.08);
+  border-radius: 4px;
+  padding: 12px;
+}
+
+.dreadlight-roll-form .pool-label {
+  font-size: 8px;
+  color: var(--dl-accent-gold);
+  letter-spacing: 0.12em;
+  margin-bottom: 10px;
+  text-transform: uppercase;
   font-weight: 700;
 }
 
 .dreadlight-roll-form .pool-bar {
   display: flex;
-  flex-direction: row;
-  gap: 3px;
+  gap: 0;
   align-items: center;
-  flex-wrap: wrap;
 }
 
-.dreadlight-roll-form .pool-bar .pool-die {
-  width: 16px;
-  height: 16px;
-  border-radius: 2px;
+.dreadlight-roll-form .pool-block {
+  width: 24px;
+  height: 24px;
+  border-radius: 3px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 8px;
+  margin-right: 2px;
+  position: relative;
+  transition: all 0.2s;
 }
 
-.dreadlight-roll-form .pool-bracket {
+.dreadlight-roll-form .pool-block-base {
+  background: rgba(220, 220, 230, 0.1);
+  border: 1px solid rgba(220, 220, 230, 0.2);
+}
+
+.dreadlight-roll-form .pool-block-dread {
+  background: rgba(180, 40, 40, 0.18);
+  border: 1px solid rgba(200, 48, 48, 0.4);
+}
+
+/* Diagonal bite on first dread die adjacent to base */
+.dreadlight-roll-form .pool-block-dread.first::before {
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  background: linear-gradient(135deg, transparent 50%, rgba(180, 40, 40, 0.18) 50%);
+}
+
+.dreadlight-roll-form .pool-block-gear {
+  background: rgba(201, 169, 110, 0.1);
+  border: 1px solid rgba(201, 169, 110, 0.25);
+}
+
+.dreadlight-roll-form .pool-gap {
+  width: 10px;
+}
+
+/* ── Pool Bracket Labels ── */
+.dreadlight-roll-form .pool-labels {
+  display: flex;
+  margin-top: 6px;
+  gap: 0;
+  align-items: flex-start;
+}
+
+.dreadlight-roll-form .pool-range {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dreadlight-roll-form .pool-range-line {
+  width: 100%;
+  height: 1px;
+  position: relative;
+}
+
+.dreadlight-roll-form .pool-range-line::before,
+.dreadlight-roll-form .pool-range-line::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  width: 1px;
+  height: 5px;
+}
+
+.dreadlight-roll-form .pool-range-line::before { left: 0; }
+.dreadlight-roll-form .pool-range-line::after { right: 0; }
+
+.dreadlight-roll-form .range-line-base {
+  background: rgba(220, 220, 230, 0.15);
+}
+.dreadlight-roll-form .range-line-base::before,
+.dreadlight-roll-form .range-line-base::after {
+  background: rgba(220, 220, 230, 0.15);
+}
+
+.dreadlight-roll-form .range-line-dread {
+  background: rgba(200, 48, 48, 0.3);
+}
+.dreadlight-roll-form .range-line-dread::before,
+.dreadlight-roll-form .range-line-dread::after {
+  background: rgba(200, 48, 48, 0.3);
+}
+
+.dreadlight-roll-form .range-line-gear {
+  background: rgba(201, 169, 110, 0.2);
+}
+.dreadlight-roll-form .range-line-gear::before,
+.dreadlight-roll-form .range-line-gear::after {
+  background: rgba(201, 169, 110, 0.2);
+}
+
+.dreadlight-roll-form .pool-range-text {
   font-size: 7px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
+  margin-top: 2px;
+}
+
+.dreadlight-roll-form .range-text-base {
+  color: rgba(220, 220, 230, 0.4);
+}
+.dreadlight-roll-form .range-text-base strong {
+  color: var(--dl-text-primary);
+}
+
+.dreadlight-roll-form .range-text-dread {
+  color: rgba(200, 48, 48, 0.6);
+}
+.dreadlight-roll-form .range-text-dread strong {
+  color: var(--dl-accent-red);
+}
+
+.dreadlight-roll-form .range-text-gear {
+  color: rgba(201, 169, 110, 0.4);
+}
+.dreadlight-roll-form .range-text-gear strong {
+  color: var(--dl-accent-gold);
+}
+
+.dreadlight-roll-form .pool-range-gap {
+  width: 10px;
+}
+
+/* ── Pool Summary ── */
+.dreadlight-roll-form .pool-summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(201, 169, 110, 0.06);
+}
+
+.dreadlight-roll-form .pool-stat {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+}
+
+.dreadlight-roll-form .stat-pip {
+  width: 6px;
+  height: 6px;
+  border-radius: 1px;
+}
+
+.dreadlight-roll-form .stat-pip-base { background: rgba(220, 220, 230, 0.5); }
+.dreadlight-roll-form .stat-pip-dread { background: var(--dl-accent-red); }
+.dreadlight-roll-form .stat-pip-gear { background: var(--dl-accent-gold); }
+
+.dreadlight-roll-form .stat-count {
+  color: var(--dl-text-primary);
+  font-weight: 700;
+}
+
+.dreadlight-roll-form .stat-count-dread { color: var(--dl-accent-red); }
+.dreadlight-roll-form .stat-count-gear { color: var(--dl-accent-gold); }
+.dreadlight-roll-form .stat-label { color: var(--dl-text-muted); }
+
+.dreadlight-roll-form .pool-total-final {
+  margin-left: auto;
+  font-size: 10px;
   color: var(--dl-text-muted);
 }
 
-.dreadlight-roll-form .pool-summary {
-  font-size: 9px;
-  color: var(--dl-text-secondary);
+.dreadlight-roll-form .pool-total-number {
+  color: var(--dl-text-primary);
+  font-size: 16px;
+}
+
+/* ── Roll Button ── */
+.dreadlight-roll-form .roll-btn {
+  width: 100%;
+  padding: 10px;
+  background: linear-gradient(180deg, rgba(201, 169, 110, 0.12), rgba(201, 169, 110, 0.06));
+  border: 1px solid rgba(201, 169, 110, 0.25);
+  border-radius: 4px;
+  color: var(--dl-accent-gold);
+  font-family: var(--dl-font-primary);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.25s;
+  text-align: center;
+  margin-top: 4px;
+}
+
+.dreadlight-roll-form .roll-btn:hover {
+  background: linear-gradient(180deg, rgba(201, 169, 110, 0.2), rgba(201, 169, 110, 0.1));
+  border-color: rgba(201, 169, 110, 0.45);
+  box-shadow: 0 0 20px -6px rgba(201, 169, 110, 0.25);
 }
 
 /* ----------------------------------------------------------
    17. CHAT CARDS
    ---------------------------------------------------------- */
 
+/* Override Foundry's chat message wrapper when it contains our card */
+.chat-message:has(.dreadlight-chat) {
+  background: var(--dl-bg-primary) !important;
+  border: 1px solid var(--dl-border-subtle) !important;
+  border-radius: 6px !important;
+  padding: 0 !important;
+  position: relative;
+}
+
+.chat-message:has(.dreadlight-chat) .message-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 3px 6px;
+  font-size: 9px;
+  opacity: 0;
+  z-index: 20;
+  border: none;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 100%);
+}
+
+.chat-message:has(.dreadlight-chat):hover .message-header {
+  opacity: 1;
+}
+
+.chat-message:has(.dreadlight-chat) .message-content {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
 .dreadlight-chat {
-  background: var(--dl-bg-primary);
-  border: 1px solid var(--dl-border-subtle);
-  border-radius: 6px;
+  background: transparent;
   overflow: hidden;
   font-family: var(--dl-font-primary);
   color: var(--dl-text-primary);
@@ -1154,45 +2127,42 @@
   height: 2px;
 }
 
-/* Color variants */
-.dreadlight-chat.chat-clean {
-  border-color: rgba(201, 169, 110, 0.2);
+/* Color variants — border on the parent message */
+.chat-message:has(.chat-clean) {
+  border-color: rgba(201, 169, 110, 0.2) !important;
 }
 
 .dreadlight-chat.chat-clean .chat-accent {
   background: linear-gradient(90deg, transparent 0%, var(--dl-accent-gold) 30%, transparent 100%);
 }
 
-.dreadlight-chat.chat-tainted {
-  border-color: rgba(168, 139, 245, 0.2);
+.chat-message:has(.chat-tainted) {
+  border-color: rgba(168, 139, 245, 0.2) !important;
 }
 
 .dreadlight-chat.chat-tainted .chat-accent {
   background: linear-gradient(90deg, transparent 0%, var(--dl-track-soul) 30%, transparent 100%);
 }
 
-.dreadlight-chat.chat-dire {
-  border-color: rgba(224, 85, 85, 0.25);
+.chat-message:has(.chat-dire) {
+  border-color: rgba(224, 85, 85, 0.25) !important;
+  animation: dire-pulse 3s ease-in-out infinite;
 }
 
 .dreadlight-chat.chat-dire .chat-accent {
   background: linear-gradient(90deg, transparent 0%, var(--dl-accent-red) 20%, var(--dl-track-soul) 80%, transparent 100%);
 }
 
-.dreadlight-chat.chat-dire {
-  animation: dire-pulse 3s ease-in-out infinite;
-}
-
-.dreadlight-chat.chat-failure {
-  border-color: rgba(255, 255, 255, 0.06);
+.chat-message:has(.chat-failure) {
+  border-color: rgba(255, 255, 255, 0.06) !important;
 }
 
 .dreadlight-chat.chat-failure .chat-accent {
   background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.1) 30%, transparent 100%);
 }
 
-.dreadlight-chat.chat-pushed {
-  border-color: rgba(201, 169, 110, 0.15);
+.chat-message:has(.chat-pushed) {
+  border-color: rgba(201, 169, 110, 0.15) !important;
 }
 
 .dreadlight-chat.chat-pushed .chat-accent {
@@ -1202,7 +2172,7 @@
 /* Chat header */
 .dreadlight-chat .chat-header {
   position: relative;
-  height: 56px;
+  height: 80px;
   overflow: hidden;
 }
 
@@ -1212,8 +2182,10 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-size: cover;
+  background-size: contain;
   background-position: center;
+  background-repeat: no-repeat;
+  transform-origin: center center;
 }
 
 .dreadlight-chat .chat-portrait-fade {
@@ -1222,37 +2194,53 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background:
-    linear-gradient(to right, var(--dl-bg-primary) 0%, transparent 40%),
-    linear-gradient(to left, var(--dl-bg-primary) 0%, transparent 25%),
-    linear-gradient(to top, var(--dl-bg-primary) 0%, transparent 60%);
+  background: linear-gradient(to top, var(--dl-bg-primary) 0%, transparent 60%);
+  z-index: 2;
 }
 
-.dreadlight-chat .chat-identity {
+/* Name overlays the portrait — anchored to bottom of header */
+.dreadlight-chat .chat-header .chat-name {
   position: absolute;
   bottom: 6px;
   left: 10px;
+  right: 10px;
   z-index: 5;
-}
-
-.dreadlight-chat .chat-name {
-  font-size: 12px;
-  color: var(--dl-text-primary);
+  font-size: 15px;
   font-weight: 700;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+  color: var(--dl-text-primary);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.95), 0 0 10px rgba(0, 0, 0, 0.7);
+  line-height: 1.2;
+  margin: 0;
+  padding: 0;
 }
 
-.dreadlight-chat .chat-action {
-  font-size: 9px;
-  color: var(--dl-text-muted);
+/* Info bar — solid background below portrait */
+.dreadlight-chat .chat-info {
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--dl-border-subtle);
+  background: var(--dl-bg-primary);
 }
 
-.dreadlight-chat .chat-talent {
+.dreadlight-chat .chat-info .chat-action {
+  font-size: 11px;
+  color: var(--dl-text-secondary);
+  font-weight: 500;
+}
+
+.dreadlight-chat .chat-info .chat-talent {
+  color: var(--dl-accent-gold);
+  font-weight: 600;
+}
+
+.dreadlight-chat .chat-info .chat-pushed {
   color: var(--dl-accent-gold);
 }
 
-.dreadlight-chat .chat-action.chat-pushed {
-  color: var(--dl-accent-gold);
+.dreadlight-chat .chat-info .chat-gear-used {
+  font-size: 10px;
+  color: rgba(201, 169, 110, 0.7);
+  font-weight: 500;
+  margin-top: 2px;
 }
 
 /* Chat dice */
@@ -1295,6 +2283,7 @@
 .dreadlight-chat .dice-label.label-base { color: var(--dl-text-muted); }
 .dreadlight-chat .dice-label.label-dread { color: rgba(224, 85, 85, 0.6); }
 .dreadlight-chat .dice-label.label-gear { color: rgba(201, 169, 110, 0.6); }
+.dreadlight-chat .dice-label.label-armor { color: rgba(107, 157, 245, 0.6); }
 
 /* ----------------------------------------------------------
    18. DIE FACES
@@ -1311,6 +2300,13 @@
   font-size: 15px;
   position: relative;
   transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dreadlight-chat .die-icon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  border: none;
 }
 
 /* Normal (2-5) */
@@ -1460,6 +2456,7 @@
 .dreadlight-chat .result-icon.purple { color: var(--dl-track-soul); }
 .dreadlight-chat .result-icon.red { color: var(--dl-accent-red); }
 .dreadlight-chat .result-icon.muted { color: var(--dl-text-muted); }
+.dreadlight-chat .result-icon.blue { color: var(--dl-track-mind); }
 
 .dreadlight-chat .result-label {
   font-size: 13px;
@@ -1591,34 +2588,34 @@
    22. UTILITY
    ---------------------------------------------------------- */
 
-/* Custom scrollbar */
-.dreadlight.sheet ::-webkit-scrollbar {
+/* Custom scrollbar — all Dreadlight windows */
+.dreadlight ::-webkit-scrollbar {
   width: 4px;
 }
 
-.dreadlight.sheet ::-webkit-scrollbar-track {
+.dreadlight ::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.dreadlight.sheet ::-webkit-scrollbar-thumb {
+.dreadlight ::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.12);
   border-radius: 2px;
 }
 
-.dreadlight.sheet ::-webkit-scrollbar-thumb:hover {
+.dreadlight ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.2);
 }
 
 /* Firefox scrollbar */
-.dreadlight.sheet * {
+.dreadlight * {
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
 }
 
 /* Smooth transitions on interactive elements */
-.dreadlight.sheet button,
-.dreadlight.sheet [data-action],
-.dreadlight.sheet .clickable {
+.dreadlight button,
+.dreadlight [data-action],
+.dreadlight .clickable {
   transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -1644,7 +2641,7 @@
 
 .dreadlight .spiral-pips {
   display: flex;
-  gap: 4px;
+  gap: 6px;
   align-items: center;
   margin-bottom: 8px;
 }
@@ -1652,7 +2649,7 @@
 .dreadlight .spiral-pip {
   width: 20px;
   height: 20px;
-  border-radius: 3px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1681,14 +2678,18 @@
 
 .dreadlight .spiral-state {
   font-size: 8px;
-  color: var(--dl-accent-red);
   text-transform: uppercase;
   letter-spacing: 0.1em;
+  color: var(--dl-text-muted);
 }
 
-.dreadlight .pip-dot {
-  width: 6px;
-  height: 6px;
+.dreadlight .spiral-state.has-marks {
+  color: var(--dl-accent-red);
+}
+
+.dreadlight .spiral-pip .pip-dot {
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background: var(--dl-accent-red);
 }
@@ -1699,28 +2700,28 @@
 }
 
 .dreadlight .mark-entry {
-  background: var(--dl-bg-elevated);
-  border: 1px solid var(--dl-border-subtle);
+  background: var(--dl-bg-card);
   border-radius: 3px;
   padding: 6px 8px;
-  margin-bottom: 4px;
+  margin-top: 6px;
 }
 
-.dreadlight .mark-entry.mark-body { border-left: 2px solid var(--dl-track-body); }
-.dreadlight .mark-entry.mark-mind { border-left: 2px solid var(--dl-track-mind); }
-.dreadlight .mark-entry.mark-soul { border-left: 2px solid var(--dl-track-soul); }
+.dreadlight .mark-entry.mark-body { border: 1px solid rgba(85, 184, 122, 0.12); }
+.dreadlight .mark-entry.mark-mind { border: 1px solid rgba(107, 157, 245, 0.12); }
+.dreadlight .mark-entry.mark-soul { border: 1px solid rgba(168, 139, 245, 0.12); }
 
 .dreadlight .mark-header {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
 }
 
 .dreadlight .mark-dot {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
+  flex-shrink: 0;
 }
 
 .dreadlight .mark-dot.body { background: var(--dl-track-body); }
@@ -1732,6 +2733,42 @@
   font-weight: 700;
   color: var(--dl-text-primary);
   flex: 1;
+}
+
+.dreadlight .mark-name-input {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--dl-text-primary);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid transparent;
+  flex: 1;
+  padding: 0;
+  font-family: var(--dl-font-primary);
+}
+
+.dreadlight .mark-name-input:hover,
+.dreadlight .mark-name-input:focus {
+  border-bottom-color: rgba(201, 169, 110, 0.25);
+  outline: none;
+}
+
+.dreadlight .mark-desc-input {
+  font-size: 8px;
+  color: var(--dl-text-secondary);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid transparent;
+  width: 100%;
+  padding: 1px 0;
+  margin-top: 2px;
+  font-family: var(--dl-font-primary);
+}
+
+.dreadlight .mark-desc-input:hover,
+.dreadlight .mark-desc-input:focus {
+  border-bottom-color: rgba(201, 169, 110, 0.2);
+  outline: none;
 }
 
 .dreadlight .mark-type {
@@ -1907,6 +2944,27 @@
   box-shadow: 0 0 8px rgba(201, 169, 110, 0.12);
 }
 
+.dreadlight .armor-roll-btn {
+  width: 22px;
+  height: 22px;
+  border: 1px solid rgba(107, 157, 245, 0.25);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--dl-track-mind);
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dreadlight .armor-roll-btn:hover {
+  border-color: rgba(107, 157, 245, 0.45);
+  box-shadow: 0 0 8px rgba(107, 157, 245, 0.15);
+}
+
 /* ----------------------------------------------------------
    28. SUPPLY TRACK LABEL (Fix 16)
    ---------------------------------------------------------- */
@@ -1931,6 +2989,7 @@
   display: flex;
   gap: 2px;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .dreadlight .track-icon.supply {
@@ -1943,4 +3002,4 @@
    ---------------------------------------------------------- */
 
 .dreadlight .tab-content > .tab { display: none; }
-.dreadlight .tab-content > .tab.active { display: block; }
+.dreadlight .tab-content > .tab.active { display: flex; flex-direction: column; gap: 0; }

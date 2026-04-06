@@ -7,7 +7,13 @@
     <div class="attr-cell {{#if this.conditionActive}}has-condition{{/if}}" data-attr="{{this.key}}">
       <div class="attr-roll-area" data-action="rollAttribute" data-attr="{{this.key}}">
         <div class="attr-abbr">{{attrAbbr this.key}}</div>
-        <div class="attr-value">{{this.value}}</div>
+        {{#if ../editMode}}
+          <input class="attr-value-input" type="number"
+                 name="system.attributes.{{this.key}}.value"
+                 value="{{this.value}}" min="1" max="6" data-dtype="Number" />
+        {{else}}
+          <div class="attr-value">{{this.value}}</div>
+        {{/if}}
         <div class="attr-name">{{attrName this.key}}</div>
       </div>
       <div class="attr-condition" data-condition="{{this.condition}}" data-action="toggleCondition">

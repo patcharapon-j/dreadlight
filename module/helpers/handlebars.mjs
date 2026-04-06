@@ -21,6 +21,20 @@ export function registerHandlebarsHelpers() {
   });
 
   /**
+   * trackPips(value, max, color)
+   * Renders simple pips (no grouping) for track displays.
+   * Usage: {{{trackPips value max "body"}}}
+   */
+  Handlebars.registerHelper("trackPips", (value, max, color) => {
+    let html = "";
+    for (let i = 0; i < max; i++) {
+      const state = i < value ? "filled" : "empty";
+      html += `<div class="pip pip-${color} ${state}"></div>`;
+    }
+    return new Handlebars.SafeString(html);
+  });
+
+  /**
    * talentPips(level, colorClass)
    * 3 pips representing talent levels 1–3.
    * Usage: {{{talentPips level "talent"}}}
@@ -57,7 +71,8 @@ export function registerHandlebarsHelpers() {
     if (totalMarks >= 5) return game.i18n.localize("DREADLIGHT.SpiralFinalSession");
     if (totalMarks >= 4) return game.i18n.localize("DREADLIGHT.SpiralUnraveling");
     if (totalMarks >= 3) return game.i18n.localize("DREADLIGHT.SpiralFraying");
-    return game.i18n.localize("DREADLIGHT.SpiralScarred");
+    if (totalMarks >= 1) return game.i18n.localize("DREADLIGHT.SpiralScarred");
+    return game.i18n.localize("DREADLIGHT.SpiralUnmarked");
   });
 
   /**
@@ -173,6 +188,47 @@ export function registerHandlebarsHelpers() {
   Handlebars.registerHelper("upper", (str) => {
     if (!str) return "";
     return String(str).toUpperCase();
+  });
+
+  /**
+   * carryPips(used, max)
+   * Renders carry capacity pips — filled for used slots, empty for free.
+   * Handles fractional values: partial slot shown as a half-filled pip.
+   */
+  Handlebars.registerHelper("carryPips", (used, max) => {
+    const total = Math.max(0, Number(max) || 0);
+    const val = Math.max(0, Number(used) || 0);
+    const wholeFilled = Math.floor(val);
+    const hasFraction = val - wholeFilled >= 0.125; // anything ≥ ⅛ shows partial
+    let html = "";
+    for (let i = 0; i < total; i++) {
+      if (i > 0 && i % 5 === 0) html += `<div class="pip-gap"></div>`;
+      if (i < wholeFilled) {
+        html += `<div class="pip pip-gold filled"></div>`;
+      } else if (i === wholeFilled && hasFraction) {
+        html += `<div class="pip pip-gold partial"></div>`;
+      } else {
+        html += `<div class="pip pip-gold empty"></div>`;
+      }
+    }
+    return new Handlebars.SafeString(html);
+  });
+
+  /**
+   * weightLabel(value) — Display a numeric weight as a nice fraction string.
+   * 0.25 → "¼", 0.5 → "½", 1 → "1", 2.5 → "2½", etc.
+   */
+  Handlebars.registerHelper("weightLabel", (value) => {
+    const num = Number(value) || 0;
+    const whole = Math.floor(num);
+    const frac = num - whole;
+    let fracStr = "";
+    if (Math.abs(frac - 0.25) < 0.01) fracStr = "¼";
+    else if (Math.abs(frac - 0.5) < 0.01) fracStr = "½";
+    else if (Math.abs(frac - 0.75) < 0.01) fracStr = "¾";
+    if (whole === 0 && fracStr) return fracStr;
+    if (fracStr) return `${whole}${fracStr}`;
+    return String(whole);
   });
 
   console.log("Dreadlight | Handlebars helpers registered");

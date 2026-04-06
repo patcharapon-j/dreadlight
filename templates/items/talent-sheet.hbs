@@ -20,49 +20,61 @@
       </div>
     </div>
 
-    {{!-- Level pips --}}
-    <div style="margin-bottom:10px;">
-      <div class="level-pips" style="margin-bottom:4px;">
-        <div class="level-pip {{#if (gte system.level 1)}}filled{{else}}locked{{/if}}" data-action="set-level" data-level="1">1</div>
-        <div class="level-pip {{#if (gte system.level 2)}}filled{{else}}locked{{/if}}" data-action="set-level" data-level="2">2</div>
-        <div class="level-pip {{#if (gte system.level 3)}}filled{{else}}locked{{/if}}" data-action="set-level" data-level="3" style="{{#if (gte system.level 3)}}{{else}}opacity:0.5;{{/if}}">3</div>
-      </div>
-      <div style="font-size:8px; color:var(--dl-text-secondary); letter-spacing:0.08em;">
-        {{localize "DREADLIGHT.TalentLevel"}} {{system.level}} — +{{system.level}} {{localize "DREADLIGHT.TalentDice"}}
+    {{!-- Level --}}
+    <div class="field-group">
+      <div class="field-label">{{localize "DREADLIGHT.TalentLevel"}}</div>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <div class="level-pips">
+          <div class="level-pip {{#if (gte system.level 1)}}filled{{else}}locked{{/if}}" data-action="set-level" data-level="1">1</div>
+          <div class="level-pip {{#if (gte system.level 2)}}filled{{else}}locked{{/if}}" data-action="set-level" data-level="2">2</div>
+          <div class="level-pip {{#if (gte system.level 3)}}filled{{else}}locked{{/if}}" data-action="set-level" data-level="3">3</div>
+        </div>
+        <span class="talent-level-text">{{localize "DREADLIGHT.TalentLevel"}} {{system.level}}</span>
+        <span class="talent-dice-text">+{{system.level}} {{localize "DREADLIGHT.TalentDice"}}</span>
       </div>
       <input type="hidden" name="system.level" value="{{system.level}}" />
     </div>
 
-    {{!-- Primary attributes (comma-separated) --}}
+    {{!-- Primary attributes --}}
     <div class="field-group">
       <div class="field-label">{{localize "DREADLIGHT.TalentPrimaryAttributes"}}</div>
-      <input type="text" name="system.primaryAttributes" value="{{join system.primaryAttributes ", "}}" style="width:100%;" {{#unless editable}}disabled{{/unless}} />
+      {{#if editable}}
+        <input type="text" name="system.primaryAttributes" value="{{join system.primaryAttributes ", "}}" style="width:100%;" />
+      {{else}}
+        <div class="talent-attr-tags">
+          {{#each system.primaryAttributes}}
+            <span class="tag tag-gold">{{this}}</span>
+          {{/each}}
+        </div>
+      {{/if}}
     </div>
 
     {{!-- Description --}}
     <div class="field-group">
       <div class="field-label">{{localize "DREADLIGHT.Description"}}</div>
-      <textarea name="system.description" style="width:100%; height:64px; resize:vertical;" {{#unless editable}}disabled{{/unless}}>{{system.description}}</textarea>
+      <textarea name="system.description" class="field-textarea" {{#unless editable}}disabled{{/unless}}>{{system.description}}</textarea>
     </div>
 
     {{!-- L2 Perk box --}}
-    <div class="perk-box {{#if (gte system.level 2)}}active{{else}}locked{{/if}}" style="margin-bottom:8px;">
+    <div class="perk-box {{#if (gte system.level 2)}}active{{else}}locked{{/if}}">
       <div class="field-label" style="margin-bottom:4px;">
-        {{localize "DREADLIGHT.TalentPerk"}}
-        <span style="font-size:7px; color:var(--dl-text-muted); margin-left:4px;">({{localize "DREADLIGHT.TalentLevel"}} 2)</span>
+        L2 {{localize "DREADLIGHT.TalentPerk"}}{{#if system.perkName}} — {{system.perkName}}{{/if}}
       </div>
-      <input type="text" name="system.perkName" value="{{system.perkName}}" placeholder="{{localize "DREADLIGHT.TalentPerkName"}}" style="width:100%; margin-bottom:4px;" {{#unless editable}}disabled{{/unless}} />
-      <textarea name="system.perkDescription" style="width:100%; height:52px; resize:vertical;" {{#unless editable}}disabled{{/unless}}>{{system.perkDescription}}</textarea>
+      {{#if editable}}
+        <input type="text" name="system.perkName" value="{{system.perkName}}" placeholder="{{localize "DREADLIGHT.TalentPerkName"}}" style="width:100%; margin-bottom:4px;" />
+      {{/if}}
+      <textarea name="system.perkDescription" class="field-textarea" style="min-height:48px;" {{#unless editable}}disabled{{/unless}}>{{system.perkDescription}}</textarea>
     </div>
 
     {{!-- L3 Mastery box --}}
     <div class="mastery-box {{#if (gte system.level 3)}}active{{else}}locked{{/if}}">
       <div class="field-label" style="margin-bottom:4px;">
-        {{localize "DREADLIGHT.TalentMastery"}}
-        <span style="font-size:7px; color:var(--dl-text-muted); margin-left:4px;">({{localize "DREADLIGHT.TalentLevel"}} 3)</span>
+        L3 {{localize "DREADLIGHT.TalentMastery"}}{{#if system.masteryName}} — {{system.masteryName}}{{/if}}
       </div>
-      <input type="text" name="system.masteryName" value="{{system.masteryName}}" placeholder="{{localize "DREADLIGHT.TalentMasteryName"}}" style="width:100%; margin-bottom:4px;" {{#unless editable}}disabled{{/unless}} />
-      <textarea name="system.masteryDescription" style="width:100%; height:52px; resize:vertical;" {{#unless editable}}disabled{{/unless}}>{{system.masteryDescription}}</textarea>
+      {{#if editable}}
+        <input type="text" name="system.masteryName" value="{{system.masteryName}}" placeholder="{{localize "DREADLIGHT.TalentMasteryName"}}" style="width:100%; margin-bottom:4px;" />
+      {{/if}}
+      <textarea name="system.masteryDescription" class="field-textarea" style="min-height:48px;" {{#unless editable}}disabled{{/unless}}>{{system.masteryDescription}}</textarea>
     </div>
 
   </div>

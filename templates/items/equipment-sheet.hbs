@@ -15,43 +15,70 @@
     <div class="item-header">
       <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" width="36" height="36" />
       <div style="display:flex; flex-direction:column; gap:2px; flex:1; min-width:0;">
-        <div class="item-type-label" style="color:var(--dl-accent-gold);">{{localize "DREADLIGHT.TypeEquipment"}}</div>
+        <div class="item-type-label">
+          {{localize "DREADLIGHT.TypeEquipment"}}
+          {{#if system.category}} — {{upper system.category}}{{/if}}
+        </div>
         <input class="item-name-input" type="text" name="name" value="{{item.name}}" {{#unless editable}}disabled{{/unless}} />
       </div>
     </div>
 
-    {{!-- Gear bonus pips + label --}}
-    <div class="field-group" style="display:flex; flex-direction:row; align-items:center; gap:8px; margin-bottom:10px;">
-      <div style="display:flex; flex-direction:row; gap:2px;">
-        {{{gearPips system.gearBonus system.gearBonusMax "gold"}}}
+    {{!-- Gear bonus --}}
+    <div class="stat-grid stat-grid-2" style="margin-bottom:12px;">
+      <div class="stat-box stat-gold">
+        <div class="stat-label">{{localize "DREADLIGHT.GearBonus"}}</div>
+        <input class="stat-value" type="number" name="system.gearBonus" value="{{system.gearBonus}}" min="0" max="{{system.gearBonusMax}}" {{#unless editable}}disabled{{/unless}} />
       </div>
-      <div class="gear-label">
-        +{{system.gearBonus}} / {{system.gearBonusMax}} {{localize "DREADLIGHT.GearBonusMax"}}
-      </div>
-    </div>
-
-    {{!-- Weight + Category row --}}
-    <div style="display:flex; flex-direction:row; gap:8px; margin-bottom:10px;">
-      <div class="field-group" style="flex:1;">
-        <div class="field-label">{{localize "DREADLIGHT.Weight"}}</div>
-        <input type="number" name="system.weight" value="{{system.weight}}" min="0" style="width:100%;" {{#unless editable}}disabled{{/unless}} />
-      </div>
-      <div class="field-group" style="flex:1;">
-        <div class="field-label">{{localize "DREADLIGHT.EquipmentCategory"}}</div>
-        <input type="text" name="system.category" value="{{system.category}}" style="width:100%;" {{#unless editable}}disabled{{/unless}} />
+      <div class="stat-box stat-gold">
+        <div class="stat-label">{{localize "DREADLIGHT.GearBonusMax"}}</div>
+        <input class="stat-value" type="number" name="system.gearBonusMax" value="{{system.gearBonusMax}}" min="0" max="4" {{#unless editable}}disabled{{/unless}} />
       </div>
     </div>
 
-    {{!-- Applies To (comma-separated) --}}
+    {{!-- Weight --}}
+    <div class="field-group">
+      <div class="field-label">{{localize "DREADLIGHT.Weight"}}</div>
+      <div style="display:flex; gap:6px; align-items:center;">
+        {{#if editable}}
+          <select name="system.weight" style="width:80px;">
+            <option value="0" {{#if (eq system.weight 0)}}selected{{/if}}>0</option>
+            <option value="0.25" {{#if (eq system.weight 0.25)}}selected{{/if}}>¼</option>
+            <option value="0.5" {{#if (eq system.weight 0.5)}}selected{{/if}}>½</option>
+            <option value="1" {{#if (eq system.weight 1)}}selected{{/if}}>1</option>
+            <option value="2" {{#if (eq system.weight 2)}}selected{{/if}}>2</option>
+            <option value="3" {{#if (eq system.weight 3)}}selected{{/if}}>3</option>
+          </select>
+          <span class="talent-dice-text">slots</span>
+        {{else}}
+          <span class="tag tag-gold">{{weightLabel system.weight}} slots</span>
+        {{/if}}
+      </div>
+    </div>
+
+    {{!-- Category --}}
+    <div class="field-group">
+      <div class="field-label">{{localize "DREADLIGHT.EquipmentCategory"}}</div>
+      <input type="text" name="system.category" value="{{system.category}}" style="width:100%;" {{#unless editable}}disabled{{/unless}} />
+    </div>
+
+    {{!-- Applies To --}}
     <div class="field-group">
       <div class="field-label">{{localize "DREADLIGHT.EquipmentAppliesTo"}}</div>
-      <input type="text" name="system.applicableTalents" value="{{join system.applicableTalents ", "}}" style="width:100%;" {{#unless editable}}disabled{{/unless}} />
+      {{#if editable}}
+        <input type="text" name="system.applicableTalents" value="{{join system.applicableTalents ", "}}" style="width:100%;" />
+      {{else}}
+        <div style="display:flex; gap:4px; flex-wrap:wrap;">
+          {{#each system.applicableTalents}}
+            {{#if this}}<span class="tag tag-gold">{{this}}</span>{{/if}}
+          {{/each}}
+        </div>
+      {{/if}}
     </div>
 
     {{!-- Description --}}
     <div class="field-group">
       <div class="field-label">{{localize "DREADLIGHT.Description"}}</div>
-      <textarea name="system.description" style="width:100%; height:90px; resize:vertical;" {{#unless editable}}disabled{{/unless}}>{{system.description}}</textarea>
+      <textarea name="system.description" class="field-textarea" style="min-height:48px;" {{#unless editable}}disabled{{/unless}}>{{system.description}}</textarea>
     </div>
 
   </div>

@@ -6,15 +6,49 @@
       {{else}}
         {{{talentPips this.system.level "gold"}}}
       {{/if}}
-      <div class="talent-info" data-action="openItem">
+      <div class="talent-info" data-action="toggleExpand">
         <div class="talent-name">{{this.name}}</div>
         <div class="talent-sub {{#if (eq this.name 'Occult')}}occult{{/if}}">
           {{join this.system.primaryAttributes " / "}}
-          {{#if this.system.perkName}} — {{this.system.perkName}}{{/if}}
+          {{#if (gte this.system.level 2)}}
+            {{#if this.system.perkName}} — {{this.system.perkName}}{{/if}}
+          {{/if}}
+          {{#if (gte this.system.level 3)}}
+            {{#if this.system.masteryName}} · {{this.system.masteryName}}{{/if}}
+          {{/if}}
         </div>
       </div>
       <div class="talent-level {{#if (eq this.name 'Occult')}}purple{{else}}gold{{/if}}">L{{this.system.level}}</div>
       <button type="button" class="talent-roll-btn {{#if (eq this.name 'Occult')}}occult{{/if}}" data-action="rollTalent">⬡</button>
+    </div>
+    <div class="talent-expand" data-expand-id="{{this.id}}">
+      <div class="expand-inner">
+        {{#if this.system.description}}
+          <div class="expand-description">{{{this.system.description}}}</div>
+        {{/if}}
+        {{#if (gte this.system.level 2)}}
+          {{#if this.system.perkName}}
+            <div class="expand-ability">
+              <span class="expand-ability-label">{{localize "DREADLIGHT.Perk"}}</span>
+              <span class="expand-ability-name">{{this.system.perkName}}</span>
+              {{#if this.system.perkDescription}}
+                <div class="expand-ability-desc">{{{this.system.perkDescription}}}</div>
+              {{/if}}
+            </div>
+          {{/if}}
+        {{/if}}
+        {{#if (gte this.system.level 3)}}
+          {{#if this.system.masteryName}}
+            <div class="expand-ability">
+              <span class="expand-ability-label">{{localize "DREADLIGHT.Mastery"}}</span>
+              <span class="expand-ability-name">{{this.system.masteryName}}</span>
+              {{#if this.system.masteryDescription}}
+                <div class="expand-ability-desc">{{{this.system.masteryDescription}}}</div>
+              {{/if}}
+            </div>
+          {{/if}}
+        {{/if}}
+      </div>
     </div>
   {{/each}}
   {{#unless talents.length}}

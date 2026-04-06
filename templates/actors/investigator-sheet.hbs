@@ -1,9 +1,15 @@
-<div class="dreadlight sheet investigator">
+<div class="dreadlight sheet investigator {{#if editMode}}is-editing{{/if}}">
   <div class="corner tl"></div>
   <div class="corner tr"></div>
   <div class="corner bl"></div>
   <div class="corner br"></div>
   <div class="accent-top"></div>
+
+  {{#if editable}}
+    <button type="button" class="edit-toggle-btn" data-action="toggleEditMode" title="{{#if editMode}}Play Mode{{else}}Edit Mode{{/if}}">
+      {{#if editMode}}<i class="fa-solid fa-lock-open"></i>{{else}}<i class="fa-solid fa-pen"></i>{{/if}}
+    </button>
+  {{/if}}
 
   {{> "systems/dreadlight/templates/actors/parts/header.hbs"}}
   {{> "systems/dreadlight/templates/actors/parts/tracks.hbs"}}
@@ -23,18 +29,18 @@
 
     <div class="col-right">
       <nav class="tab-bar">
-        <a class="tab" data-tab="talents">{{localize "DREADLIGHT.TabTalents"}}</a>
-        <a class="tab" data-tab="equipment">{{localize "DREADLIGHT.TabEquipment"}}</a>
-        <a class="tab" data-tab="details">{{localize "DREADLIGHT.TabDetails"}}</a>
+        <a class="tab {{#if (eq tab "talents")}}active{{/if}}" data-tab="talents">{{localize "DREADLIGHT.TabTalents"}}</a>
+        <a class="tab {{#if (eq tab "equipment")}}active{{/if}}" data-tab="equipment">{{localize "DREADLIGHT.TabEquipment"}}</a>
+        <a class="tab {{#if (eq tab "details")}}active{{/if}}" data-tab="details">{{localize "DREADLIGHT.TabDetails"}}</a>
       </nav>
       <div class="tab-content">
-        <div class="tab" data-tab="talents">
+        <div class="tab {{#if (eq tab "talents")}}active{{/if}}" data-tab="talents">
           {{> "systems/dreadlight/templates/actors/parts/tab-talents.hbs"}}
         </div>
-        <div class="tab" data-tab="equipment">
+        <div class="tab {{#if (eq tab "equipment")}}active{{/if}}" data-tab="equipment">
           {{> "systems/dreadlight/templates/actors/parts/tab-equipment.hbs"}}
         </div>
-        <div class="tab" data-tab="details">
+        <div class="tab {{#if (eq tab "details")}}active{{/if}}" data-tab="details">
           {{> "systems/dreadlight/templates/actors/parts/tab-details.hbs"}}
         </div>
       </div>

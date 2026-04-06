@@ -6,8 +6,11 @@ export class InvestigatorData extends foundry.abstract.TypeDataModel {
       concept: new fields.StringField({ required: true, initial: "" }),
 
       backgrounds: new fields.ArrayField(
-        new fields.StringField({ required: true, initial: "" }),
-        { initial: ["", ""] }
+        new fields.SchemaField({
+          name: new fields.StringField({ required: true, initial: "" }),
+          desc: new fields.StringField({ required: true, initial: "" }),
+        }),
+        { initial: [{ name: "", desc: "" }, { name: "", desc: "" }] }
       ),
 
       attributes: new fields.SchemaField({
@@ -54,6 +57,7 @@ export class InvestigatorData extends foundry.abstract.TypeDataModel {
       details: new fields.SchemaField({
         anchor: new fields.StringField({ required: true, initial: "" }),
         drive: new fields.StringField({ required: true, initial: "" }),
+        driveDesc: new fields.StringField({ required: true, initial: "" }),
         fear: new fields.StringField({ required: true, initial: "" }),
         connections: new fields.ArrayField(
           new fields.SchemaField({
@@ -70,6 +74,19 @@ export class InvestigatorData extends foundry.abstract.TypeDataModel {
 
       supply: new fields.SchemaField({
         value: new fields.NumberField({ required: true, initial: 7, min: 0, integer: true }),
+      }),
+
+      portrait: new fields.SchemaField({
+        sheet: new fields.SchemaField({
+          offsetX: new fields.NumberField({ required: true, initial: 0 }),
+          offsetY: new fields.NumberField({ required: true, initial: 0 }),
+          zoom: new fields.NumberField({ required: true, initial: 1, min: 0.5, max: 5 }),
+        }),
+        chat: new fields.SchemaField({
+          offsetX: new fields.NumberField({ required: true, initial: 0 }),
+          offsetY: new fields.NumberField({ required: true, initial: 0 }),
+          zoom: new fields.NumberField({ required: true, initial: 1, min: 0.5, max: 15 }),
+        }),
       }),
 
       conditions: new fields.SchemaField({

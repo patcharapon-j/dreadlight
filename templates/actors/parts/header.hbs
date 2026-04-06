@@ -1,12 +1,17 @@
 <div class="sheet-header">
-  <div class="header-portrait" style="background-image: url('{{actor.img}}')"></div>
-  <div class="header-fade"></div>
+  <div class="header-bg"></div>
+  <figure class="portrait-figure">
+    <img src="{{actor.img}}" alt="{{actor.name}}" style="transform: translate({{system.portrait.sheet.offsetX}}px, {{system.portrait.sheet.offsetY}}px) scale({{system.portrait.sheet.zoom}});" />
+    {{#if editMode}}
+      <div class="portrait-edit-overlay" data-action="editPortrait"><i class="fa-solid fa-camera"></i></div>
+    {{/if}}
+  </figure>
   <div class="header-identity">
     <input class="name-input" type="text" name="name" value="{{actor.name}}" placeholder="Character Name" />
     <input class="concept-input" type="text" name="system.concept" value="{{system.concept}}" placeholder="One-sentence concept..." />
     <div class="tags">
       {{#each system.backgrounds}}
-        {{#if this}}<span class="tag tag-bg">{{this}}</span>{{/if}}
+        {{#if this.name}}<span class="tag tag-bg">{{this.name}}</span>{{/if}}
       {{/each}}
       {{#if system.details.drive}}
         <span class="tag tag-drive">{{system.details.drive}}</span>

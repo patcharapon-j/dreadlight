@@ -5,7 +5,9 @@ export class ArmorData extends foundry.abstract.TypeDataModel {
     return {
       armorRating: new fields.NumberField({ required: true, initial: 2, min: 0, max: 8, integer: true }),
 
-      weight: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+      armorCurrent: new fields.NumberField({ required: true, initial: 2, min: 0, max: 8, integer: true }),
+
+      weight: new fields.NumberField({ required: true, initial: 1, min: 0 }),
 
       properties: new fields.ArrayField(
         new fields.StringField({ required: true, initial: "" })

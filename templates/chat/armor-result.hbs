@@ -1,0 +1,37 @@
+<div class="dreadlight-chat chat-armor {{#if sixes}}chat-clean{{else}}chat-failure{{/if}}">
+  <div class="chat-accent"></div>
+
+  <div class="chat-header">
+    <div class="chat-portrait" style="background-image: url('{{actorImg}}'); transform: translate({{portraitChat.offsetX}}px, {{portraitChat.offsetY}}px) scale({{portraitChat.zoom}});"></div>
+    <div class="chat-portrait-fade"></div>
+    <div class="chat-name">{{actorName}}</div>
+  </div>
+
+  <div class="chat-info">
+    <div class="chat-action">
+      <span class="chat-talent">{{armorName}}</span> — {{localize "DREADLIGHT.ArmorRoll"}}
+    </div>
+  </div>
+
+  <div class="chat-dice">
+    <div class="dice-group group-base">
+      <span class="dice-label label-armor">{{localize "DREADLIGHT.TypeArmor"}}</span>
+      {{#each results}}
+        <div class="die die-base {{#if (eq this 6)}}six{{else}}normal{{/if}}">{{this}}</div>
+      {{/each}}
+    </div>
+  </div>
+
+  <div class="chat-result">
+    <div class="result-row">
+      {{#if sixes}}
+        <span class="result-icon blue">🛡</span>
+        <span class="result-label">{{localize "DREADLIGHT.ArmorBlocked"}}</span>
+        <span class="result-count">{{sixes}} {{localize "DREADLIGHT.ArmorReduction"}}</span>
+      {{else}}
+        <span class="result-icon muted">✕</span>
+        <span class="result-label">{{localize "DREADLIGHT.ArmorNoBlock"}}</span>
+      {{/if}}
+    </div>
+  </div>
+</div>

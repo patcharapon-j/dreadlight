@@ -23,7 +23,7 @@ export class WeaponData extends foundry.abstract.TypeDataModel {
         choices: ["engaged", "short", "medium", "long", "extreme"],
       }),
 
-      weight: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+      weight: new fields.NumberField({ required: true, initial: 1, min: 0 }),
 
       properties: new fields.ArrayField(
         new fields.StringField({ required: true, initial: "" })

@@ -1,46 +1,60 @@
 /**
- * Register Dreadlight dice colorsets and preferences with Dice So Nice.
+ * Register Dreadlight dice colorsets and presets with Dice So Nice.
  * Called from diceSoNiceReady hook in dreadlight.mjs.
  */
 export function registerDSN(dice3d) {
-  // Base dice — light/white
+  const ICON_PATH = "systems/dreadlight/assets/dice";
+  const FONT = "Monaspace Krypton";
+
+  // Base dice — black
   dice3d.addColorset({
     name: "dreadlight-base",
     description: "Dreadlight Base",
     category: "Dreadlight",
-    foreground: "#222222",
-    background: "#e8e8ee",
-    outline: "#ccccdd",
-    edge: "#ddddea",
+    foreground: "#ffffff",
+    background: "#1a1a1a",
+    outline: "#000000",
+    edge: "#333333",
     material: "plastic",
+    font: FONT,
   });
 
-  // Dread dice — elegant deep crimson (oxblood, not bright red)
+  // Dread dice — deep red
   dice3d.addColorset({
     name: "dreadlight-dread",
     description: "Dreadlight Dread",
     category: "Dreadlight",
-    foreground: "#ffcccc",
+    foreground: "#ffffff",
     background: "#8b2020",
     outline: "#4a1010",
     edge: "#c93030",
     material: "plastic",
+    font: FONT,
   });
 
-  // Gear dice — gold metallic
+  // Gear dice — gold
   dice3d.addColorset({
     name: "dreadlight-gear",
     description: "Dreadlight Gear",
     category: "Dreadlight",
-    foreground: "#2a2015",
+    foreground: "#ffffff",
     background: "#c9a96e",
     outline: "#8a7a55",
     edge: "#e8c97a",
     material: "metal",
+    font: FONT,
   });
 
-  // Register system preference
+  // Register system BEFORE presets — DSN needs the system to exist first
   dice3d.addSystem({ id: "dreadlight", name: "Dreadlight" }, "preferred");
 
-  console.log("Dreadlight | Dice So Nice colorsets registered");
+  // Custom d6 preset — face 1 = thorny vine (bane), face 6 = fireflake (success)
+  // Icons use white fill + dark outline so they're visible on all die colors
+  dice3d.addDicePreset({
+    type: "d6",
+    labels: [`${ICON_PATH}/bane.png`, "", "", "", "", `${ICON_PATH}/success.png`],
+    system: "dreadlight",
+  });
+
+  console.log("Dreadlight | Dice So Nice colorsets & presets registered");
 }

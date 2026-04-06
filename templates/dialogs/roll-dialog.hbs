@@ -1,8 +1,13 @@
 <form class="dreadlight-roll-form" autocomplete="off">
+
+  {{!-- Attribute --}}
   <div class="dialog-field">
-    <div class="dialog-label">{{localize "DREADLIGHT.RollAttribute"}}</div>
+    <div class="field-label">{{localize "DREADLIGHT.RollAttribute"}}</div>
     <div class="source-row static">
-      <span class="source-name">{{attrName attribute}}</span>
+      <div class="source-info">
+        <div class="source-name">{{attrName attribute}}</div>
+        <div class="source-meta">Base attribute</div>
+      </div>
       <div class="source-pips">
         {{#times attrValue}}<div class="pip pip-base"></div>{{/times}}
       </div>
@@ -10,40 +15,151 @@
     </div>
   </div>
 
+  {{!-- Talent --}}
   <div class="dialog-field">
-    <div class="dialog-label">{{localize "DREADLIGHT.RollTalent"}}</div>
-    <select name="talent" class="dialog-select">
-      <option value="">{{localize "DREADLIGHT.RollNone"}}</option>
-      {{#each talents}}
-        <option value="{{this.id}}" {{#if (eq this.id ../selectedTalentId)}}selected{{/if}}>
-          {{this.name}} (L{{this.level}})
-        </option>
-      {{/each}}
-    </select>
-  </div>
-
-  <div class="dialog-field">
-    <div class="dialog-label">{{localize "DREADLIGHT.RollEquipment"}}</div>
-    <select name="gear" class="dialog-select">
-      <option value="">{{localize "DREADLIGHT.RollNone"}}</option>
-      {{#each gearItems}}
-        <option value="{{this.id}}" {{#if (eq this.id ../selectedGearId)}}selected{{/if}}>
-          {{this.name}} (+{{this.bonus}})
-        </option>
-      {{/each}}
-    </select>
-  </div>
-
-  <div class="dialog-field">
-    <div class="dialog-label">{{localize "DREADLIGHT.RollDifficulty"}}</div>
-    <div class="difficulty-row">
-      <label class="diff-btn"><input type="radio" name="difficulty" value="3" />+3</label>
-      <label class="diff-btn"><input type="radio" name="difficulty" value="2" />+2</label>
-      <label class="diff-btn"><input type="radio" name="difficulty" value="1" />+1</label>
-      <label class="diff-btn"><input type="radio" name="difficulty" value="0" checked />±0</label>
-      <label class="diff-btn"><input type="radio" name="difficulty" value="-1" />−1</label>
-      <label class="diff-btn"><input type="radio" name="difficulty" value="-2" />−2</label>
-      <label class="diff-btn"><input type="radio" name="difficulty" value="-3" />−3</label>
+    <div class="field-label">{{localize "DREADLIGHT.RollTalent"}}</div>
+    <div class="source-row talent-row">
+      <div class="source-info">
+        <div class="source-name talent-name">{{#if selectedTalentName}}{{selectedTalentName}}{{else}}{{localize "DREADLIGHT.RollNone"}}{{/if}}</div>
+        <div class="source-meta talent-meta">{{#if selectedTalentLevel}}Level {{selectedTalentLevel}}{{/if}}</div>
+      </div>
+      <div class="source-pips talent-pips">
+        {{#times selectedTalentLevel}}<div class="pip pip-base"></div>{{/times}}
+      </div>
+      <span class="source-count talent-count">{{#if selectedTalentLevel}}{{selectedTalentLevel}}{{/if}}</span>
+      <select name="talent" class="source-select">
+        <option value="">{{localize "DREADLIGHT.RollNone"}}</option>
+        {{#each talents}}
+          <option value="{{this.id}}" data-level="{{this.level}}" data-name="{{this.name}}" {{#if (eq this.id ../selectedTalentId)}}selected{{/if}}>
+            {{this.name}} (L{{this.level}})
+          </option>
+        {{/each}}
+      </select>
+      <span class="source-chevron">&#x25BE;</span>
     </div>
   </div>
+
+  {{!-- Equipment --}}
+  <div class="dialog-field">
+    <div class="field-label">{{localize "DREADLIGHT.RollEquipment"}}</div>
+    <div class="source-row gear-row">
+      <div class="source-info">
+        <div class="source-name gear-name {{#unless selectedGearName}}muted{{/unless}}">{{#if selectedGearName}}{{selectedGearName}}{{else}}{{localize "DREADLIGHT.RollNone"}}{{/if}}</div>
+        <div class="source-meta gear-meta">{{#if selectedGearBonus}}Gear bonus{{/if}}</div>
+      </div>
+      <div class="source-pips gear-pips">
+        {{#times selectedGearBonus}}<div class="pip pip-gear"></div>{{/times}}
+      </div>
+      <span class="source-count gear-count {{#if selectedGearBonus}}gear-color{{/if}}">{{#if selectedGearBonus}}{{selectedGearBonus}}{{/if}}</span>
+      <select name="gear" class="source-select">
+        <option value="">{{localize "DREADLIGHT.RollNone"}}</option>
+        {{#each gearItems}}
+          <option value="{{this.id}}" data-bonus="{{this.bonus}}" data-name="{{this.name}}" {{#if (eq this.id ../selectedGearId)}}selected{{/if}}>
+            {{this.name}} (+{{this.bonus}})
+          </option>
+        {{/each}}
+      </select>
+      <span class="source-chevron">&#x25BE;</span>
+    </div>
+  </div>
+
+  {{!-- Difficulty --}}
+  <div class="dialog-field">
+    <div class="field-label">{{localize "DREADLIGHT.RollDifficulty"}}</div>
+    <div class="difficulty-row">
+      <label class="diff-btn"><input type="radio" name="difficulty" value="3"><span class="diff-abbr">EFF</span><span class="diff-mod">+3</span></label>
+      <label class="diff-btn"><input type="radio" name="difficulty" value="2"><span class="diff-abbr">RTN</span><span class="diff-mod">+2</span></label>
+      <label class="diff-btn"><input type="radio" name="difficulty" value="1"><span class="diff-abbr">EAS</span><span class="diff-mod">+1</span></label>
+      <label class="diff-btn"><input type="radio" name="difficulty" value="0" checked><span class="diff-abbr">NRM</span><span class="diff-mod">&plusmn;0</span></label>
+      <label class="diff-btn"><input type="radio" name="difficulty" value="-1"><span class="diff-abbr">DEM</span><span class="diff-mod">&minus;1</span></label>
+      <label class="diff-btn"><input type="radio" name="difficulty" value="-2"><span class="diff-abbr">HRD</span><span class="diff-mod">&minus;2</span></label>
+      <label class="diff-btn"><input type="radio" name="difficulty" value="-3"><span class="diff-abbr">INS</span><span class="diff-mod">&minus;3</span></label>
+    </div>
+  </div>
+
+  {{!-- Marks (invoke for penalty) --}}
+  {{#if hasMarks}}
+  <div class="dialog-field">
+    <div class="field-label">{{localize "DREADLIGHT.RollMarks"}}</div>
+    <div class="marks-section">
+      {{#each marks}}
+        <label class="mark-row">
+          <input type="checkbox" name="mark-{{this.track}}-{{this.index}}" class="mark-checkbox" value="1">
+          <span class="mark-pip mark-pip-{{this.track}}"></span>
+          <span class="mark-info">
+            <span class="mark-name">{{this.name}}</span>
+            {{#if this.effect}}<span class="mark-effect">{{this.effect}}</span>{{/if}}
+          </span>
+          <span class="mark-penalty">&minus;1</span>
+        </label>
+      {{/each}}
+    </div>
+  </div>
+  {{/if}}
+
+  {{!-- Pool Preview --}}
+  <div class="pool-preview">
+    <div class="pool-label">{{localize "DREADLIGHT.RollPool"}}</div>
+
+    <div class="pool-bar">
+      {{#times pool.baseDice}}<div class="pool-block pool-block-base"></div>{{/times}}
+      {{#times pool.dreadDice}}<div class="pool-block pool-block-dread"></div>{{/times}}
+      {{#if pool.gearDice}}<div class="pool-gap"></div>{{/if}}
+      {{#times pool.gearDice}}<div class="pool-block pool-block-gear"></div>{{/times}}
+    </div>
+
+    {{!-- Bracket labels --}}
+    <div class="pool-labels">
+      {{#if pool.baseDice}}
+      <div class="pool-range" data-type="base" style="width: calc({{pool.baseDice}} * 26px);">
+        <div class="pool-range-line range-line-base"></div>
+        <span class="pool-range-text range-text-base">BASE <strong>{{pool.baseDice}}</strong></span>
+      </div>
+      {{/if}}
+      {{#if pool.dreadDice}}
+      <div class="pool-range" data-type="dread" style="width: calc({{pool.dreadDice}} * 26px);">
+        <div class="pool-range-line range-line-dread"></div>
+        <span class="pool-range-text range-text-dread">DREAD <strong>{{pool.dreadDice}}</strong></span>
+      </div>
+      {{/if}}
+      {{#if pool.gearDice}}
+      <div class="pool-range-gap"></div>
+      <div class="pool-range" data-type="gear" style="width: calc({{pool.gearDice}} * 26px);">
+        <div class="pool-range-line range-line-gear"></div>
+        <span class="pool-range-text range-text-gear">GEAR <strong>{{pool.gearDice}}</strong></span>
+      </div>
+      {{/if}}
+    </div>
+
+    {{!-- Summary --}}
+    <div class="pool-summary">
+      {{#if pool.baseDice}}
+      <div class="pool-stat">
+        <div class="stat-pip stat-pip-base"></div>
+        <span class="stat-count">{{pool.baseDice}}</span>
+        <span class="stat-label">base</span>
+      </div>
+      {{/if}}
+      {{#if pool.dreadDice}}
+      <div class="pool-stat">
+        <div class="stat-pip stat-pip-dread"></div>
+        <span class="stat-count stat-count-dread">{{pool.dreadDice}}</span>
+        <span class="stat-label">dread</span>
+      </div>
+      {{/if}}
+      {{#if pool.gearDice}}
+      <div class="pool-stat">
+        <div class="stat-pip stat-pip-gear"></div>
+        <span class="stat-count stat-count-gear">{{pool.gearDice}}</span>
+        <span class="stat-label">gear</span>
+      </div>
+      {{/if}}
+      <div class="pool-total-final">
+        <strong class="pool-total-number">{{pool.totalPool}}</strong> dice
+      </div>
+    </div>
+  </div>
+
+  {{!-- Roll Button --}}
+  <button type="button" class="roll-btn" data-action="roll">{{localize "DREADLIGHT.RollButton"}}</button>
 </form>
