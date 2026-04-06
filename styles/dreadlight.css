@@ -94,7 +94,7 @@
    3. CORNER BRACKETS (.corner)
    ---------------------------------------------------------- */
 
-.corner {
+.dreadlight .corner {
   position: absolute;
   width: 14px;
   height: 14px;
@@ -103,28 +103,28 @@
   opacity: 0.15;
 }
 
-.corner.tl {
+.dreadlight .corner.tl {
   top: 0;
   left: 0;
   border-top: 1px solid var(--dl-accent-gold);
   border-left: 1px solid var(--dl-accent-gold);
 }
 
-.corner.tr {
+.dreadlight .corner.tr {
   top: 0;
   right: 0;
   border-top: 1px solid var(--dl-accent-gold);
   border-right: 1px solid var(--dl-accent-gold);
 }
 
-.corner.bl {
+.dreadlight .corner.bl {
   bottom: 0;
   left: 0;
   border-bottom: 1px solid var(--dl-accent-gold);
   border-left: 1px solid var(--dl-accent-gold);
 }
 
-.corner.br {
+.dreadlight .corner.br {
   bottom: 0;
   right: 0;
   border-bottom: 1px solid var(--dl-accent-gold);
@@ -135,12 +135,12 @@
    4. ACCENT LINES
    ---------------------------------------------------------- */
 
-.accent-top {
+.dreadlight .accent-top {
   height: 2px;
   background: linear-gradient(90deg, transparent 0%, var(--dl-accent-gold) 30%, transparent 100%);
 }
 
-.accent-bottom {
+.dreadlight .accent-bottom {
   height: 1px;
   background: linear-gradient(90deg, transparent 0%, rgba(201, 169, 110, 0.15) 30%, transparent 100%);
 }
@@ -149,13 +149,13 @@
    5. HEADER (.sheet-header)
    ---------------------------------------------------------- */
 
-.sheet-header {
+.dreadlight .sheet-header {
   height: 140px;
   position: relative;
   overflow: hidden;
 }
 
-.header-portrait {
+.dreadlight .header-portrait {
   position: absolute;
   top: 0;
   left: 0;
@@ -165,7 +165,7 @@
   background-position: center;
 }
 
-.header-fade {
+.dreadlight .header-fade {
   position: absolute;
   top: 0;
   left: 0;
@@ -177,7 +177,7 @@
     linear-gradient(to top, var(--dl-bg-primary) 0%, transparent 50%);
 }
 
-.header-identity {
+.dreadlight .header-identity {
   position: absolute;
   bottom: 10px;
   left: 14px;
@@ -187,7 +187,7 @@
   gap: 3px;
 }
 
-.header-identity .name-input {
+.dreadlight .header-identity .name-input {
   background: transparent;
   border: none;
   color: var(--dl-text-primary);
@@ -198,7 +198,7 @@
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
 }
 
-.header-identity .concept-input {
+.dreadlight .header-identity .concept-input {
   background: transparent;
   border: none;
   color: var(--dl-text-secondary);
@@ -207,13 +207,13 @@
   padding: 0;
 }
 
-.header-identity .tags {
+.dreadlight .header-identity .tags {
   display: flex;
   gap: 4px;
   flex-wrap: wrap;
 }
 
-.header-identity .tag {
+.dreadlight .header-identity .tag {
   font-size: 7px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -228,7 +228,7 @@
    6. TRACKS BAR (.tracks-bar)
    ---------------------------------------------------------- */
 
-.tracks-bar {
+.dreadlight .tracks-bar {
   display: flex;
   flex-direction: row;
   gap: 6px;
@@ -238,7 +238,7 @@
   align-items: center;
 }
 
-.track-btn {
+.dreadlight .track-btn {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -251,36 +251,36 @@
   transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.track-btn.body { border-color: rgba(85, 184, 122, 0.15); }
-.track-btn.mind { border-color: rgba(107, 157, 245, 0.15); }
-.track-btn.soul { border-color: rgba(168, 139, 245, 0.15); }
-.track-btn.dread { border-color: rgba(224, 85, 85, 0.15); }
+.dreadlight .track-btn.body { border-color: rgba(85, 184, 122, 0.15); }
+.dreadlight .track-btn.mind { border-color: rgba(107, 157, 245, 0.15); }
+.dreadlight .track-btn.soul { border-color: rgba(168, 139, 245, 0.15); }
+.dreadlight .track-btn.dread { border-color: rgba(224, 85, 85, 0.15); }
 
-.track-btn.body:hover {
+.dreadlight .track-btn.body:hover {
   border-color: rgba(85, 184, 122, 0.4);
   box-shadow: 0 0 10px rgba(85, 184, 122, 0.12);
   transform: translateY(-1px);
 }
 
-.track-btn.mind:hover {
+.dreadlight .track-btn.mind:hover {
   border-color: rgba(107, 157, 245, 0.4);
   box-shadow: 0 0 10px rgba(107, 157, 245, 0.12);
   transform: translateY(-1px);
 }
 
-.track-btn.soul:hover {
+.dreadlight .track-btn.soul:hover {
   border-color: rgba(168, 139, 245, 0.4);
   box-shadow: 0 0 10px rgba(168, 139, 245, 0.12);
   transform: translateY(-1px);
 }
 
-.track-btn.dread:hover {
+.dreadlight .track-btn.dread:hover {
   border-color: rgba(224, 85, 85, 0.4);
   box-shadow: 0 0 10px rgba(224, 85, 85, 0.12);
   transform: translateY(-1px);
 }
 
-.track-icon {
+.dreadlight .track-icon {
   width: 28px;
   height: 28px;
   border-radius: 4px;
@@ -290,35 +290,35 @@
   font-size: 13px;
 }
 
-.track-icon.body { background: rgba(85, 184, 122, 0.12); color: var(--dl-track-body); }
-.track-icon.mind { background: rgba(107, 157, 245, 0.12); color: var(--dl-track-mind); }
-.track-icon.soul { background: rgba(168, 139, 245, 0.12); color: var(--dl-track-soul); }
-.track-icon.dread { background: rgba(224, 85, 85, 0.12); color: var(--dl-track-dread); }
+.dreadlight .track-icon.body { background: rgba(85, 184, 122, 0.12); color: var(--dl-track-body); }
+.dreadlight .track-icon.mind { background: rgba(107, 157, 245, 0.12); color: var(--dl-track-mind); }
+.dreadlight .track-icon.soul { background: rgba(168, 139, 245, 0.12); color: var(--dl-track-soul); }
+.dreadlight .track-icon.dread { background: rgba(224, 85, 85, 0.12); color: var(--dl-track-dread); }
 
-.track-info {
+.dreadlight .track-info {
   display: flex;
   flex-direction: column;
   gap: 1px;
 }
 
-.track-label {
+.dreadlight .track-label {
   font-size: 7px;
   text-transform: uppercase;
   letter-spacing: 0.15em;
   font-weight: 700;
 }
 
-.track-label.body { color: var(--dl-track-body); }
-.track-label.mind { color: var(--dl-track-mind); }
-.track-label.soul { color: var(--dl-track-soul); }
-.track-label.dread { color: var(--dl-track-dread); }
+.dreadlight .track-label.body { color: var(--dl-track-body); }
+.dreadlight .track-label.mind { color: var(--dl-track-mind); }
+.dreadlight .track-label.soul { color: var(--dl-track-soul); }
+.dreadlight .track-label.dread { color: var(--dl-track-dread); }
 
-.track-num {
+.dreadlight .track-num {
   font-size: 9px;
   color: var(--dl-text-secondary);
 }
 
-.track-separator {
+.dreadlight .track-separator {
   width: 1px;
   height: 24px;
   background: var(--dl-border-subtle);
@@ -329,33 +329,33 @@
    7. SEGMENTED PIPS
    ---------------------------------------------------------- */
 
-.segmented-pips {
+.dreadlight .segmented-pips {
   display: flex;
   flex-direction: row;
   gap: 2px;
   align-items: center;
 }
 
-.pip {
+.dreadlight .pip {
   width: 7px;
   height: 11px;
   border-radius: 1.5px;
   transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.pip.filled.pip-body { background: var(--dl-track-body); }
-.pip.filled.pip-mind { background: var(--dl-track-mind); }
-.pip.filled.pip-soul { background: var(--dl-track-soul); }
-.pip.filled.pip-dread { background: var(--dl-track-dread); }
-.pip.filled.pip-gold { background: var(--dl-accent-gold); }
+.dreadlight .pip.filled.pip-body { background: var(--dl-track-body); }
+.dreadlight .pip.filled.pip-mind { background: var(--dl-track-mind); }
+.dreadlight .pip.filled.pip-soul { background: var(--dl-track-soul); }
+.dreadlight .pip.filled.pip-dread { background: var(--dl-track-dread); }
+.dreadlight .pip.filled.pip-gold { background: var(--dl-accent-gold); }
 
-.pip.empty.pip-body { border: 1px solid rgba(85, 184, 122, 0.2); background: transparent; }
-.pip.empty.pip-mind { border: 1px solid rgba(107, 157, 245, 0.2); background: transparent; }
-.pip.empty.pip-soul { border: 1px solid rgba(168, 139, 245, 0.2); background: transparent; }
-.pip.empty.pip-dread { border: 1px solid rgba(224, 85, 85, 0.2); background: transparent; }
-.pip.empty.pip-gold { border: 1px solid rgba(201, 169, 110, 0.2); background: transparent; }
+.dreadlight .pip.empty.pip-body { border: 1px solid rgba(85, 184, 122, 0.2); background: transparent; }
+.dreadlight .pip.empty.pip-mind { border: 1px solid rgba(107, 157, 245, 0.2); background: transparent; }
+.dreadlight .pip.empty.pip-soul { border: 1px solid rgba(168, 139, 245, 0.2); background: transparent; }
+.dreadlight .pip.empty.pip-dread { border: 1px solid rgba(224, 85, 85, 0.2); background: transparent; }
+.dreadlight .pip.empty.pip-gold { border: 1px solid rgba(201, 169, 110, 0.2); background: transparent; }
 
-.pip-gap {
+.dreadlight .pip-gap {
   width: 4px;
 }
 
@@ -363,13 +363,13 @@
    8. ATTRIBUTES GRID (.attr-grid)
    ---------------------------------------------------------- */
 
-.attr-grid {
+.dreadlight .attr-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 6px;
 }
 
-.attr-cell {
+.dreadlight .attr-cell {
   background: var(--dl-bg-card);
   border: 1px solid rgba(201, 169, 110, 0.1);
   border-radius: 4px;
@@ -382,7 +382,7 @@
   gap: 2px;
 }
 
-.attr-roll-area {
+.dreadlight .attr-roll-area {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -391,18 +391,18 @@
   width: 100%;
 }
 
-.attr-cell:hover {
+.dreadlight .attr-cell:hover {
   border-color: rgba(201, 169, 110, 0.3);
   box-shadow: 0 0 10px rgba(201, 169, 110, 0.08);
   transform: translateY(-1px);
 }
 
-.attr-cell.has-condition {
+.dreadlight .attr-cell.has-condition {
   border-color: rgba(224, 85, 85, 0.2);
   background: linear-gradient(180deg, rgba(224, 85, 85, 0.03) 0%, var(--dl-bg-card) 100%);
 }
 
-.attr-abbr {
+.dreadlight .attr-abbr {
   font-size: 8px;
   color: var(--dl-accent-gold);
   text-transform: uppercase;
@@ -410,35 +410,35 @@
   font-weight: 700;
 }
 
-.attr-value {
+.dreadlight .attr-value {
   font-size: 22px;
   color: var(--dl-text-primary);
   font-weight: 700;
   line-height: 1;
 }
 
-.attr-name {
+.dreadlight .attr-name {
   font-size: 7px;
   color: var(--dl-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 
-.attr-condition {
+.dreadlight .attr-condition {
   border-top: 1px solid var(--dl-border-subtle);
   margin-top: 4px;
   padding-top: 4px;
   width: 100%;
 }
 
-.condition-inactive {
+.dreadlight .condition-inactive {
   font-size: 7px;
   color: #2a2a35;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
-.condition-active {
+.dreadlight .condition-active {
   font-size: 7px;
   color: var(--dl-accent-red);
   font-weight: 700;
@@ -447,7 +447,7 @@
   letter-spacing: 0.05em;
 }
 
-.condition-penalty {
+.dreadlight .condition-penalty {
   font-size: 7px;
   color: rgba(224, 85, 85, 0.7);
 }
@@ -456,14 +456,14 @@
    9. SHEET BODY LAYOUT
    ---------------------------------------------------------- */
 
-.sheet-body {
+.dreadlight .sheet-body {
   display: flex;
   flex-direction: row;
   gap: 14px;
   padding: 14px 18px;
 }
 
-.col-left {
+.dreadlight .col-left {
   width: 240px;
   min-width: 240px;
   display: flex;
@@ -471,7 +471,7 @@
   gap: 10px;
 }
 
-.col-right {
+.dreadlight .col-right {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -482,7 +482,7 @@
    10. SECTION HEADERS
    ---------------------------------------------------------- */
 
-.section-header {
+.dreadlight .section-header {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -495,7 +495,7 @@
   margin-bottom: 6px;
 }
 
-.section-line {
+.dreadlight .section-line {
   flex: 1;
   height: 1px;
   background: rgba(201, 169, 110, 0.08);
@@ -505,14 +505,14 @@
    11. TAB BAR
    ---------------------------------------------------------- */
 
-.tab-bar {
+.dreadlight .tab-bar {
   display: flex;
   flex-direction: row;
   border-bottom: 1px solid rgba(201, 169, 110, 0.08);
   margin-bottom: 10px;
 }
 
-.tab {
+.dreadlight .tab {
   padding: 6px 14px;
   font-size: 10px;
   font-family: var(--dl-font-primary);
@@ -527,16 +527,16 @@
   border-right: none;
 }
 
-.tab.active {
+.dreadlight .tab.active {
   color: var(--dl-accent-gold);
   border-bottom-color: var(--dl-accent-gold);
 }
 
-.tab:not(.active) {
+.dreadlight .tab:not(.active) {
   color: var(--dl-text-muted);
 }
 
-.tab:not(.active):hover {
+.dreadlight .tab:not(.active):hover {
   color: var(--dl-text-secondary);
 }
 
@@ -544,7 +544,7 @@
    12. TALENT ROWS
    ---------------------------------------------------------- */
 
-.talent-row {
+.dreadlight .talent-row {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -557,71 +557,71 @@
   transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.talent-row:hover {
+.dreadlight .talent-row:hover {
   border-color: rgba(255, 255, 255, 0.14);
 }
 
-.talent-pips {
+.dreadlight .talent-pips {
   display: flex;
   flex-direction: row;
   gap: 2px;
 }
 
-.talent-pip {
+.dreadlight .talent-pip {
   width: 6px;
   height: 6px;
   border-radius: 1.5px;
 }
 
-.talent-pip.filled {
+.dreadlight .talent-pip.filled {
   background: var(--dl-accent-gold);
 }
 
-.talent-pip.filled.occult {
+.dreadlight .talent-pip.filled.occult {
   background: var(--dl-track-soul);
 }
 
-.talent-pip.empty {
+.dreadlight .talent-pip.empty {
   border: 1px solid rgba(201, 169, 110, 0.2);
   background: transparent;
 }
 
-.talent-pip.empty.occult {
+.dreadlight .talent-pip.empty.occult {
   border-color: rgba(168, 139, 245, 0.2);
 }
 
-.talent-info {
+.dreadlight .talent-info {
   flex: 1;
   min-width: 0;
 }
 
-.talent-name {
+.dreadlight .talent-name {
   font-size: 10px;
   color: var(--dl-text-primary);
   font-weight: 700;
 }
 
-.talent-sub {
+.dreadlight .talent-sub {
   font-size: 8px;
   color: var(--dl-text-muted);
 }
 
-.talent-sub.occult {
+.dreadlight .talent-sub.occult {
   color: var(--dl-track-soul);
 }
 
-.talent-level {
+.dreadlight .talent-level {
   font-size: 9px;
   font-weight: 700;
   color: var(--dl-accent-gold);
 }
 
-.talent-level.purple {
+.dreadlight .talent-level.purple {
   color: var(--dl-track-soul);
 }
 
-.talent-roll-btn,
-.roll-sm {
+.dreadlight .talent-roll-btn,
+.dreadlight .roll-sm {
   width: 22px;
   height: 22px;
   border: 1px solid var(--dl-border-gold);
@@ -636,8 +636,8 @@
   transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.talent-roll-btn:hover,
-.roll-sm:hover {
+.dreadlight .talent-roll-btn:hover,
+.dreadlight .roll-sm:hover {
   border-color: rgba(201, 169, 110, 0.35);
   box-shadow: 0 0 8px rgba(201, 169, 110, 0.12);
 }
@@ -646,7 +646,7 @@
    13. EQUIPMENT TAB
    ---------------------------------------------------------- */
 
-.carry-bar {
+.dreadlight .carry-bar {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -657,7 +657,7 @@
   padding: 6px 10px;
 }
 
-.carry-label {
+.dreadlight .carry-label {
   font-size: 8px;
   color: var(--dl-accent-gold);
   text-transform: uppercase;
@@ -665,12 +665,12 @@
   font-weight: 700;
 }
 
-.carry-num {
+.dreadlight .carry-num {
   font-weight: 700;
   color: var(--dl-text-primary);
 }
 
-.supply-row {
+.dreadlight .supply-row {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -681,7 +681,7 @@
   padding: 6px 10px;
 }
 
-.item-row {
+.dreadlight .item-row {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -693,11 +693,11 @@
   transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.item-row:hover {
+.dreadlight .item-row:hover {
   border-color: rgba(255, 255, 255, 0.14);
 }
 
-.item-icon {
+.dreadlight .item-icon {
   width: 24px;
   height: 24px;
   border-radius: 3px;
@@ -707,46 +707,46 @@
   font-size: 12px;
 }
 
-.item-icon.body { background: rgba(85, 184, 122, 0.08); color: var(--dl-track-body); }
-.item-icon.mind { background: rgba(107, 157, 245, 0.08); color: var(--dl-track-mind); }
-.item-icon.soul { background: rgba(168, 139, 245, 0.08); color: var(--dl-track-soul); }
-.item-icon.gold { background: rgba(201, 169, 110, 0.08); color: var(--dl-accent-gold); }
-.item-icon.red { background: rgba(224, 85, 85, 0.08); color: var(--dl-accent-red); }
+.dreadlight .item-icon.body { background: rgba(85, 184, 122, 0.08); color: var(--dl-track-body); }
+.dreadlight .item-icon.mind { background: rgba(107, 157, 245, 0.08); color: var(--dl-track-mind); }
+.dreadlight .item-icon.soul { background: rgba(168, 139, 245, 0.08); color: var(--dl-track-soul); }
+.dreadlight .item-icon.gold { background: rgba(201, 169, 110, 0.08); color: var(--dl-accent-gold); }
+.dreadlight .item-icon.red { background: rgba(224, 85, 85, 0.08); color: var(--dl-accent-red); }
 
-.item-name {
+.dreadlight .item-name {
   font-size: 10px;
   color: var(--dl-text-primary);
   font-weight: 700;
 }
 
-.item-meta {
+.dreadlight .item-meta {
   font-size: 8px;
   color: var(--dl-text-muted);
 }
 
-.item-stat {
+.dreadlight .item-stat {
   font-size: 9px;
   font-weight: 700;
   padding: 2px 6px;
   border-radius: 3px;
 }
 
-.item-stat.stat-red {
+.dreadlight .item-stat.stat-red {
   background: rgba(224, 85, 85, 0.1);
   color: var(--dl-accent-red);
 }
 
-.item-stat.stat-gold {
+.dreadlight .item-stat.stat-gold {
   background: rgba(201, 169, 110, 0.1);
   color: var(--dl-accent-gold);
 }
 
-.item-stat.stat-blue {
+.dreadlight .item-stat.stat-blue {
   background: rgba(107, 157, 245, 0.1);
   color: var(--dl-track-mind);
 }
 
-.drop-zone {
+.dreadlight .drop-zone {
   border: 1px dashed rgba(201, 169, 110, 0.12);
   border-radius: 4px;
   padding: 16px;
@@ -759,13 +759,13 @@
    14. DETAILS TAB
    ---------------------------------------------------------- */
 
-.bg-cards {
+.dreadlight .bg-cards {
   display: flex;
   flex-direction: row;
   gap: 6px;
 }
 
-.bg-card {
+.dreadlight .bg-card {
   flex: 1;
   background: var(--dl-bg-card);
   border: 1px solid var(--dl-border-gold);
@@ -773,11 +773,11 @@
   padding: 8px;
 }
 
-.field-group {
+.dreadlight .field-group {
   margin-bottom: 10px;
 }
 
-.field-label {
+.dreadlight .field-label {
   font-size: 8px;
   color: var(--dl-accent-gold);
   text-transform: uppercase;
@@ -786,24 +786,24 @@
   margin-bottom: 3px;
 }
 
-.hint-green {
+.dreadlight .hint-green {
   font-size: 7px;
   color: var(--dl-track-body);
 }
 
-.hint-red {
+.dreadlight .hint-red {
   font-size: 7px;
   color: var(--dl-accent-red);
 }
 
-.fear-field {
+.dreadlight .fear-field {
   background: rgba(224, 85, 85, 0.02);
   border: 1px solid rgba(224, 85, 85, 0.08);
   border-radius: 3px;
   padding: 4px 6px;
 }
 
-.connection-row {
+.dreadlight .connection-row {
   display: flex;
   flex-direction: row;
   gap: 6px;
@@ -811,11 +811,11 @@
   margin-bottom: 4px;
 }
 
-.connection-row input {
+.dreadlight .connection-row input {
   flex: 1;
 }
 
-.connection-row .delete-btn {
+.dreadlight .connection-row .delete-btn {
   width: 20px;
   height: 20px;
   border: 1px solid var(--dl-border-subtle);
@@ -830,7 +830,7 @@
   transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.connection-row .delete-btn:hover {
+.dreadlight .connection-row .delete-btn:hover {
   color: var(--dl-accent-red);
   border-color: rgba(224, 85, 85, 0.25);
 }
@@ -839,11 +839,11 @@
    15. ITEM SHEETS
    ---------------------------------------------------------- */
 
-.item-body {
+.dreadlight .item-body {
   padding: 14px 16px;
 }
 
-.item-header {
+.dreadlight .item-header {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -853,7 +853,7 @@
   margin-bottom: 10px;
 }
 
-.item-img {
+.dreadlight .item-img {
   width: 36px;
   height: 36px;
   border-radius: 4px;
@@ -862,7 +862,7 @@
   object-fit: cover;
 }
 
-.item-type-label {
+.dreadlight .item-type-label {
   font-size: 7px;
   color: var(--dl-accent-gold);
   text-transform: uppercase;
@@ -870,10 +870,10 @@
   font-weight: 700;
 }
 
-.item-type-label.red { color: var(--dl-accent-red); }
-.item-type-label.blue { color: var(--dl-track-mind); }
+.dreadlight .item-type-label.red { color: var(--dl-accent-red); }
+.dreadlight .item-type-label.blue { color: var(--dl-track-mind); }
 
-.item-name-input {
+.dreadlight .item-name-input {
   font-size: 14px;
   color: var(--dl-text-primary);
   font-weight: 700;
@@ -884,20 +884,20 @@
   width: 100%;
 }
 
-.stat-grid {
+.dreadlight .stat-grid {
   display: grid;
   gap: 6px;
 }
 
-.stat-grid-3 {
+.dreadlight .stat-grid-3 {
   grid-template-columns: repeat(3, 1fr);
 }
 
-.stat-grid-2 {
+.dreadlight .stat-grid-2 {
   grid-template-columns: repeat(2, 1fr);
 }
 
-.stat-box {
+.dreadlight .stat-box {
   background: var(--dl-bg-card);
   border: 1px solid var(--dl-border-subtle);
   border-radius: 4px;
@@ -905,11 +905,11 @@
   padding: 8px 4px;
 }
 
-.stat-box.stat-red { border-color: rgba(224, 85, 85, 0.15); }
-.stat-box.stat-gold { border-color: var(--dl-border-gold); }
-.stat-box.stat-blue { border-color: rgba(107, 157, 245, 0.15); }
+.dreadlight .stat-box.stat-red { border-color: rgba(224, 85, 85, 0.15); }
+.dreadlight .stat-box.stat-gold { border-color: var(--dl-border-gold); }
+.dreadlight .stat-box.stat-blue { border-color: rgba(107, 157, 245, 0.15); }
 
-.stat-label {
+.dreadlight .stat-label {
   font-size: 7px;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -917,11 +917,11 @@
   margin-bottom: 2px;
 }
 
-.stat-box.stat-red .stat-label { color: var(--dl-accent-red); }
-.stat-box.stat-gold .stat-label { color: var(--dl-accent-gold); }
-.stat-box.stat-blue .stat-label { color: var(--dl-track-mind); }
+.dreadlight .stat-box.stat-red .stat-label { color: var(--dl-accent-red); }
+.dreadlight .stat-box.stat-gold .stat-label { color: var(--dl-accent-gold); }
+.dreadlight .stat-box.stat-blue .stat-label { color: var(--dl-track-mind); }
 
-.stat-value {
+.dreadlight .stat-value {
   font-size: 20px;
   color: var(--dl-text-primary);
   font-weight: 700;
@@ -932,13 +932,13 @@
   font-family: var(--dl-font-primary);
 }
 
-.level-pips {
+.dreadlight .level-pips {
   display: flex;
   flex-direction: row;
   gap: 3px;
 }
 
-.level-pip {
+.dreadlight .level-pip {
   width: 28px;
   height: 28px;
   border-radius: 3px;
@@ -951,41 +951,41 @@
   cursor: pointer;
 }
 
-.level-pip.filled {
+.dreadlight .level-pip.filled {
   background: rgba(201, 169, 110, 0.15);
   border: 1px solid rgba(201, 169, 110, 0.35);
   color: var(--dl-accent-gold);
 }
 
-.level-pip.locked {
+.dreadlight .level-pip.locked {
   background: var(--dl-bg-card);
   border: 1px solid var(--dl-border-subtle);
   color: var(--dl-text-muted);
 }
 
-.perk-box {
+.dreadlight .perk-box {
   padding: 8px;
   background: rgba(201, 169, 110, 0.04);
   border: 1px solid rgba(201, 169, 110, 0.1);
   border-radius: 4px;
 }
 
-.perk-box.locked {
+.dreadlight .perk-box.locked {
   opacity: 0.4;
 }
 
-.mastery-box {
+.dreadlight .mastery-box {
   padding: 8px;
   background: rgba(201, 169, 110, 0.04);
   border: 1px solid rgba(201, 169, 110, 0.1);
   border-radius: 4px;
 }
 
-.mastery-box.locked {
+.dreadlight .mastery-box.locked {
   opacity: 0.4;
 }
 
-.gear-label {
+.dreadlight .gear-label {
   font-size: 8px;
   color: var(--dl-text-secondary);
 }
@@ -1002,11 +1002,11 @@
   font-family: var(--dl-font-primary);
 }
 
-.dialog-field {
+.dreadlight-roll-form .dialog-field {
   margin-bottom: 10px;
 }
 
-.dialog-label {
+.dreadlight-roll-form .dialog-label {
   font-size: 8px;
   color: var(--dl-accent-gold);
   text-transform: uppercase;
@@ -1015,7 +1015,7 @@
   margin-bottom: 4px;
 }
 
-.source-row {
+.dreadlight-roll-form .source-row {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -1028,41 +1028,41 @@
   transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.source-row:hover {
+.dreadlight-roll-form .source-row:hover {
   border-color: rgba(255, 255, 255, 0.14);
 }
 
-.source-row.static {
+.dreadlight-roll-form .source-row.static {
   cursor: default;
 }
 
-.source-row.static:hover {
+.dreadlight-roll-form .source-row.static:hover {
   border-color: var(--dl-border-subtle);
 }
 
-.source-name {
+.dreadlight-roll-form .source-name {
   font-size: 10px;
   color: var(--dl-text-primary);
   font-weight: 700;
 }
 
-.source-pips {
+.dreadlight-roll-form .source-pips {
   display: flex;
   flex-direction: row;
   gap: 2px;
 }
 
-.pip-base {
+.dreadlight-roll-form .pip-base {
   background: rgba(255, 255, 255, 0.45);
 }
 
-.source-count {
+.dreadlight-roll-form .source-count {
   color: var(--dl-text-primary);
   font-weight: 700;
   font-size: 10px;
 }
 
-.dialog-select {
+.dreadlight-roll-form .dialog-select {
   width: 100%;
   background: var(--dl-bg-card);
   border: 1px solid var(--dl-border-subtle);
@@ -1073,13 +1073,13 @@
   border-radius: 3px;
 }
 
-.difficulty-row {
+.dreadlight-roll-form .difficulty-row {
   display: flex;
   flex-direction: row;
   gap: 2px;
 }
 
-.diff-btn {
+.dreadlight-roll-form .diff-btn {
   flex: 1;
   background: var(--dl-bg-card);
   border: 1px solid var(--dl-border-subtle);
@@ -1095,19 +1095,19 @@
   transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.diff-btn input[type="radio"] {
+.dreadlight-roll-form .diff-btn input[type="radio"] {
   display: none;
 }
 
-.diff-btn:has(:checked),
-.diff-btn.active {
+.dreadlight-roll-form .diff-btn:has(:checked),
+.dreadlight-roll-form .diff-btn.active {
   background: rgba(201, 169, 110, 0.1);
   border-color: rgba(201, 169, 110, 0.25);
   color: var(--dl-accent-gold);
   font-weight: 700;
 }
 
-.pool-bar {
+.dreadlight-roll-form .pool-bar {
   display: flex;
   flex-direction: row;
   gap: 3px;
@@ -1115,7 +1115,7 @@
   flex-wrap: wrap;
 }
 
-.pool-bar .pool-die {
+.dreadlight-roll-form .pool-bar .pool-die {
   width: 16px;
   height: 16px;
   border-radius: 2px;
@@ -1125,14 +1125,14 @@
   font-size: 8px;
 }
 
-.pool-bracket {
+.dreadlight-roll-form .pool-bracket {
   font-size: 7px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--dl-text-muted);
 }
 
-.pool-summary {
+.dreadlight-roll-form .pool-summary {
   font-size: 9px;
   color: var(--dl-text-secondary);
 }
@@ -1150,7 +1150,7 @@
   color: var(--dl-text-primary);
 }
 
-.chat-accent {
+.dreadlight-chat .chat-accent {
   height: 2px;
 }
 
@@ -1159,7 +1159,7 @@
   border-color: rgba(201, 169, 110, 0.2);
 }
 
-.chat-clean .chat-accent {
+.dreadlight-chat.chat-clean .chat-accent {
   background: linear-gradient(90deg, transparent 0%, var(--dl-accent-gold) 30%, transparent 100%);
 }
 
@@ -1167,7 +1167,7 @@
   border-color: rgba(168, 139, 245, 0.2);
 }
 
-.chat-tainted .chat-accent {
+.dreadlight-chat.chat-tainted .chat-accent {
   background: linear-gradient(90deg, transparent 0%, var(--dl-track-soul) 30%, transparent 100%);
 }
 
@@ -1175,7 +1175,7 @@
   border-color: rgba(224, 85, 85, 0.25);
 }
 
-.chat-dire .chat-accent {
+.dreadlight-chat.chat-dire .chat-accent {
   background: linear-gradient(90deg, transparent 0%, var(--dl-accent-red) 20%, var(--dl-track-soul) 80%, transparent 100%);
 }
 
@@ -1187,7 +1187,7 @@
   border-color: rgba(255, 255, 255, 0.06);
 }
 
-.chat-failure .chat-accent {
+.dreadlight-chat.chat-failure .chat-accent {
   background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.1) 30%, transparent 100%);
 }
 
@@ -1195,18 +1195,18 @@
   border-color: rgba(201, 169, 110, 0.15);
 }
 
-.chat-pushed .chat-accent {
+.dreadlight-chat.chat-pushed .chat-accent {
   background: linear-gradient(90deg, transparent 0%, rgba(201, 169, 110, 0.5) 30%, transparent 100%);
 }
 
 /* Chat header */
-.chat-header {
+.dreadlight-chat .chat-header {
   position: relative;
   height: 56px;
   overflow: hidden;
 }
 
-.chat-portrait {
+.dreadlight-chat .chat-portrait {
   position: absolute;
   top: 0;
   left: 0;
@@ -1216,7 +1216,7 @@
   background-position: center;
 }
 
-.chat-portrait-fade {
+.dreadlight-chat .chat-portrait-fade {
   position: absolute;
   top: 0;
   left: 0;
@@ -1228,35 +1228,35 @@
     linear-gradient(to top, var(--dl-bg-primary) 0%, transparent 60%);
 }
 
-.chat-identity {
+.dreadlight-chat .chat-identity {
   position: absolute;
   bottom: 6px;
   left: 10px;
   z-index: 5;
 }
 
-.chat-name {
+.dreadlight-chat .chat-name {
   font-size: 12px;
   color: var(--dl-text-primary);
   font-weight: 700;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
 }
 
-.chat-action {
+.dreadlight-chat .chat-action {
   font-size: 9px;
   color: var(--dl-text-muted);
 }
 
-.chat-talent {
+.dreadlight-chat .chat-talent {
   color: var(--dl-accent-gold);
 }
 
-.chat-action.chat-pushed {
+.dreadlight-chat .chat-action.chat-pushed {
   color: var(--dl-accent-gold);
 }
 
 /* Chat dice */
-.chat-dice {
+.dreadlight-chat .chat-dice {
   display: flex;
   flex-direction: row;
   padding: 8px 10px;
@@ -1264,7 +1264,7 @@
   flex-wrap: wrap;
 }
 
-.dice-group {
+.dreadlight-chat .dice-group {
   display: flex;
   flex-direction: row;
   gap: 3px;
@@ -1272,19 +1272,19 @@
   border-radius: 4px;
 }
 
-.dice-group.group-base {
+.dreadlight-chat .dice-group.group-base {
   background: rgba(255, 255, 255, 0.03);
 }
 
-.dice-group.group-dread {
+.dreadlight-chat .dice-group.group-dread {
   background: rgba(224, 85, 85, 0.05);
 }
 
-.dice-group.group-gear {
+.dreadlight-chat .dice-group.group-gear {
   background: rgba(201, 169, 110, 0.04);
 }
 
-.dice-label {
+.dreadlight-chat .dice-label {
   font-size: 7px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -1292,15 +1292,15 @@
   margin-right: 2px;
 }
 
-.dice-label.label-base { color: var(--dl-text-muted); }
-.dice-label.label-dread { color: rgba(224, 85, 85, 0.6); }
-.dice-label.label-gear { color: rgba(201, 169, 110, 0.6); }
+.dreadlight-chat .dice-label.label-base { color: var(--dl-text-muted); }
+.dreadlight-chat .dice-label.label-dread { color: rgba(224, 85, 85, 0.6); }
+.dreadlight-chat .dice-label.label-gear { color: rgba(201, 169, 110, 0.6); }
 
 /* ----------------------------------------------------------
    18. DIE FACES
    ---------------------------------------------------------- */
 
-.die {
+.dreadlight-chat .die {
   width: 30px;
   height: 30px;
   border-radius: 4px;
@@ -1314,26 +1314,26 @@
 }
 
 /* Normal (2-5) */
-.die-base.normal {
+.dreadlight-chat .die-base.normal {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: #66667a;
 }
 
-.die-dread.normal {
+.dreadlight-chat .die-dread.normal {
   background: rgba(224, 85, 85, 0.08);
   border: 1px solid rgba(224, 85, 85, 0.15);
   color: #6b3333;
 }
 
-.die-gear.normal {
+.dreadlight-chat .die-gear.normal {
   background: rgba(201, 169, 110, 0.04);
   border: 1px solid rgba(201, 169, 110, 0.1);
   color: #6b6045;
 }
 
 /* 6s (SUCCESS) */
-.die-base.six {
+.dreadlight-chat .die-base.six {
   background: rgba(255, 255, 255, 0.18);
   border: 2px solid rgba(255, 255, 255, 0.6);
   color: #ffffff;
@@ -1341,7 +1341,7 @@
   text-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
 }
 
-.die-dread.six {
+.dreadlight-chat .die-dread.six {
   background: rgba(224, 85, 85, 0.25);
   border: 2px solid rgba(224, 85, 85, 0.7);
   color: #ff6666;
@@ -1349,7 +1349,7 @@
   text-shadow: 0 0 6px rgba(224, 85, 85, 0.5);
 }
 
-.die-gear.six {
+.dreadlight-chat .die-gear.six {
   background: rgba(201, 169, 110, 0.18);
   border: 2px solid rgba(201, 169, 110, 0.65);
   color: var(--dl-accent-gold);
@@ -1358,13 +1358,13 @@
 }
 
 /* 1s (CONSEQUENCE) */
-.die-base.one {
+.dreadlight-chat .die-base.one {
   background: rgba(107, 157, 245, 0.12);
   border: 2px solid rgba(107, 157, 245, 0.5);
   color: var(--dl-track-mind);
 }
 
-.die-base.one::after {
+.dreadlight-chat .die-base.one::after {
   content: '\25C8';
   position: absolute;
   top: -5px;
@@ -1382,13 +1382,13 @@
   font-weight: 400;
 }
 
-.die-dread.one {
+.dreadlight-chat .die-dread.one {
   background: rgba(168, 139, 245, 0.12);
   border: 2px solid rgba(168, 139, 245, 0.5);
   color: var(--dl-track-soul);
 }
 
-.die-dread.one::after {
+.dreadlight-chat .die-dread.one::after {
   content: '\25C9';
   position: absolute;
   top: -5px;
@@ -1406,13 +1406,13 @@
   font-weight: 400;
 }
 
-.die-gear.one {
+.dreadlight-chat .die-gear.one {
   background: rgba(224, 85, 85, 0.1);
   border: 2px solid rgba(224, 85, 85, 0.45);
   color: var(--dl-accent-red);
 }
 
-.die-gear.one::after {
+.dreadlight-chat .die-gear.one::after {
   content: '\2699';
   position: absolute;
   top: -5px;
@@ -1431,7 +1431,7 @@
 }
 
 /* Locked (after push) */
-.die.locked {
+.dreadlight-chat .die.locked {
   outline: 2px solid rgba(201, 169, 110, 0.5);
   outline-offset: 1px;
 }
@@ -1440,47 +1440,47 @@
    19. RESULT AREA
    ---------------------------------------------------------- */
 
-.chat-result {
+.dreadlight-chat .chat-result {
   padding: 8px 10px;
   border-top: 1px solid var(--dl-border-subtle);
 }
 
-.result-row {
+.dreadlight-chat .result-row {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 8px;
 }
 
-.result-icon {
+.dreadlight-chat .result-icon {
   font-size: 16px;
 }
 
-.result-icon.gold { color: var(--dl-accent-gold); }
-.result-icon.purple { color: var(--dl-track-soul); }
-.result-icon.red { color: var(--dl-accent-red); }
-.result-icon.muted { color: var(--dl-text-muted); }
+.dreadlight-chat .result-icon.gold { color: var(--dl-accent-gold); }
+.dreadlight-chat .result-icon.purple { color: var(--dl-track-soul); }
+.dreadlight-chat .result-icon.red { color: var(--dl-accent-red); }
+.dreadlight-chat .result-icon.muted { color: var(--dl-text-muted); }
 
-.result-label {
+.dreadlight-chat .result-label {
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
-.chat-clean .result-label { color: var(--dl-accent-gold); }
-.chat-tainted .result-label { color: var(--dl-track-soul); }
-.chat-dire .result-label { color: var(--dl-accent-red); }
-.chat-failure .result-label { color: var(--dl-text-muted); }
-.chat-pushed .result-label { color: var(--dl-accent-gold); }
+.dreadlight-chat.chat-clean .result-label { color: var(--dl-accent-gold); }
+.dreadlight-chat.chat-tainted .result-label { color: var(--dl-track-soul); }
+.dreadlight-chat.chat-dire .result-label { color: var(--dl-accent-red); }
+.dreadlight-chat.chat-failure .result-label { color: var(--dl-text-muted); }
+.dreadlight-chat.chat-pushed .result-label { color: var(--dl-accent-gold); }
 
-.result-count {
+.dreadlight-chat .result-count {
   font-size: 11px;
   margin-left: auto;
   color: var(--dl-text-secondary);
 }
 
-.consequence {
+.dreadlight-chat .consequence {
   display: flex;
   flex-direction: row;
   gap: 6px;
@@ -1491,31 +1491,31 @@
   margin-top: 4px;
 }
 
-.consequence-mind {
+.dreadlight-chat .consequence-mind {
   background: rgba(107, 157, 245, 0.06);
   border: 1px solid rgba(107, 157, 245, 0.12);
   color: var(--dl-track-mind);
 }
 
-.consequence-soul {
+.dreadlight-chat .consequence-soul {
   background: rgba(168, 139, 245, 0.06);
   border: 1px solid rgba(168, 139, 245, 0.12);
   color: var(--dl-track-soul);
 }
 
-.consequence-gear {
+.dreadlight-chat .consequence-gear {
   background: rgba(201, 169, 110, 0.06);
   border: 1px solid rgba(201, 169, 110, 0.12);
   color: var(--dl-accent-gold);
 }
 
-.consequence-dread {
+.dreadlight-chat .consequence-dread {
   background: rgba(224, 85, 85, 0.06);
   border: 1px solid rgba(224, 85, 85, 0.12);
   color: var(--dl-accent-red);
 }
 
-.dire-flavor {
+.dreadlight-chat .dire-flavor {
   font-style: italic;
   color: var(--dl-text-muted);
   font-family: var(--dl-font-italic);
@@ -1530,12 +1530,12 @@
    20. PUSH BUTTON
    ---------------------------------------------------------- */
 
-.push-bar {
+.dreadlight-chat .push-bar {
   padding: 8px 10px;
   border-top: 1px solid var(--dl-border-subtle);
 }
 
-.push-btn {
+.dreadlight-chat .push-btn {
   width: 100%;
   background: rgba(201, 169, 110, 0.06);
   border: 1px solid rgba(201, 169, 110, 0.15);
@@ -1552,13 +1552,13 @@
   transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.push-btn:hover {
+.dreadlight-chat .push-btn:hover {
   background: rgba(201, 169, 110, 0.12);
   border-color: rgba(201, 169, 110, 0.3);
   box-shadow: 0 0 12px rgba(201, 169, 110, 0.1);
 }
 
-.push-hint {
+.dreadlight-chat .push-hint {
   font-size: 8px;
   color: var(--dl-text-muted);
   font-weight: 400;
@@ -1623,7 +1623,7 @@
 }
 
 /* Empty message placeholder */
-.empty-message {
+.dreadlight .empty-message {
   text-align: center;
   color: var(--dl-text-muted);
   padding: 20px 10px;
