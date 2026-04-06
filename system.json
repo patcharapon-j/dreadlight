@@ -1,0 +1,46 @@
+{
+  "id": "dreadlight",
+  "title": "Dreadlight",
+  "description": "A horror investigation RPG built on a modified Year Zero Engine. Corruption lives in your dice.",
+  "version": "0.1.0",
+  "compatibility": {
+    "minimum": "13",
+    "verified": "13"
+  },
+  "authors": [
+    {
+      "name": "Dreadlight Dev"
+    }
+  ],
+  "esmodules": ["dreadlight.mjs"],
+  "styles": ["styles/dreadlight.css"],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "documentTypes": {
+    "Actor": {
+      "investigator": {}
+    },
+    "Item": {
+      "talent": {},
+      "weapon": {},
+      "armor": {},
+      "equipment": {}
+    }
+  },
+  "grid": {
+    "type": 0,
+    "distance": 1,
+    "units": "zone"
+  },
+  "primaryTokenAttribute": "tracks.body",
+  "secondaryTokenAttribute": "tracks.mind",
+  "socket": false,
+  "url": "",
+  "manifest": "",
+  "download": ""
+}
