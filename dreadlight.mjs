@@ -11,10 +11,6 @@ import { registerDSN } from "./module/dice/dsn-integration.mjs";
 import { registerChatListeners } from "./module/dice/chat-message.mjs";
 import { registerHandlebarsHelpers } from "./module/helpers/handlebars.mjs";
 
-// v13 namespaced references
-const { DocumentSheetConfig } = foundry.applications;
-const { Actor, Item } = foundry.documents;
-
 Hooks.once("init", () => {
   console.log("Dreadlight | Initializing system");
 
@@ -50,20 +46,24 @@ Hooks.once("init", () => {
     armor: ArmorData, equipment: EquipmentData,
   });
 
-  // Register Sheet Classes (v13 API)
-  DocumentSheetConfig.registerSheet(Actor, "dreadlight", InvestigatorSheet, {
+  // Register Sheet Classes
+  // Use the v13 namespaced collections (accessed inside init when they're available)
+  const actors = foundry.documents.collections.Actors;
+  const items = foundry.documents.collections.Items;
+
+  actors.registerSheet("dreadlight", InvestigatorSheet, {
     types: ["investigator"],
     makeDefault: true,
     label: "DREADLIGHT.SheetInvestigator",
   });
 
-  DocumentSheetConfig.registerSheet(Item, "dreadlight", TalentSheet, {
+  items.registerSheet("dreadlight", TalentSheet, {
     types: ["talent"],
     makeDefault: true,
     label: "DREADLIGHT.SheetTalent",
   });
 
-  DocumentSheetConfig.registerSheet(Item, "dreadlight", DreadlightItemSheet, {
+  items.registerSheet("dreadlight", DreadlightItemSheet, {
     types: ["weapon", "armor", "equipment"],
     makeDefault: true,
     label: "DREADLIGHT.SheetItem",
