@@ -1,1 +1,20 @@
-{{!-- attributes partial --}}
+<div class="section-header">
+  <span>{{localize "DREADLIGHT.RollAttribute"}}</span>
+  <div class="section-line"></div>
+</div>
+<div class="attr-grid">
+  {{#each attributeList}}
+    <div class="attr-cell {{#if this.conditionActive}}has-condition{{/if}}" data-attr="{{this.key}}">
+      <div class="attr-abbr">{{attrAbbr this.key}}</div>
+      <div class="attr-value">{{this.value}}</div>
+      <div class="attr-name">{{attrName this.key}}</div>
+      <div class="attr-condition" data-condition="{{this.condition}}">
+        {{#if this.conditionActive}}
+          <span class="condition-active">{{conditionName this.key}} <span class="condition-penalty">−2</span></span>
+        {{else}}
+          <span class="condition-inactive">{{conditionName this.key}}</span>
+        {{/if}}
+      </div>
+    </div>
+  {{/each}}
+</div>

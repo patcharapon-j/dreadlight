@@ -1,1 +1,23 @@
-{{!-- tab-talents partial --}}
+<div class="talent-list">
+  {{#each talents}}
+    <div class="talent-row {{#if (eq this.name 'Occult')}}occult{{/if}}" data-item-id="{{this.id}}">
+      {{#if (eq this.name "Occult")}}
+        {{{talentPips this.system.level "occult"}}}
+      {{else}}
+        {{{talentPips this.system.level ""}}}
+      {{/if}}
+      <div class="talent-info">
+        <div class="talent-name">{{this.name}}</div>
+        <div class="talent-sub {{#if (eq this.name 'Occult')}}occult{{/if}}">
+          {{join this.system.primaryAttributes " / "}}
+          {{#if this.system.perkName}} — {{this.system.perkName}}{{/if}}
+        </div>
+      </div>
+      <div class="talent-level {{#if (eq this.name 'Occult')}}purple{{else}}gold{{/if}}">L{{this.system.level}}</div>
+      <button type="button" class="talent-roll-btn {{#if (eq this.name 'Occult')}}occult{{/if}}">⬡</button>
+    </div>
+  {{/each}}
+  {{#unless talents.length}}
+    <div class="empty-message">{{localize "DREADLIGHT.DropItems"}}</div>
+  {{/unless}}
+</div>

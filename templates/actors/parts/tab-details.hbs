@@ -1,1 +1,38 @@
-{{!-- tab-details partial --}}
+<div class="section-header"><span>{{localize "DREADLIGHT.Backgrounds"}}</span><div class="section-line"></div></div>
+<div class="bg-cards">
+  <div class="bg-card">
+    <div class="field-label">{{localize "DREADLIGHT.Background1"}}</div>
+    <input type="text" name="system.backgrounds.0" value="{{lookup system.backgrounds 0}}" />
+  </div>
+  <div class="bg-card">
+    <div class="field-label">{{localize "DREADLIGHT.Background2"}}</div>
+    <input type="text" name="system.backgrounds.1" value="{{lookup system.backgrounds 1}}" />
+  </div>
+</div>
+
+<div class="section-header"><span>{{localize "DREADLIGHT.Personal"}}</span><div class="section-line"></div></div>
+
+<div class="field-group">
+  <div class="field-label">{{localize "DREADLIGHT.Anchor"}} <span class="hint-green">♥ {{localize "DREADLIGHT.AnchorHint"}}</span></div>
+  <textarea name="system.details.anchor" rows="2">{{system.details.anchor}}</textarea>
+</div>
+
+<div class="field-group">
+  <div class="field-label">{{localize "DREADLIGHT.Drive"}}</div>
+  <input type="text" name="system.details.drive" value="{{system.details.drive}}" />
+</div>
+
+<div class="field-group">
+  <div class="field-label">{{localize "DREADLIGHT.Fear"}} <span class="hint-red">⚠ {{localize "DREADLIGHT.FearHint"}}</span></div>
+  <textarea name="system.details.fear" rows="2" class="fear-field">{{system.details.fear}}</textarea>
+</div>
+
+<div class="section-header"><span>{{localize "DREADLIGHT.Connections"}}</span><div class="section-line"></div></div>
+{{#each system.details.connections}}
+  <div class="connection-row" data-index="{{@index}}">
+    <input type="text" name="system.details.connections.{{@index}}.name" value="{{this.name}}" placeholder="Name" class="conn-name" />
+    <textarea name="system.details.connections.{{@index}}.text" rows="1" placeholder="Relationship..." class="conn-text">{{this.text}}</textarea>
+    <button type="button" class="delete-connection" data-index="{{@index}}">✕</button>
+  </div>
+{{/each}}
+<button type="button" class="add-connection">+ Connection</button>

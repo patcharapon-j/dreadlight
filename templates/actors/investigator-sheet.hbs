@@ -1,3 +1,45 @@
 <form class="dreadlight sheet investigator" autocomplete="off">
-  <h1>{{actor.name}} — Investigator Sheet (placeholder)</h1>
+  <div class="corner corner-tl"></div>
+  <div class="corner corner-tr"></div>
+  <div class="corner corner-bl"></div>
+  <div class="corner corner-br"></div>
+  <div class="accent-top"></div>
+
+  {{> "systems/dreadlight/templates/actors/parts/header.hbs"}}
+  {{> "systems/dreadlight/templates/actors/parts/tracks.hbs"}}
+
+  <div class="sheet-body">
+    <div class="col-left">
+      {{> "systems/dreadlight/templates/actors/parts/attributes.hbs"}}
+      {{> "systems/dreadlight/templates/actors/parts/spiral.hbs"}}
+      <div class="xp-box">
+        <div class="section-label">{{localize "DREADLIGHT.XP"}}</div>
+        <div class="xp-value">
+          <input type="number" name="system.advancement.xp" value="{{system.advancement.xp}}" data-dtype="Number" min="0" />
+        </div>
+        <div class="xp-spent">{{localize "DREADLIGHT.XPSpent"}}: {{system.advancement.spent}}</div>
+      </div>
+    </div>
+
+    <div class="col-right">
+      <nav class="tab-bar">
+        <a class="tab" data-tab="talents">{{localize "DREADLIGHT.TabTalents"}}</a>
+        <a class="tab" data-tab="equipment">{{localize "DREADLIGHT.TabEquipment"}}</a>
+        <a class="tab" data-tab="details">{{localize "DREADLIGHT.TabDetails"}}</a>
+      </nav>
+      <div class="tab-content">
+        <div class="tab" data-tab="talents">
+          {{> "systems/dreadlight/templates/actors/parts/tab-talents.hbs"}}
+        </div>
+        <div class="tab" data-tab="equipment">
+          {{> "systems/dreadlight/templates/actors/parts/tab-equipment.hbs"}}
+        </div>
+        <div class="tab" data-tab="details">
+          {{> "systems/dreadlight/templates/actors/parts/tab-details.hbs"}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="accent-bottom"></div>
 </form>

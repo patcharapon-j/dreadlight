@@ -42,5 +42,35 @@
   "socket": false,
   "url": "",
   "manifest": "",
-  "download": ""
+  "download": "",
+  "packs": [
+    {
+      "name": "talents",
+      "label": "Dreadlight Talents",
+      "path": "packs/talents",
+      "type": "Item",
+      "system": "dreadlight"
+    },
+    {
+      "name": "weapons",
+      "label": "Dreadlight Weapons",
+      "path": "packs/weapons",
+      "type": "Item",
+      "system": "dreadlight"
+    },
+    {
+      "name": "armor",
+      "label": "Dreadlight Armor",
+      "path": "packs/armor",
+      "type": "Item",
+      "system": "dreadlight"
+    },
+    {
+      "name": "equipment",
+      "label": "Dreadlight Equipment",
+      "path": "packs/equipment",
+      "type": "Item",
+      "system": "dreadlight"
+    }
+  ]
 }

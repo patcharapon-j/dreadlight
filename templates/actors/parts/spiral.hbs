@@ -1,1 +1,47 @@
-{{!-- spiral partial --}}
+<div class="spiral-section">
+  <div class="section-header">
+    <span>{{localize "DREADLIGHT.TheSpiral"}}</span>
+    <div class="section-line"></div>
+    <span class="spiral-state">{{spiralState totalMarks}}</span>
+  </div>
+
+  <div class="spiral-pips">
+    {{!-- Pips 0-3: normal --}}
+    <div class="spiral-pip {{#if (gte totalMarks 1)}}filled{{else}}empty{{/if}}">
+      {{#if (gte totalMarks 1)}}<div class="pip-dot"></div>{{/if}}
+    </div>
+    <div class="spiral-pip {{#if (gte totalMarks 2)}}filled{{else}}empty{{/if}}">
+      {{#if (gte totalMarks 2)}}<div class="pip-dot"></div>{{/if}}
+    </div>
+    <div class="spiral-pip {{#if (gte totalMarks 3)}}filled{{else}}empty{{/if}}">
+      {{#if (gte totalMarks 3)}}<div class="pip-dot"></div>{{/if}}
+    </div>
+    <div class="spiral-pip {{#if (gte totalMarks 4)}}filled{{else}}empty{{/if}}">
+      {{#if (gte totalMarks 4)}}<div class="pip-dot"></div>{{/if}}
+    </div>
+    {{!-- Pip 4: final session --}}
+    <div class="spiral-pip final {{#if (gte totalMarks 5)}}filled{{/if}}">
+      {{#if (gte totalMarks 5)}}<div class="pip-dot"></div>{{else}}<span class="pip-x">✕</span>{{/if}}
+    </div>
+  </div>
+
+  {{#each allMarks}}
+    <div class="mark-entry mark-{{this.track}}" data-track="{{this.track}}" data-index="{{this.index}}">
+      <div class="mark-header">
+        <div class="mark-dot {{this.track}}"></div>
+        <span class="mark-name">{{this.name}}</span>
+        <span class="mark-type">{{this.track}}</span>
+        <button type="button" class="delete-mark" data-track="{{this.track}}" data-index="{{this.index}}">✕</button>
+      </div>
+      {{#if this.trigger}}
+        <div class="mark-desc">{{this.trigger}}: {{this.effect}}</div>
+      {{/if}}
+    </div>
+  {{/each}}
+
+  <div class="mark-actions">
+    <button type="button" class="add-mark" data-track="body">+ Body</button>
+    <button type="button" class="add-mark" data-track="mind">+ Mind</button>
+    <button type="button" class="add-mark" data-track="soul">+ Soul</button>
+  </div>
+</div>

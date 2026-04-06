@@ -1,1 +1,49 @@
-{{!-- tracks partial --}}
+<div class="tracks-bar">
+  <div class="track-btn track-body">
+    <div class="track-icon body">♥</div>
+    <div class="track-info">
+      <div class="track-label body">{{localize "DREADLIGHT.TrackBody"}}</div>
+      <div class="track-pips">{{{segmentedPips system.tracks.body.value system.tracks.body.max "body"}}}</div>
+    </div>
+    <span class="track-num">{{system.tracks.body.value}}</span>
+  </div>
+
+  <div class="track-btn track-mind">
+    <div class="track-icon mind">◈</div>
+    <div class="track-info">
+      <div class="track-label mind">{{localize "DREADLIGHT.TrackMind"}}</div>
+      <div class="track-pips">{{{segmentedPips system.tracks.mind.value system.tracks.mind.max "mind"}}}</div>
+    </div>
+    <span class="track-num">{{system.tracks.mind.value}}</span>
+  </div>
+
+  <div class="track-btn track-soul">
+    <div class="track-icon soul">◉</div>
+    <div class="track-info">
+      <div class="track-label soul">{{localize "DREADLIGHT.TrackSoul"}}</div>
+      <div class="track-pips">{{{segmentedPips system.tracks.soul.value system.tracks.soul.max "soul"}}}</div>
+    </div>
+    <span class="track-num">{{system.tracks.soul.value}}</span>
+  </div>
+
+  <div class="track-separator"></div>
+
+  <div class="track-btn track-dread">
+    <div class="track-icon dread">◼</div>
+    <div class="track-info">
+      <div class="track-label dread">{{localize "DREADLIGHT.TrackDread"}}</div>
+      <div class="dread-pips">{{{segmentedPips system.dread.value 5 "dread"}}}</div>
+    </div>
+  </div>
+
+  <div class="track-separator"></div>
+
+  <div class="track-btn track-supply">
+    <div class="track-icon supply">⬡</div>
+    <div class="track-info">
+      <div class="track-label supply">{{localize "DREADLIGHT.Supply"}}</div>
+      <div class="supply-pips">{{{segmentedPips system.supply.value 10 "gold"}}}</div>
+    </div>
+    <span class="track-num">{{system.supply.value}}</span>
+  </div>
+</div>
