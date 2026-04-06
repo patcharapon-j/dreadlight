@@ -2,7 +2,7 @@ import { DreadlightRoll } from "./dreadlight-roll.mjs";
 
 export async function sendRollToChat(roll) {
   const templateData = roll.toTemplateData();
-  const content = await renderTemplate("systems/dreadlight/templates/chat/roll-result.hbs", templateData);
+  const content = await foundry.applications.handlebars.renderTemplate("systems/dreadlight/templates/chat/roll-result.hbs", templateData);
 
   return ChatMessage.create({
     speaker: ChatMessage.getSpeaker({ actor: roll.actor }),
@@ -29,9 +29,9 @@ export async function sendRollToChat(roll) {
 }
 
 export function registerChatListeners() {
-  Hooks.on("renderChatMessage", (message, html) => {
-    // html is a jQuery object for renderChatMessage hook
-    const pushBtn = html[0]?.querySelector(".push-btn") || html.find(".push-btn")[0];
+  Hooks.on("renderChatMessageHTML", (message, html) => {
+    // html is an HTMLElement in v13's renderChatMessageHTML hook
+    const pushBtn = html.querySelector(".push-btn");
     if (!pushBtn) return;
 
     pushBtn.addEventListener("click", async (ev) => {
@@ -64,7 +64,7 @@ export function registerChatListeners() {
       await roll.push();
 
       const templateData = roll.toTemplateData();
-      const content = await renderTemplate("systems/dreadlight/templates/chat/roll-result.hbs", templateData);
+      const content = await foundry.applications.handlebars.renderTemplate("systems/dreadlight/templates/chat/roll-result.hbs", templateData);
 
       await message.update({
         content,

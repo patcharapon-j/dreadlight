@@ -1,4 +1,4 @@
-// Dreadlight — FoundryVTT System
+// Dreadlight — FoundryVTT v13 System
 import { InvestigatorData } from "./module/data/investigator.mjs";
 import { TalentData } from "./module/data/talent.mjs";
 import { WeaponData } from "./module/data/weapon.mjs";
@@ -10,6 +10,10 @@ import { DreadlightItemSheet } from "./module/sheets/item-sheet.mjs";
 import { registerDSN } from "./module/dice/dsn-integration.mjs";
 import { registerChatListeners } from "./module/dice/chat-message.mjs";
 import { registerHandlebarsHelpers } from "./module/helpers/handlebars.mjs";
+
+// v13 namespaced references
+const { DocumentSheetConfig } = foundry.applications;
+const { Actor, Item } = foundry.documents;
 
 Hooks.once("init", () => {
   console.log("Dreadlight | Initializing system");
@@ -39,26 +43,34 @@ Hooks.once("init", () => {
     },
   };
 
+  // Register Data Models
   Object.assign(CONFIG.Actor.dataModels, { investigator: InvestigatorData });
   Object.assign(CONFIG.Item.dataModels, {
     talent: TalentData, weapon: WeaponData,
     armor: ArmorData, equipment: EquipmentData,
   });
 
-  Actors.unregisterSheet("core", ActorSheet);
-  Actors.registerSheet("dreadlight", InvestigatorSheet, {
-    types: ["investigator"], makeDefault: true, label: "DREADLIGHT.SheetInvestigator",
+  // Register Sheet Classes (v13 API)
+  DocumentSheetConfig.registerSheet(Actor, "dreadlight", InvestigatorSheet, {
+    types: ["investigator"],
+    makeDefault: true,
+    label: "DREADLIGHT.SheetInvestigator",
   });
 
-  Items.unregisterSheet("core", ItemSheet);
-  Items.registerSheet("dreadlight", TalentSheet, {
-    types: ["talent"], makeDefault: true, label: "DREADLIGHT.SheetTalent",
-  });
-  Items.registerSheet("dreadlight", DreadlightItemSheet, {
-    types: ["weapon", "armor", "equipment"], makeDefault: true, label: "DREADLIGHT.SheetItem",
+  DocumentSheetConfig.registerSheet(Item, "dreadlight", TalentSheet, {
+    types: ["talent"],
+    makeDefault: true,
+    label: "DREADLIGHT.SheetTalent",
   });
 
-  loadTemplates([
+  DocumentSheetConfig.registerSheet(Item, "dreadlight", DreadlightItemSheet, {
+    types: ["weapon", "armor", "equipment"],
+    makeDefault: true,
+    label: "DREADLIGHT.SheetItem",
+  });
+
+  // Preload Handlebars partials
+  foundry.applications.handlebars.loadTemplates([
     "systems/dreadlight/templates/actors/parts/header.hbs",
     "systems/dreadlight/templates/actors/parts/tracks.hbs",
     "systems/dreadlight/templates/actors/parts/attributes.hbs",
@@ -70,8 +82,12 @@ Hooks.once("init", () => {
     "systems/dreadlight/templates/dialogs/roll-dialog.hbs",
   ]);
 
+  // Register Handlebars helpers
   registerHandlebarsHelpers();
+
+  // Register chat card listeners
   registerChatListeners();
+
   console.log("Dreadlight | System initialized");
 });
 

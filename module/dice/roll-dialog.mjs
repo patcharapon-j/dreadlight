@@ -20,7 +20,7 @@ export class DreadlightRollDialog {
       difficulties: CONFIG.DREADLIGHT.difficulties,
     };
 
-    const html = await renderTemplate("systems/dreadlight/templates/dialogs/roll-dialog.hbs", templateData);
+    const html = await foundry.applications.handlebars.renderTemplate("systems/dreadlight/templates/dialogs/roll-dialog.hbs", templateData);
 
     return new Promise((resolve) => {
       const dlg = new Dialog({
