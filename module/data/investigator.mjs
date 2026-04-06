@@ -15,22 +15,22 @@ export class InvestigatorData extends foundry.abstract.TypeDataModel {
 
       attributes: new fields.SchemaField({
         str: new fields.SchemaField({
-          value: new fields.NumberField({ required: true, initial: 3, min: 1, max: 6, integer: true }),
+          value: new fields.NumberField({ required: true, initial: 3, min: 0, integer: true }),
         }),
         agl: new fields.SchemaField({
-          value: new fields.NumberField({ required: true, initial: 3, min: 1, max: 6, integer: true }),
+          value: new fields.NumberField({ required: true, initial: 3, min: 0, integer: true }),
         }),
         log: new fields.SchemaField({
-          value: new fields.NumberField({ required: true, initial: 3, min: 1, max: 6, integer: true }),
+          value: new fields.NumberField({ required: true, initial: 3, min: 0, integer: true }),
         }),
         per: new fields.SchemaField({
-          value: new fields.NumberField({ required: true, initial: 3, min: 1, max: 6, integer: true }),
+          value: new fields.NumberField({ required: true, initial: 3, min: 0, integer: true }),
         }),
         ins: new fields.SchemaField({
-          value: new fields.NumberField({ required: true, initial: 3, min: 1, max: 6, integer: true }),
+          value: new fields.NumberField({ required: true, initial: 3, min: 0, integer: true }),
         }),
         emp: new fields.SchemaField({
-          value: new fields.NumberField({ required: true, initial: 3, min: 1, max: 6, integer: true }),
+          value: new fields.NumberField({ required: true, initial: 3, min: 0, integer: true }),
         }),
       }),
 
@@ -51,7 +51,6 @@ export class InvestigatorData extends foundry.abstract.TypeDataModel {
 
       dread: new fields.SchemaField({
         value: new fields.NumberField({ required: true, initial: 0, min: 0, max: 5, integer: true }),
-        override: new fields.BooleanField({ required: true, initial: false }),
       }),
 
       details: new fields.SchemaField({
@@ -145,23 +144,6 @@ export class InvestigatorData extends foundry.abstract.TypeDataModel {
     this.tracks.body.value = Math.min(this.tracks.body.value, this.tracks.body.max);
     this.tracks.mind.value = Math.min(this.tracks.mind.value, this.tracks.mind.max);
     this.tracks.soul.value = Math.min(this.tracks.soul.value, this.tracks.soul.max);
-
-    // Auto-derive dread from soul lost unless override is true
-    if (!this.dread.override) {
-      const soulMax = this.tracks.soul.max;
-      const soulCurrent = this.tracks.soul.value;
-      const soulLost = Math.max(0, soulMax - soulCurrent);
-
-      let dreadValue;
-      if (soulLost <= 1) dreadValue = 0;
-      else if (soulLost <= 3) dreadValue = 1;
-      else if (soulLost <= 5) dreadValue = 2;
-      else if (soulLost <= 7) dreadValue = 3;
-      else if (soulLost <= 9) dreadValue = 4;
-      else dreadValue = 5;
-
-      this.dread.value = dreadValue;
-    }
 
     // Calculate spiral (total mark count across all three arrays)
     this.spiral = (this.marks.body?.length ?? 0)

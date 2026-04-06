@@ -32,7 +32,6 @@ Hooks.once("init", () => {
       ins: "shaken",
       emp: "disheartened",
     },
-    dreadTable: [0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5],
     difficulties: {
       effortless: 3, routine: 2, easy: 1, normal: 0,
       demanding: -1, hard: -2, insane: -3,
