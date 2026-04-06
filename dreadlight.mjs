@@ -8,6 +8,7 @@ import { InvestigatorSheet } from "./module/sheets/investigator-sheet.mjs";
 import { TalentSheet } from "./module/sheets/talent-sheet.mjs";
 import { DreadlightItemSheet } from "./module/sheets/item-sheet.mjs";
 import { registerDSN } from "./module/dice/dsn-integration.mjs";
+import { registerChatListeners } from "./module/dice/chat-message.mjs";
 import { registerHandlebarsHelpers } from "./module/helpers/handlebars.mjs";
 
 Hooks.once("init", () => {
@@ -70,6 +71,7 @@ Hooks.once("init", () => {
   ]);
 
   registerHandlebarsHelpers();
+  registerChatListeners();
   console.log("Dreadlight | System initialized");
 });
 

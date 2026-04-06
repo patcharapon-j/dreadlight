@@ -1,1 +1,49 @@
-{{!-- roll-dialog --}}
+<form class="dreadlight-roll-form" autocomplete="off">
+  <div class="dialog-field">
+    <div class="dialog-label">{{localize "DREADLIGHT.RollAttribute"}}</div>
+    <div class="source-row static">
+      <span class="source-name">{{attrName attribute}}</span>
+      <div class="source-pips">
+        {{#times attrValue}}<div class="pip pip-base"></div>{{/times}}
+      </div>
+      <span class="source-count">{{attrValue}}</span>
+    </div>
+  </div>
+
+  <div class="dialog-field">
+    <div class="dialog-label">{{localize "DREADLIGHT.RollTalent"}}</div>
+    <select name="talent" class="dialog-select">
+      <option value="">{{localize "DREADLIGHT.RollNone"}}</option>
+      {{#each talents}}
+        <option value="{{this.id}}" {{#if (eq this.id ../selectedTalentId)}}selected{{/if}}>
+          {{this.name}} (L{{this.level}})
+        </option>
+      {{/each}}
+    </select>
+  </div>
+
+  <div class="dialog-field">
+    <div class="dialog-label">{{localize "DREADLIGHT.RollEquipment"}}</div>
+    <select name="gear" class="dialog-select">
+      <option value="">{{localize "DREADLIGHT.RollNone"}}</option>
+      {{#each gearItems}}
+        <option value="{{this.id}}" {{#if (eq this.id ../selectedGearId)}}selected{{/if}}>
+          {{this.name}} (+{{this.bonus}})
+        </option>
+      {{/each}}
+    </select>
+  </div>
+
+  <div class="dialog-field">
+    <div class="dialog-label">{{localize "DREADLIGHT.RollDifficulty"}}</div>
+    <div class="difficulty-row">
+      <label class="diff-btn"><input type="radio" name="difficulty" value="3" />+3</label>
+      <label class="diff-btn"><input type="radio" name="difficulty" value="2" />+2</label>
+      <label class="diff-btn"><input type="radio" name="difficulty" value="1" />+1</label>
+      <label class="diff-btn"><input type="radio" name="difficulty" value="0" checked />±0</label>
+      <label class="diff-btn"><input type="radio" name="difficulty" value="-1" />−1</label>
+      <label class="diff-btn"><input type="radio" name="difficulty" value="-2" />−2</label>
+      <label class="diff-btn"><input type="radio" name="difficulty" value="-3" />−3</label>
+    </div>
+  </div>
+</form>

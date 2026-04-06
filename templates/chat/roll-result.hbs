@@ -1,1 +1,83 @@
-{{!-- roll-result --}}
+<div class="dreadlight-chat chat-{{outcome}} {{#if pushed}}pushed{{/if}}">
+  <div class="chat-accent"></div>
+
+  <div class="chat-header">
+    <div class="chat-portrait" style="background-image: url('{{actorImg}}')"></div>
+    <div class="chat-portrait-fade"></div>
+    <div class="chat-identity">
+      <div class="chat-name">{{actorName}}</div>
+      <div class="chat-action">
+        {{#if talentName}}<span class="chat-talent">{{talentName}}</span> — {{/if}}
+        {{attrName attribute}}
+        ({{capitalize difficulty}})
+        {{#if pushed}}<span class="chat-pushed">⟳ {{localize "DREADLIGHT.ResultPushed"}}</span>{{/if}}
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-dice">
+    {{#if baseResults.length}}
+      <div class="dice-group group-base">
+        <span class="dice-label base">{{localize "DREADLIGHT.Base"}}</span>
+        {{#each baseResults}}
+          <div class="die die-base {{#if (eq this 6)}}six{{else}}{{#if (eq this 1)}}one{{else}}normal{{/if}}{{/if}} {{#if (and ../pushed (or (eq this 1) (eq this 6)))}}locked{{/if}}">{{this}}</div>
+        {{/each}}
+      </div>
+    {{/if}}
+    {{#if dreadResults.length}}
+      <div class="dice-group group-dread">
+        <span class="dice-label dread">{{localize "DREADLIGHT.Dread"}}</span>
+        {{#each dreadResults}}
+          <div class="die die-dread {{#if (eq this 6)}}six{{else}}{{#if (eq this 1)}}one{{else}}normal{{/if}}{{/if}} {{#if (and ../pushed (or (eq this 1) (eq this 6)))}}locked{{/if}}">{{this}}</div>
+        {{/each}}
+      </div>
+    {{/if}}
+    {{#if gearResults.length}}
+      <div class="dice-group group-gear">
+        <span class="dice-label gear">{{localize "DREADLIGHT.Gear"}}</span>
+        {{#each gearResults}}
+          <div class="die die-gear {{#if (eq this 6)}}six{{else}}{{#if (eq this 1)}}one{{else}}normal{{/if}}{{/if}} {{#if (and ../pushed (or (eq this 1) (eq this 6)))}}locked{{/if}}">{{this}}</div>
+        {{/each}}
+      </div>
+    {{/if}}
+  </div>
+
+  <div class="chat-result">
+    <div class="result-row">
+      {{#if (eq outcome "clean")}}<span class="result-icon gold">✦</span>{{/if}}
+      {{#if (eq outcome "tainted")}}<span class="result-icon purple">⬡</span>{{/if}}
+      {{#if (eq outcome "dire")}}<span class="result-icon red dire-glow">◆</span>{{/if}}
+      {{#if (eq outcome "failure")}}<span class="result-icon muted">✕</span>{{/if}}
+
+      <span class="result-label">
+        {{#if (eq outcome "clean")}}{{localize "DREADLIGHT.ResultCleanSuccess"}}{{/if}}
+        {{#if (eq outcome "tainted")}}{{localize "DREADLIGHT.ResultTaintedSuccess"}}{{/if}}
+        {{#if (eq outcome "dire")}}{{localize "DREADLIGHT.ResultDireSuccess"}}{{/if}}
+        {{#if (eq outcome "failure")}}{{localize "DREADLIGHT.ResultFailure"}}{{/if}}
+      </span>
+
+      <span class="result-count">{{totalSixes}} {{#if (eq totalSixes 1)}}{{localize "DREADLIGHT.Success"}}{{else}}{{localize "DREADLIGHT.Successes"}}{{/if}}</span>
+    </div>
+
+    {{#if dreadGained}}
+      <div class="consequence consequence-dread">⬡ {{localize "DREADLIGHT.DreadGain"}} <strong>+{{dreadGained}}</strong></div>
+    {{/if}}
+
+    {{#if (eq outcome "dire")}}
+      <div class="dire-flavor">{{localize "DREADLIGHT.DireFlavorText"}}</div>
+    {{/if}}
+
+    {{#if consequences}}
+      {{#if consequences.mindLoss}}<div class="consequence consequence-mind">◈ <strong>−{{consequences.mindLoss}} {{localize "DREADLIGHT.PushCostMind"}}</strong></div>{{/if}}
+      {{#if consequences.soulLoss}}<div class="consequence consequence-soul">◉ <strong>−{{consequences.soulLoss}} {{localize "DREADLIGHT.PushCostSoul"}}</strong></div>{{/if}}
+      {{#if consequences.gearDamage}}<div class="consequence consequence-gear">⚙ <strong>{{localize "DREADLIGHT.PushCostGear"}} −{{consequences.gearDamage}}</strong></div>{{/if}}
+      <div class="consequence consequence-dread">⬡ {{localize "DREADLIGHT.DreadGain"}} <strong>+1</strong></div>
+    {{/if}}
+  </div>
+
+  {{#unless pushed}}
+    <div class="push-bar">
+      <button type="button" class="push-btn">{{localize "DREADLIGHT.Push"}} <span class="push-hint">· {{localize "DREADLIGHT.PushHint"}}</span></button>
+    </div>
+  {{/unless}}
+</div>
