@@ -16,7 +16,7 @@
   <div class="item-row weapon-row" data-item-id="{{this.id}}">
     <div class="item-icon weapon-icon">⚔</div>
     <div class="item-info">
-      <div class="item-name">{{this.name}}</div>
+      <div class="item-name" data-action="openItem">{{this.name}}</div>
       <div class="item-meta">
         {{#if (eq this.system.weaponType "melee")}}Melee{{else}}Ranged{{/if}}
         · {{capitalize this.system.range}}
@@ -26,7 +26,7 @@
     <div class="item-stat stat-red">DMG {{this.system.damage}}</div>
     <div class="item-stat stat-gold">CRIT {{this.system.critThreshold}}</div>
     {{{gearPips this.system.gearBonus this.system.gearBonusMax "gold"}}}
-    <button type="button" class="weapon-roll-btn">⬡</button>
+    <button type="button" class="weapon-roll-btn" data-action="rollWeapon">⬡</button>
   </div>
 {{/each}}
 
@@ -35,7 +35,7 @@
   <div class="item-row armor-row" data-item-id="{{this.id}}">
     <div class="item-icon armor-icon">🛡</div>
     <div class="item-info">
-      <div class="item-name">{{this.name}}</div>
+      <div class="item-name" data-action="openItem">{{this.name}}</div>
       <div class="item-meta">{{#each this.system.properties}}<span class="tag">{{this}}</span>{{/each}}</div>
     </div>
     <div class="item-stat stat-blue">AR {{this.system.armorRating}}</div>
@@ -48,7 +48,7 @@
   <div class="item-row gear-row" data-item-id="{{this.id}}">
     <div class="item-icon gear-icon">⬡</div>
     <div class="item-info">
-      <div class="item-name">{{this.name}}</div>
+      <div class="item-name" data-action="openItem">{{this.name}}</div>
       <div class="item-meta">{{#each this.system.applicableTalents}}<span class="tag tag-gold">{{this}}</span>{{/each}}</div>
     </div>
     {{{gearPips this.system.gearBonus this.system.gearBonusMax "gold"}}}

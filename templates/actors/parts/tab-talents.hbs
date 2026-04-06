@@ -6,7 +6,7 @@
       {{else}}
         {{{talentPips this.system.level ""}}}
       {{/if}}
-      <div class="talent-info">
+      <div class="talent-info" data-action="openItem">
         <div class="talent-name">{{this.name}}</div>
         <div class="talent-sub {{#if (eq this.name 'Occult')}}occult{{/if}}">
           {{join this.system.primaryAttributes " / "}}
@@ -14,7 +14,7 @@
         </div>
       </div>
       <div class="talent-level {{#if (eq this.name 'Occult')}}purple{{else}}gold{{/if}}">L{{this.system.level}}</div>
-      <button type="button" class="talent-roll-btn {{#if (eq this.name 'Occult')}}occult{{/if}}">⬡</button>
+      <button type="button" class="talent-roll-btn {{#if (eq this.name 'Occult')}}occult{{/if}}" data-action="rollTalent">⬡</button>
     </div>
   {{/each}}
   {{#unless talents.length}}

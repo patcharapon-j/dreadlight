@@ -1,19 +1,75 @@
 import { DreadlightRollDialog } from "../dice/roll-dialog.mjs";
 
-export class InvestigatorSheet extends ActorSheet {
-  static get defaultOptions() {
-    return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: ["dreadlight", "sheet", "actor", "investigator"],
-      template: "systems/dreadlight/templates/actors/investigator-sheet.hbs",
-      width: 720,
-      height: 820,
-      tabs: [{ navSelector: ".tab-bar", contentSelector: ".tab-content", initial: "talents" }],
-      dragDrop: [{ dragSelector: ".item-row", dropSelector: null }],
+const { HandlebarsApplicationMixin } = foundry.applications.api;
+const { ActorSheetV2 } = foundry.applications.sheets;
+
+export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
+
+  static DEFAULT_OPTIONS = {
+    classes: ["dreadlight", "sheet", "actor", "investigator"],
+    position: { width: 720, height: 820 },
+    actions: {
+      rollAttribute: InvestigatorSheet.#rollAttribute,
+      rollTalent: InvestigatorSheet.#rollTalent,
+      rollWeapon: InvestigatorSheet.#rollWeapon,
+      toggleCondition: InvestigatorSheet.#toggleCondition,
+      openItem: InvestigatorSheet.#openItem,
+      deleteItem: InvestigatorSheet.#deleteItem,
+      addConnection: InvestigatorSheet.#addConnection,
+      deleteConnection: InvestigatorSheet.#deleteConnection,
+      addMark: InvestigatorSheet.#addMark,
+      deleteMark: InvestigatorSheet.#deleteMark,
+    },
+    form: {
+      submitOnChange: true,
+    },
+    dragDrop: [{ dragSelector: ".item-row", dropSelector: null }],
+  };
+
+  static PARTS = {
+    sheet: { template: "systems/dreadlight/templates/actors/investigator-sheet.hbs" },
+  };
+
+  /** @override */
+  tabGroups = { primary: "talents" };
+
+  /* ---------------------------------------- */
+  /*  Drag-Drop                               */
+  /* ---------------------------------------- */
+
+  #dragDrop;
+
+  constructor(options = {}) {
+    super(options);
+    this.#dragDrop = this.#createDragDropHandlers();
+  }
+
+  get dragDrop() {
+    return this.#dragDrop;
+  }
+
+  #createDragDropHandlers() {
+    return this.options.dragDrop.map((d) => {
+      d.permissions = {
+        dragstart: this._canDragStart.bind(this),
+        drop: this._canDragDrop.bind(this),
+      };
+      d.callbacks = {
+        dragstart: this._onDragStart.bind(this),
+        dragover: this._onDragOver.bind(this),
+        drop: this._onDrop.bind(this),
+      };
+      return new DragDrop(d);
     });
   }
 
-  getData() {
-    const context = super.getData();
+  /* ---------------------------------------- */
+  /*  Context                                 */
+  /* ---------------------------------------- */
+
+  /** @override */
+  async _prepareContext(options) {
+    const context = await super._prepareContext(options);
     const system = this.actor.system;
 
     context.system = system;
@@ -71,131 +127,148 @@ export class InvestigatorSheet extends ActorSheet {
       ...buildMarks("soul"),
     ];
 
+    // Tab group state
+    context.tab = this.tabGroups.primary;
+
     return context;
   }
 
-  activateListeners(html) {
-    super.activateListeners(html);
+  /* ---------------------------------------- */
+  /*  Render                                  */
+  /* ---------------------------------------- */
+
+  /** @override */
+  _onRender(context, options) {
+    super._onRender(context, options);
+
+    // Bind drag-drop handlers
+    this.#dragDrop.forEach((d) => d.bind(this.element));
 
     if (!this.isEditable) return;
 
-    // Attribute roll
-    html.find(".attr-cell[data-attr]").on("click", (event) => {
-      const attrKey = event.currentTarget.dataset.attr;
-      this._onRollAttribute(attrKey);
-    });
-
-    // Talent roll
-    html.find(".talent-roll-btn").on("click", (event) => {
-      const row = event.currentTarget.closest(".talent-row[data-item-id]");
-      const talent = this.actor.items.get(row.dataset.itemId);
-      if (talent) this._onRollTalent(talent);
-    });
-
-    // Weapon roll
-    html.find(".weapon-roll-btn").on("click", (event) => {
-      const row = event.currentTarget.closest(".item-row[data-item-id]");
-      const weapon = this.actor.items.get(row.dataset.itemId);
-      if (weapon) this._onRollWeapon(weapon);
-    });
-
-    // Attribute condition toggle
-    html.find(".attr-condition").on("click", (event) => {
-      const attrKey = event.currentTarget.closest("[data-attr]")?.dataset.attr
-        ?? event.currentTarget.dataset.attr;
-      const conditionKey = CONFIG.DREADLIGHT.conditionMap[attrKey];
-      if (!conditionKey) return;
-      const current = this.actor.system.conditions[conditionKey];
-      this.actor.update({ [`system.conditions.${conditionKey}`]: !current });
-    });
-
-    // Track pip clicks (body/mind/soul)
-    html.find(".track-pip-click").on("click", (event) => {
-      const pip = event.currentTarget;
-      const trackKey = pip.dataset.track;
-      const pipIndex = parseInt(pip.dataset.index, 10);
-      const track = this.actor.system.tracks[trackKey];
-      if (!track) return;
-
-      // If this pip is currently filled (index < value), clicking it sets value to pipIndex
-      // If this pip is empty (index >= value), clicking it sets value to pipIndex + 1
-      const newValue = pipIndex < track.value ? pipIndex : pipIndex + 1;
-      this.actor.update({ [`system.tracks.${trackKey}.value`]: newValue });
+    // Track pip clicks (body/mind/soul) — these use Handlebars-generated pips
+    // that don't have data-action, so we bind manually.
+    this.element.querySelectorAll(".track-body .pip, .track-mind .pip, .track-soul .pip").forEach((pip) => {
+      pip.style.cursor = "pointer";
+      pip.addEventListener("click", (ev) => {
+        const trackBtn = ev.currentTarget.closest(".track-btn");
+        if (!trackBtn) return;
+        let trackKey;
+        if (trackBtn.classList.contains("track-body")) trackKey = "body";
+        else if (trackBtn.classList.contains("track-mind")) trackKey = "mind";
+        else if (trackBtn.classList.contains("track-soul")) trackKey = "soul";
+        else return;
+        const pips = Array.from(trackBtn.querySelectorAll(".pip"));
+        const pipIndex = pips.indexOf(ev.currentTarget);
+        if (pipIndex < 0) return;
+        const track = this.actor.system.tracks[trackKey];
+        if (!track) return;
+        const newValue = pipIndex < track.value ? pipIndex : pipIndex + 1;
+        this.actor.update({ [`system.tracks.${trackKey}.value`]: newValue });
+      });
     });
 
     // Supply pip clicks
-    html.find(".supply-pip-click").on("click", (event) => {
-      const pip = event.currentTarget;
-      const pipIndex = parseInt(pip.dataset.index, 10);
-      const currentValue = this.actor.system.supply.value;
-
-      const newValue = pipIndex < currentValue ? pipIndex : pipIndex + 1;
-      this.actor.update({ "system.supply.value": newValue });
+    this.element.querySelectorAll(".track-supply .pip").forEach((pip) => {
+      pip.style.cursor = "pointer";
+      pip.addEventListener("click", (ev) => {
+        const pips = Array.from(ev.currentTarget.closest(".track-supply").querySelectorAll(".pip"));
+        const pipIndex = pips.indexOf(ev.currentTarget);
+        if (pipIndex < 0) return;
+        const currentValue = this.actor.system.supply.value;
+        const newValue = pipIndex < currentValue ? pipIndex : pipIndex + 1;
+        this.actor.update({ "system.supply.value": newValue });
+      });
     });
 
-    // Open item sheet — gear rows
-    html.find(".item-row .item-name").on("click", (event) => {
-      const row = event.currentTarget.closest(".item-row[data-item-id]");
-      const item = this.actor.items.get(row.dataset.itemId);
-      item?.sheet.render(true);
+    // Tab navigation
+    this.element.querySelectorAll(".tab-bar .tab").forEach((tab) => {
+      tab.addEventListener("click", (ev) => {
+        const tabName = ev.currentTarget.dataset.tab;
+        this.tabGroups.primary = tabName;
+        // Toggle active class on nav tabs
+        this.element.querySelectorAll(".tab-bar .tab").forEach((t) => t.classList.toggle("active", t.dataset.tab === tabName));
+        // Toggle active class on tab content
+        this.element.querySelectorAll(".tab-content > .tab").forEach((t) => t.classList.toggle("active", t.dataset.tab === tabName));
+      });
     });
 
-    // Open item sheet — talent rows
-    html.find(".talent-row .talent-info").on("click", (event) => {
-      const row = event.currentTarget.closest(".talent-row[data-item-id]");
-      const item = this.actor.items.get(row.dataset.itemId);
-      item?.sheet.render(true);
-    });
-
-    // Delete item
-    html.find(".item-delete").on("click", (event) => {
-      const row = event.currentTarget.closest("[data-item-id]");
-      const item = this.actor.items.get(row.dataset.itemId);
-      item?.delete();
-    });
-
-    // Connections
-    html.find(".add-connection").on("click", () => {
-      const connections = foundry.utils.deepClone(this.actor.system.details.connections ?? []);
-      connections.push({ name: "", text: "" });
-      this.actor.update({ "system.details.connections": connections });
-    });
-
-    html.find(".delete-connection").on("click", (event) => {
-      const index = parseInt(event.currentTarget.dataset.index, 10);
-      const connections = foundry.utils.deepClone(this.actor.system.details.connections ?? []);
-      connections.splice(index, 1);
-      this.actor.update({ "system.details.connections": connections });
-    });
-
-    // Marks
-    html.find(".add-mark").on("click", (event) => {
-      const trackKey = event.currentTarget.dataset.track;
-      const marks = foundry.utils.deepClone(this.actor.system.marks[trackKey] ?? []);
-      marks.push({ name: "", trigger: "", effect: "", benefit: "" });
-      this.actor.update({ [`system.marks.${trackKey}`]: marks });
-    });
-
-    html.find(".delete-mark").on("click", (event) => {
-      const trackKey = event.currentTarget.dataset.track;
-      const index = parseInt(event.currentTarget.dataset.index, 10);
-      const marks = foundry.utils.deepClone(this.actor.system.marks[trackKey] ?? []);
-      marks.splice(index, 1);
-      this.actor.update({ [`system.marks.${trackKey}`]: marks });
-    });
+    // Set initial active tab
+    const activeTab = this.tabGroups.primary;
+    this.element.querySelectorAll(".tab-bar .tab").forEach((t) => t.classList.toggle("active", t.dataset.tab === activeTab));
+    this.element.querySelectorAll(".tab-content > .tab").forEach((t) => t.classList.toggle("active", t.dataset.tab === activeTab));
   }
 
-  _onRollAttribute(attrKey) {
-    DreadlightRollDialog.create({ actor: this.actor, attribute: attrKey });
+  /* ---------------------------------------- */
+  /*  Actions                                 */
+  /* ---------------------------------------- */
+
+  static #rollAttribute(event, target) {
+    const attr = target.closest("[data-attr]").dataset.attr;
+    DreadlightRollDialog.create({ actor: this.actor, attribute: attr });
   }
 
-  _onRollTalent(talent) {
+  static #rollTalent(event, target) {
+    const row = target.closest(".talent-row[data-item-id]");
+    const talent = this.actor.items.get(row.dataset.itemId);
+    if (!talent) return;
     const attribute = talent.system.primaryAttributes?.[0] ?? "str";
     DreadlightRollDialog.create({ actor: this.actor, attribute, talent });
   }
 
-  _onRollWeapon(weapon) {
+  static #rollWeapon(event, target) {
+    const row = target.closest(".item-row[data-item-id]");
+    const weapon = this.actor.items.get(row.dataset.itemId);
+    if (!weapon) return;
     const attribute = weapon.system.weaponType === "ranged" ? "agl" : "str";
     DreadlightRollDialog.create({ actor: this.actor, attribute, gearItem: weapon });
+  }
+
+  static #toggleCondition(event, target) {
+    const attr = target.closest("[data-attr]")?.dataset.attr ?? target.dataset.attr;
+    const conditionKey = CONFIG.DREADLIGHT.conditionMap[attr];
+    if (!conditionKey) return;
+    const current = this.actor.system.conditions[conditionKey];
+    this.actor.update({ [`system.conditions.${conditionKey}`]: !current });
+  }
+
+  static #openItem(event, target) {
+    const row = target.closest("[data-item-id]");
+    const item = this.actor.items.get(row.dataset.itemId);
+    item?.sheet.render(true);
+  }
+
+  static #deleteItem(event, target) {
+    const row = target.closest("[data-item-id]");
+    const item = this.actor.items.get(row.dataset.itemId);
+    item?.delete();
+  }
+
+  static #addConnection(event, target) {
+    const connections = foundry.utils.deepClone(this.actor.system.details.connections ?? []);
+    connections.push({ name: "", text: "" });
+    this.actor.update({ "system.details.connections": connections });
+  }
+
+  static #deleteConnection(event, target) {
+    const index = parseInt(target.dataset.index, 10);
+    const connections = foundry.utils.deepClone(this.actor.system.details.connections ?? []);
+    connections.splice(index, 1);
+    this.actor.update({ "system.details.connections": connections });
+  }
+
+  static #addMark(event, target) {
+    const trackKey = target.dataset.track;
+    const marks = foundry.utils.deepClone(this.actor.system.marks[trackKey] ?? []);
+    marks.push({ name: "", trigger: "", effect: "", benefit: "" });
+    this.actor.update({ [`system.marks.${trackKey}`]: marks });
+  }
+
+  static #deleteMark(event, target) {
+    const trackKey = target.dataset.track;
+    const index = parseInt(target.dataset.index, 10);
+    const marks = foundry.utils.deepClone(this.actor.system.marks[trackKey] ?? []);
+    marks.splice(index, 1);
+    this.actor.update({ [`system.marks.${trackKey}`]: marks });
   }
 }

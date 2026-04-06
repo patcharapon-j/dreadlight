@@ -31,7 +31,7 @@
         <div class="mark-dot {{this.track}}"></div>
         <span class="mark-name">{{this.name}}</span>
         <span class="mark-type">{{this.track}}</span>
-        <button type="button" class="delete-mark" data-track="{{this.track}}" data-index="{{this.index}}">✕</button>
+        <button type="button" class="delete-mark" data-action="deleteMark" data-track="{{this.track}}" data-index="{{this.index}}">✕</button>
       </div>
       {{#if this.trigger}}
         <div class="mark-desc">{{this.trigger}}: {{this.effect}}</div>
@@ -40,8 +40,8 @@
   {{/each}}
 
   <div class="mark-actions">
-    <button type="button" class="add-mark" data-track="body">+ Body</button>
-    <button type="button" class="add-mark" data-track="mind">+ Mind</button>
-    <button type="button" class="add-mark" data-track="soul">+ Soul</button>
+    <button type="button" class="add-mark" data-action="addMark" data-track="body">+ Body</button>
+    <button type="button" class="add-mark" data-action="addMark" data-track="mind">+ Mind</button>
+    <button type="button" class="add-mark" data-action="addMark" data-track="soul">+ Soul</button>
   </div>
 </div>
