@@ -186,12 +186,26 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       });
     }
 
+    // Dread button: left-click = +1, right-click = −1
+    const dreadBtn = this.element.querySelector(".track-btn.dread");
+    if (dreadBtn) {
+      dreadBtn.addEventListener("click", () => {
+        const val = this.actor.system.dread.value;
+        if (val < 5) this.actor.update({ "system.dread.value": val + 1 });
+      });
+      dreadBtn.addEventListener("contextmenu", (ev) => {
+        ev.preventDefault();
+        const val = this.actor.system.dread.value;
+        if (val > 0) this.actor.update({ "system.dread.value": val - 1 });
+      });
+    }
+
     // Supply button: left-click = +1, right-click = −1
     const supplyBtn = this.element.querySelector(".track-btn.supply");
     if (supplyBtn) {
       supplyBtn.addEventListener("click", () => {
         const val = this.actor.system.supply.value;
-        if (val < 10) this.actor.update({ "system.supply.value": val + 1 });
+        this.actor.update({ "system.supply.value": val + 1 });
       });
       supplyBtn.addEventListener("contextmenu", (ev) => {
         ev.preventDefault();
