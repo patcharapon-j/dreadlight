@@ -165,6 +165,10 @@
   "DREADLIGHT.D66HealTime": "Recovery",
   "DREADLIGHT.D66Lethal": "LETHAL",
   "DREADLIGHT.D66Result": "D66",
+  "DREADLIGHT.D66Apply": "Apply to Sheet",
+  "DREADLIGHT.D66Applied": "Applied",
+  "DREADLIGHT.Injuries": "Active Injuries",
+  "DREADLIGHT.InjuriesNone": "No active injuries",
 
   "DREADLIGHT.AdhocRoll": "Ad-Hoc Roll"
 }

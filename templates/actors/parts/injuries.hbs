@@ -1,0 +1,25 @@
+<div class="injuries-section">
+  <div class="section-header">
+    <span>{{localize "DREADLIGHT.Injuries"}}</span>
+    <div class="section-line"></div>
+  </div>
+
+  {{#each injuries}}
+    <div class="injury-entry injury-{{this.track}} {{#if this.lethal}}injury-lethal{{/if}}">
+      <div class="injury-header">
+        <div class="injury-dot {{this.track}}"></div>
+        <span class="injury-name">{{this.name}}</span>
+        <span class="injury-d66">{{this.d66Key}}</span>
+        {{#if ../editMode}}
+          <button type="button" class="delete-injury" data-action="deleteInjury" data-index="{{@index}}">✕</button>
+        {{/if}}
+      </div>
+      <div class="injury-effect">{{this.effect}}</div>
+      <div class="injury-heal">{{localize "DREADLIGHT.D66HealTime"}}: {{this.healTime}}</div>
+    </div>
+  {{/each}}
+
+  {{#unless injuries.length}}
+    <div class="injuries-empty">{{localize "DREADLIGHT.InjuriesNone"}}</div>
+  {{/unless}}
+</div>

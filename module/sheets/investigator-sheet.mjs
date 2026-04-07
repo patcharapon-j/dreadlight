@@ -29,6 +29,7 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       addMark: InvestigatorSheet.#addMark,
       deleteMark: InvestigatorSheet.#deleteMark,
       rollD66: InvestigatorSheet.#rollD66,
+      deleteInjury: InvestigatorSheet.#deleteInjury,
     },
     form: {
       submitOnChange: true,
@@ -154,6 +155,9 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     context.bodyPct = Math.round((system.tracks.body.value / bodyMax) * 100);
     context.mindPct = Math.round((system.tracks.mind.value / mindMax) * 100);
     context.soulPct = Math.round((system.tracks.soul.value / soulMax) * 100);
+
+    // Active injuries
+    context.injuries = system.injuries ?? [];
 
     // Broken state
     context.anyBroken = system.tracks.body.broken || system.tracks.mind.broken || system.tracks.soul.broken;
@@ -666,6 +670,13 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     if (!trackKey) return;
     const result = await rollD66(trackKey, this.actor);
     await sendD66ToChat(result);
+  }
+
+  static #deleteInjury(event, target) {
+    const index = parseInt(target.dataset.index, 10);
+    const injuries = [...(this.actor.system.injuries ?? [])];
+    injuries.splice(index, 1);
+    this.actor.update({ "system.injuries": injuries });
   }
 
   static #toggleCondition(event, target) {

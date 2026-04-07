@@ -89,6 +89,7 @@ Hooks.once("init", () => {
     "systems/dreadlight/templates/actors/parts/tab-talents.hbs",
     "systems/dreadlight/templates/actors/parts/tab-equipment.hbs",
     "systems/dreadlight/templates/actors/parts/tab-details.hbs",
+    "systems/dreadlight/templates/actors/parts/injuries.hbs",
     "systems/dreadlight/templates/chat/roll-result.hbs",
     "systems/dreadlight/templates/chat/armor-result.hbs",
     "systems/dreadlight/templates/dialogs/roll-dialog.hbs",

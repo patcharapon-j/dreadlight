@@ -163,5 +163,42 @@ export function registerChatListeners() {
         await sendD66ToChat(result);
       });
     }
+
+    // D66 apply-to-sheet button
+    const applyBtn = html.querySelector(".d66-apply-btn");
+    if (applyBtn) {
+      // Hide if already applied
+      const applied = message.flags?.dreadlight?.d66?.applied;
+      if (applied) {
+        applyBtn.textContent = game.i18n.localize("DREADLIGHT.D66Applied");
+        applyBtn.disabled = true;
+        applyBtn.classList.add("applied");
+      }
+
+      applyBtn.addEventListener("click", async (ev) => {
+        ev.preventDefault();
+        const d66 = message.flags?.dreadlight?.d66;
+        if (!d66 || d66.applied) return;
+
+        const actorId = applyBtn.dataset.actorId;
+        const actor = game.actors.get(actorId);
+        if (!actor || !actor.isOwner) return;
+
+        const injuries = actor.system.injuries ?? [];
+        await actor.update({
+          "system.injuries": [...injuries, {
+            track: d66.tableKey,
+            d66Key: d66.d66Key,
+            name: d66.entry.name,
+            effect: d66.entry.effect,
+            healTime: d66.entry.healTime,
+            lethal: d66.entry.lethal,
+          }],
+        });
+
+        // Mark as applied so button is disabled on re-render
+        await message.update({ "flags.dreadlight.d66.applied": true });
+      });
+    }
   });
 }

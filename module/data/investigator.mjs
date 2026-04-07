@@ -97,6 +97,17 @@ export class InvestigatorData extends foundry.abstract.TypeDataModel {
         disheartened: new fields.BooleanField({ required: true, initial: false }),
       }),
 
+      injuries: new fields.ArrayField(
+        new fields.SchemaField({
+          track: new fields.StringField({ required: true, initial: "body" }),
+          d66Key: new fields.StringField({ required: true, initial: "" }),
+          name: new fields.StringField({ required: true, initial: "" }),
+          effect: new fields.StringField({ required: true, initial: "" }),
+          healTime: new fields.StringField({ required: true, initial: "" }),
+          lethal: new fields.BooleanField({ required: true, initial: false }),
+        })
+      ),
+
       marks: new fields.SchemaField({
         body: new fields.ArrayField(
           new fields.SchemaField({

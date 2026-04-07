@@ -3155,6 +3155,102 @@
   font-weight: 700;
 }
 
+/* ---- Active Injuries Section ---- */
+.dreadlight .injuries-section {
+  margin-top: 8px;
+}
+
+.dreadlight .injury-entry {
+  background: var(--dl-bg-card);
+  border-radius: 3px;
+  padding: 6px 8px;
+  margin-top: 4px;
+}
+
+.dreadlight .injury-entry.injury-body { border: 1px solid rgba(85, 184, 122, 0.12); }
+.dreadlight .injury-entry.injury-mind { border: 1px solid rgba(107, 157, 245, 0.12); }
+.dreadlight .injury-entry.injury-soul { border: 1px solid rgba(168, 139, 245, 0.12); }
+
+.dreadlight .injury-entry.injury-lethal {
+  border-color: rgba(224, 85, 85, 0.3);
+  background: rgba(224, 85, 85, 0.04);
+}
+
+.dreadlight .injury-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+}
+
+.dreadlight .injury-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dreadlight .injury-dot.body { background: var(--dl-track-body); }
+.dreadlight .injury-dot.mind { background: var(--dl-track-mind); }
+.dreadlight .injury-dot.soul { background: var(--dl-track-soul); }
+
+.dreadlight .injury-name {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--dl-text-primary);
+  flex: 1;
+}
+
+.dreadlight .injury-entry.injury-body .injury-name { color: var(--dl-track-body); }
+.dreadlight .injury-entry.injury-mind .injury-name { color: var(--dl-track-mind); }
+.dreadlight .injury-entry.injury-soul .injury-name { color: var(--dl-track-soul); }
+.dreadlight .injury-entry.injury-lethal .injury-name { color: var(--dl-accent-red); }
+
+.dreadlight .injury-d66 {
+  font-size: 8px;
+  color: var(--dl-text-muted);
+  font-family: var(--dl-font-primary);
+}
+
+.dreadlight .injury-effect {
+  font-size: 9px;
+  color: var(--dl-text-secondary);
+  line-height: 1.4;
+  margin-top: 2px;
+}
+
+.dreadlight .injury-heal {
+  font-size: 8px;
+  color: var(--dl-text-muted);
+  margin-top: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.dreadlight .delete-injury {
+  background: transparent;
+  border: none;
+  color: var(--dl-text-muted);
+  font-size: 10px;
+  cursor: pointer;
+  padding: 0 2px;
+  opacity: 0.5;
+  transition: all 0.2s ease;
+}
+
+.dreadlight .delete-injury:hover {
+  opacity: 1;
+  color: var(--dl-accent-red);
+}
+
+.dreadlight .injuries-empty {
+  font-size: 9px;
+  color: var(--dl-text-muted);
+  text-align: center;
+  padding: 6px 0;
+  font-style: italic;
+}
+
 .dreadlight .xp-box {
   background: var(--dl-bg-card);
   border: 1px solid var(--dl-border-gold);
@@ -3667,6 +3763,45 @@
   background: rgba(201, 169, 110, 0.15);
   border-color: var(--dl-accent-gold);
   box-shadow: 0 0 8px rgba(201, 169, 110, 0.2);
+}
+
+/* D66 Apply to Sheet button */
+.dreadlight-chat .d66-apply-bar {
+  padding: 6px 14px 10px;
+  text-align: center;
+}
+
+.dreadlight-chat .d66-apply-btn {
+  display: inline-block;
+  background: rgba(85, 184, 122, 0.08);
+  border: 1px solid rgba(85, 184, 122, 0.2);
+  border-radius: 4px;
+  color: var(--dl-track-body);
+  font-family: var(--dl-font-primary);
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dreadlight-chat .d66-apply-btn:hover {
+  background: rgba(85, 184, 122, 0.15);
+  border-color: var(--dl-track-body);
+  box-shadow: 0 0 8px rgba(85, 184, 122, 0.2);
+}
+
+.dreadlight-chat .d66-apply-btn.applied {
+  opacity: 0.4;
+  cursor: default;
+  background: transparent;
+  border-color: var(--dl-border-subtle);
+  color: var(--dl-text-muted);
+}
+
+.dreadlight-chat .d66-apply-btn.applied:hover {
+  box-shadow: none;
 }
 
 /* D66 Broken Header Treatment */
