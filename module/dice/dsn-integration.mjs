@@ -1,10 +1,16 @@
 /**
  * Register Dreadlight dice colorsets and presets with Dice So Nice.
  * Called from diceSoNiceReady hook in dreadlight.mjs.
+ *
+ * Each pool type (base / dread / gear) has its own Die denomination
+ * (db, dd, dg) so DSN can apply distinct colorsets and face labels
+ * without overriding the standard d6.
  */
 export function registerDSN(dice3d) {
   const ICON_PATH = "systems/dreadlight/assets/dice";
   const FONT = "Monaspace Krypton";
+
+  // ── Colorsets ──────────────────────────────────────────────────────
 
   // Base dice — black
   dice3d.addColorset({
@@ -48,21 +54,53 @@ export function registerDSN(dice3d) {
     font: FONT,
   });
 
-  // Register system BEFORE presets — DSN needs the system to exist first
+  // ── System ─────────────────────────────────────────────────────────
   dice3d.addSystem({ id: "dreadlight", name: "Dreadlight" }, "preferred");
 
-  // Custom d6 preset — face 1 = thorny vine (bane), face 6 = fireflake (success)
-  // Icons use white fill + dark outline so they're visible on all die colors
-  // bumpMaps use pre-generated inverted icons (black on white) for indented/engraved effect
+  // ── Shared face configuration ──────────────────────────────────────
+  // Face 1 = thorny vine (bane), Face 6 = fireflake (success), 2-5 blank
+  const labels = [`${ICON_PATH}/bane.png`, "", "", "", "", `${ICON_PATH}/success.png`];
+  const bumpMaps = [`${ICON_PATH}/bane-bump.png`, "", "", "", "", `${ICON_PATH}/success-bump.png`];
+  const emissiveMaps = [`${ICON_PATH}/bane.png`, "", "", "", "", `${ICON_PATH}/success.png`];
+
+  // ── Per-denomination presets ────────────────────────────────────────
+  // Each custom denomination gets its own preset + default colorset.
+
+  // Base die (db)
   dice3d.addDicePreset({
-    type: "d6",
-    labels: [`${ICON_PATH}/bane.png`, "", "", "", "", `${ICON_PATH}/success.png`],
-    bumpMaps: [`${ICON_PATH}/bane-bump.png`, "", "", "", "", `${ICON_PATH}/success-bump.png`],
-    emissiveMaps: [`${ICON_PATH}/bane.png`, "", "", "", "", `${ICON_PATH}/success.png`],
+    type: "db",
+    labels,
+    bumpMaps,
+    emissiveMaps,
     emissive: 0xffffff,
     emissiveIntensity: 0.3,
+    colorset: "dreadlight-base",
     system: "dreadlight",
   });
 
-  console.log("Dreadlight | Dice So Nice colorsets & presets registered");
+  // Dread die (dd)
+  dice3d.addDicePreset({
+    type: "dd",
+    labels,
+    bumpMaps,
+    emissiveMaps,
+    emissive: 0xffffff,
+    emissiveIntensity: 0.3,
+    colorset: "dreadlight-dread",
+    system: "dreadlight",
+  });
+
+  // Gear die (dg)
+  dice3d.addDicePreset({
+    type: "dg",
+    labels,
+    bumpMaps,
+    emissiveMaps,
+    emissive: 0xffffff,
+    emissiveIntensity: 0.3,
+    colorset: "dreadlight-gear",
+    system: "dreadlight",
+  });
+
+  console.log("Dreadlight | Dice So Nice presets registered (db, dd, dg)");
 }

@@ -7,6 +7,7 @@ import { EquipmentData } from "./module/data/equipment.mjs";
 import { InvestigatorSheet } from "./module/sheets/investigator-sheet.mjs";
 import { TalentSheet } from "./module/sheets/talent-sheet.mjs";
 import { WeaponSheet, ArmorSheet, EquipmentSheet } from "./module/sheets/item-sheet.mjs";
+import { BaseDie, DreadDie, GearDie } from "./module/dice/terms.mjs";
 import { registerDSN } from "./module/dice/dsn-integration.mjs";
 import { registerChatListeners, sendD66PromptToChat } from "./module/dice/chat-message.mjs";
 import { registerAdhocRoller } from "./module/dice/adhoc-roller.mjs";
@@ -40,6 +41,11 @@ Hooks.once("init", () => {
     },
   };
   CONFIG.DREADLIGHT.d66Tables = d66Tables;
+
+  // Register custom dice terms (db = base, dd = dread, dg = gear)
+  CONFIG.Dice.terms.b = BaseDie;
+  CONFIG.Dice.terms.d = DreadDie;
+  CONFIG.Dice.terms.g = GearDie;
 
   // Register Data Models
   Object.assign(CONFIG.Actor.dataModels, { investigator: InvestigatorData });
