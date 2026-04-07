@@ -63,19 +63,6 @@ export function registerHandlebarsHelpers() {
   });
 
   /**
-   * spiralState(totalMarks)
-   * Returns localized spiral state label based on mark thresholds.
-   * 0–2 → Scarred, 3 → Fraying, 4 → Unraveling, 5+ → Final Session
-   */
-  Handlebars.registerHelper("spiralState", (totalMarks) => {
-    if (totalMarks >= 5) return game.i18n.localize("DREADLIGHT.SpiralFinalSession");
-    if (totalMarks >= 4) return game.i18n.localize("DREADLIGHT.SpiralUnraveling");
-    if (totalMarks >= 3) return game.i18n.localize("DREADLIGHT.SpiralFraying");
-    if (totalMarks >= 1) return game.i18n.localize("DREADLIGHT.SpiralScarred");
-    return game.i18n.localize("DREADLIGHT.SpiralUnmarked");
-  });
-
-  /**
    * eq(a, b) — Equality check. Works as subexpression: {{#if (eq a b)}}
    */
   Handlebars.registerHelper("eq", (a, b) => a === b);
@@ -181,6 +168,15 @@ export function registerHandlebarsHelpers() {
    * or(a, b) — Logical OR.
    */
   Handlebars.registerHelper("or", (a, b) => !!a || !!b);
+
+  /**
+   * split(str, delimiter) — Split a string into an array.
+   * Usage: {{#each (split "a;b;c" ";")}}{{this}}{{/each}}
+   */
+  Handlebars.registerHelper("split", (str, delimiter) => {
+    if (!str) return [];
+    return String(str).split(delimiter).map((s) => s.trim()).filter(Boolean);
+  });
 
   /**
    * upper(str) — Uppercase a string.

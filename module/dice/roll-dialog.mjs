@@ -81,17 +81,6 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
     context.difficulties = CONFIG.DREADLIGHT.difficulties;
     context.dreadValue = system.dread.value;
 
-    // Marks for invocation
-    const marks = [];
-    for (const track of ["body", "mind", "soul"]) {
-      const trackMarks = system.marks[track] || [];
-      trackMarks.forEach((m, idx) => {
-        if (m.name) marks.push({ track, index: idx, name: m.name, effect: m.effect });
-      });
-    }
-    context.marks = marks;
-    context.hasMarks = marks.length > 0;
-
     // Build initial pool preview
     const talentLevel = this.#talent?.system.level || 0;
     const gearBonus = this.#gearItem?.system.gearBonus || 0;
@@ -101,7 +90,6 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
       talentLevel,
       gearBonus,
       difficultyMod: 0,
-      markPenalty: 0,
     });
     context.pool = pool;
 
@@ -128,11 +116,6 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
     // Difficulty radios → update pool
     el.querySelectorAll("[name=difficulty]").forEach(r =>
       r.addEventListener("change", () => this.#updatePoolPreview())
-    );
-
-    // Mark checkboxes → update pool
-    el.querySelectorAll(".mark-checkbox").forEach(cb =>
-      cb.addEventListener("change", () => this.#updatePoolPreview())
     );
 
     // Initial pool render to apply "first" class on dread blocks
@@ -179,7 +162,6 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
     const talentId = form.querySelector("[name=talent]")?.value || "";
     const gearId = form.querySelector("[name=gear]")?.value || "";
     const diffMod = parseInt(form.querySelector("[name=difficulty]:checked")?.value || "0");
-    const markCount = form.querySelectorAll(".mark-checkbox:checked").length;
 
     const selectedTalent = talentId ? this.#actor.items.get(talentId) : null;
     const selectedGear = gearId ? this.#actor.items.get(gearId) : null;
@@ -190,7 +172,6 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
       talentLevel: selectedTalent?.system.level || 0,
       gearBonus: selectedGear?.system.gearBonus || 0,
       difficultyMod: diffMod,
-      markPenalty: markCount,
     });
 
     this.#renderPoolDOM(pool);
@@ -258,7 +239,6 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
     const gearId = form.querySelector("[name=gear]")?.value || "";
     const diffChecked = form.querySelector("[name=difficulty]:checked");
     const diffMod = parseInt(diffChecked?.value || "0");
-    const markCount = form.querySelectorAll(".mark-checkbox:checked").length;
 
     const selectedTalent = talentId ? this.#actor.items.get(talentId) : null;
     const selectedGear = gearId ? this.#actor.items.get(gearId) : null;
@@ -269,17 +249,10 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
       talentLevel: selectedTalent?.system.level || 0,
       gearBonus: selectedGear?.system.gearBonus || 0,
       difficultyMod: diffMod,
-      markPenalty: markCount,
     });
 
     const diffName = Object.keys(CONFIG.DREADLIGHT.difficulties)
       .find(k => CONFIG.DREADLIGHT.difficulties[k] === diffMod) || "normal";
-
-    // Collect invoked mark names
-    const invokedMarks = [...form.querySelectorAll(".mark-checkbox:checked")].map(cb => {
-      const row = cb.closest(".mark-row");
-      return row?.querySelector(".mark-name")?.textContent || "";
-    }).filter(Boolean);
 
     const roll = new DreadlightRoll({
       ...pool,
@@ -288,7 +261,6 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
       gearName: selectedGear?.name || null,
       difficulty: diffName,
       actor: this.#actor,
-      invokedMarks,
     });
 
     await roll.evaluate();

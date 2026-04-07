@@ -45,7 +45,7 @@ Hooks.once("init", () => {
 
   // Register custom dice terms (db = base, dd = dread, dg = gear)
   CONFIG.Dice.terms.b = BaseDie;
-  CONFIG.Dice.terms.d = DreadDie;
+  CONFIG.Dice.terms.r = DreadDie;
   CONFIG.Dice.terms.g = GearDie;
 
   // Register Data Models
@@ -92,7 +92,6 @@ Hooks.once("init", () => {
     "systems/dreadlight/templates/actors/parts/header.hbs",
     "systems/dreadlight/templates/actors/parts/tracks.hbs",
     "systems/dreadlight/templates/actors/parts/attributes.hbs",
-    "systems/dreadlight/templates/actors/parts/spiral.hbs",
     "systems/dreadlight/templates/actors/parts/tab-talents.hbs",
     "systems/dreadlight/templates/actors/parts/tab-equipment.hbs",
     "systems/dreadlight/templates/actors/parts/tab-details.hbs",

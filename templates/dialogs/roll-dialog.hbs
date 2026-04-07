@@ -77,26 +77,6 @@
     </div>
   </div>
 
-  {{!-- Marks (invoke for penalty) --}}
-  {{#if hasMarks}}
-  <div class="dialog-field">
-    <div class="field-label">{{localize "DREADLIGHT.RollMarks"}}</div>
-    <div class="marks-section">
-      {{#each marks}}
-        <label class="mark-row">
-          <input type="checkbox" name="mark-{{this.track}}-{{this.index}}" class="mark-checkbox" value="1">
-          <span class="mark-pip mark-pip-{{this.track}}"></span>
-          <span class="mark-info">
-            <span class="mark-name">{{this.name}}</span>
-            {{#if this.effect}}<span class="mark-effect">{{this.effect}}</span>{{/if}}
-          </span>
-          <span class="mark-penalty">&minus;1</span>
-        </label>
-      {{/each}}
-    </div>
-  </div>
-  {{/if}}
-
   {{!-- Pool Preview --}}
   <div class="pool-preview">
     <div class="pool-label">{{localize "DREADLIGHT.RollPool"}}</div>

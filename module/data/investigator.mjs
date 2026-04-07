@@ -9,8 +9,9 @@ export class InvestigatorData extends foundry.abstract.TypeDataModel {
         new fields.SchemaField({
           name: new fields.StringField({ required: true, initial: "" }),
           desc: new fields.StringField({ required: true, initial: "" }),
+          vantage: new fields.StringField({ required: true, initial: "" }),
         }),
-        { initial: [{ name: "", desc: "" }, { name: "", desc: "" }] }
+        { initial: [{ name: "", desc: "", vantage: "" }, { name: "", desc: "", vantage: "" }] }
       ),
 
       attributes: new fields.SchemaField({
@@ -108,32 +109,6 @@ export class InvestigatorData extends foundry.abstract.TypeDataModel {
         })
       ),
 
-      marks: new fields.SchemaField({
-        body: new fields.ArrayField(
-          new fields.SchemaField({
-            name: new fields.StringField({ required: true, initial: "" }),
-            trigger: new fields.StringField({ required: true, initial: "" }),
-            effect: new fields.StringField({ required: true, initial: "" }),
-            benefit: new fields.StringField({ required: true, initial: "" }),
-          })
-        ),
-        mind: new fields.ArrayField(
-          new fields.SchemaField({
-            name: new fields.StringField({ required: true, initial: "" }),
-            trigger: new fields.StringField({ required: true, initial: "" }),
-            effect: new fields.StringField({ required: true, initial: "" }),
-            benefit: new fields.StringField({ required: true, initial: "" }),
-          })
-        ),
-        soul: new fields.ArrayField(
-          new fields.SchemaField({
-            name: new fields.StringField({ required: true, initial: "" }),
-            trigger: new fields.StringField({ required: true, initial: "" }),
-            effect: new fields.StringField({ required: true, initial: "" }),
-            benefit: new fields.StringField({ required: true, initial: "" }),
-          })
-        ),
-      }),
     };
   }
 
@@ -160,11 +135,6 @@ export class InvestigatorData extends foundry.abstract.TypeDataModel {
     this.tracks.body.broken = this.tracks.body.value === 0;
     this.tracks.mind.broken = this.tracks.mind.value === 0;
     this.tracks.soul.broken = this.tracks.soul.value === 0;
-
-    // Calculate spiral (total mark count across all three arrays)
-    this.spiral = (this.marks.body?.length ?? 0)
-      + (this.marks.mind?.length ?? 0)
-      + (this.marks.soul?.length ?? 0);
 
     // Calculate carry limit
     this.carryLimit = str + game.settings.get("dreadlight", "carryBonus");

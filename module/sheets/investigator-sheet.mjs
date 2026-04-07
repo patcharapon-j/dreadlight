@@ -26,8 +26,6 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       deleteItem: InvestigatorSheet.#deleteItem,
       addConnection: InvestigatorSheet.#addConnection,
       deleteConnection: InvestigatorSheet.#deleteConnection,
-      addMark: InvestigatorSheet.#addMark,
-      deleteMark: InvestigatorSheet.#deleteMark,
       rollD66: InvestigatorSheet.#rollD66,
       deleteInjury: InvestigatorSheet.#deleteInjury,
     },
@@ -135,20 +133,6 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     context.carryUsed = Math.round((itemWeight + supplyWeight) * 100) / 100;
     context.carryLimit = system.carryLimit;
 
-    // Spiral / marks — compute directly from source arrays
-    context.totalMarks = (system.marks?.body?.length ?? 0)
-      + (system.marks?.mind?.length ?? 0)
-      + (system.marks?.soul?.length ?? 0);
-
-    const buildMarks = (trackKey) =>
-      (system.marks[trackKey] ?? []).map((mark, index) => ({ ...mark, track: trackKey, index }));
-
-    context.allMarks = [
-      ...buildMarks("body"),
-      ...buildMarks("mind"),
-      ...buildMarks("soul"),
-    ];
-
     // Track bar percentages for mini bars
     const bodyMax = system.tracks.body.max || 1;
     const mindMax = system.tracks.mind.max || 1;
@@ -162,6 +146,14 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
 
     // Broken state
     context.anyBroken = system.tracks.body.broken || system.tracks.mind.broken || system.tracks.soul.broken;
+
+    // Build background tags with per-background vantage arrays for the header
+    context.backgroundTags = system.backgrounds
+      .filter((bg) => bg.name)
+      .map((bg) => ({
+        name: bg.name,
+        vantages: (bg.vantage || "").split(";").map((v) => v.trim()).filter(Boolean),
+      }));
 
     // Tab group state
     context.tab = this.tabGroups.primary;
@@ -721,21 +713,6 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     const connections = foundry.utils.deepClone(this.actor.system.details.connections ?? []);
     connections.splice(index, 1);
     this.actor.update({ "system.details.connections": connections });
-  }
-
-  static #addMark(event, target) {
-    const trackKey = target.dataset.track;
-    const marks = foundry.utils.deepClone(this.actor.system.marks[trackKey] ?? []);
-    marks.push({ name: "", trigger: "", effect: "", benefit: "" });
-    this.actor.update({ [`system.marks.${trackKey}`]: marks });
-  }
-
-  static #deleteMark(event, target) {
-    const trackKey = target.dataset.track;
-    const index = parseInt(target.dataset.index, 10);
-    const marks = foundry.utils.deepClone(this.actor.system.marks[trackKey] ?? []);
-    marks.splice(index, 1);
-    this.actor.update({ [`system.marks.${trackKey}`]: marks });
   }
 
   /* ---------------------------------------- */
