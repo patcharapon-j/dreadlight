@@ -588,7 +588,6 @@
 }
 
 .dreadlight .track-btn {
-  position: relative;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -601,7 +600,7 @@
   padding: 5px 8px;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
-  overflow: visible;
+  overflow: hidden;
 }
 
 .dreadlight .track-btn.body { border-color: rgba(85, 184, 122, 0.15); }
@@ -3326,92 +3325,145 @@
 .dreadlight .tab-content > .tab.active { display: flex; flex-direction: column; gap: 0; }
 
 /* ----------------------------------------------------------
-   31. AD-HOC ROLLER BAR (above chat input)
+   31. AD-HOC ROLLER (floating button + panel)
    ---------------------------------------------------------- */
 
-.adhoc-roller {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 6px;
-  background: var(--dl-bg-surface);
-  border: 1px solid var(--dl-border-subtle);
-  border-radius: 5px;
-  margin: 0 0 4px 0;
+.adhoc-roller-float {
+  position: fixed;
+  bottom: 20px;
+  z-index: 100;
   font-family: var(--dl-font-primary);
+  transition: right 0.3s ease;
 }
 
-.adhoc-roller .adhoc-pool {
-  display: flex;
-  gap: 4px;
-  flex: 1;
-}
-
-.adhoc-roller .adhoc-group {
+/* Toggle button */
+.adhoc-roller-float .adhoc-toggle {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(201, 169, 110, 0.25);
+  background: var(--dl-bg-elevated);
+  cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 2px;
-  padding: 2px 4px;
-  border-radius: 4px;
-  flex: 1;
   justify-content: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  padding: 0;
 }
 
-.adhoc-roller .adhoc-group-base {
+.adhoc-roller-float .adhoc-toggle:hover {
+  border-color: rgba(201, 169, 110, 0.5);
+  box-shadow: 0 2px 12px rgba(201, 169, 110, 0.15);
+}
+
+.adhoc-roller-float .adhoc-toggle.active {
+  border-color: var(--dl-accent-gold);
+  box-shadow: 0 0 12px rgba(201, 169, 110, 0.25);
+}
+
+.adhoc-roller-float .adhoc-toggle-icon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  border: none;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.adhoc-roller-float .adhoc-toggle:hover .adhoc-toggle-icon,
+.adhoc-roller-float .adhoc-toggle.active .adhoc-toggle-icon {
+  opacity: 1;
+}
+
+/* Expandable panel */
+.adhoc-roller-float .adhoc-panel {
+  position: absolute;
+  bottom: 46px;
+  right: 0;
+  width: 200px;
+  background: var(--dl-bg-surface);
+  border: 1px solid rgba(201, 169, 110, 0.15);
+  border-radius: 6px;
+  padding: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.adhoc-roller-float .adhoc-pool {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.adhoc-roller-float .adhoc-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 6px;
+  border-radius: 4px;
+}
+
+.adhoc-roller-float .adhoc-group-base {
   background: rgba(255, 255, 255, 0.03);
 }
 
-.adhoc-roller .adhoc-group-dread {
+.adhoc-roller-float .adhoc-group-dread {
   background: rgba(224, 85, 85, 0.06);
 }
 
-.adhoc-roller .adhoc-group-gear {
+.adhoc-roller-float .adhoc-group-gear {
   background: rgba(201, 169, 110, 0.04);
 }
 
-.adhoc-roller .adhoc-label {
-  font-size: 7px;
+.adhoc-roller-float .adhoc-label {
+  font-size: 9px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--dl-text-muted);
-  margin-right: 2px;
-  min-width: 22px;
+  min-width: 36px;
 }
 
-.adhoc-roller .adhoc-group-dread .adhoc-label {
+.adhoc-roller-float .adhoc-group-dread .adhoc-label {
   color: rgba(224, 85, 85, 0.6);
 }
 
-.adhoc-roller .adhoc-group-gear .adhoc-label {
+.adhoc-roller-float .adhoc-group-gear .adhoc-label {
   color: rgba(201, 169, 110, 0.6);
 }
 
-.adhoc-roller .adhoc-count {
-  font-size: 14px;
+.adhoc-roller-float .adhoc-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.adhoc-roller-float .adhoc-count {
+  font-size: 16px;
   font-weight: 700;
   color: var(--dl-text-primary);
-  min-width: 16px;
+  min-width: 20px;
   text-align: center;
 }
 
-.adhoc-roller .adhoc-group-dread .adhoc-count {
+.adhoc-roller-float .adhoc-group-dread .adhoc-count {
   color: var(--dl-accent-red);
 }
 
-.adhoc-roller .adhoc-group-gear .adhoc-count {
+.adhoc-roller-float .adhoc-group-gear .adhoc-count {
   color: var(--dl-accent-gold);
 }
 
-.adhoc-roller .adhoc-btn {
-  width: 20px;
-  height: 20px;
+.adhoc-roller-float .adhoc-btn {
+  width: 22px;
+  height: 22px;
   padding: 0;
   margin: 0;
   border: 1px solid var(--dl-border-subtle);
   border-radius: 3px;
   background: rgba(255, 255, 255, 0.04);
   color: var(--dl-text-secondary);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
   display: flex;
@@ -3421,28 +3473,28 @@
   transition: background 0.15s, border-color 0.15s;
 }
 
-.adhoc-roller .adhoc-btn:hover {
+.adhoc-roller-float .adhoc-btn:hover {
   background: rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.2);
 }
 
-.adhoc-roller .adhoc-roll-btn {
-  padding: 4px 10px;
+.adhoc-roller-float .adhoc-roll-btn {
+  width: 100%;
+  padding: 6px 0;
   border: 1px solid rgba(201, 169, 110, 0.25);
   border-radius: 4px;
   background: rgba(201, 169, 110, 0.08);
   color: var(--dl-accent-gold);
   font-family: var(--dl-font-primary);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s;
-  white-space: nowrap;
 }
 
-.adhoc-roller .adhoc-roll-btn:hover {
+.adhoc-roller-float .adhoc-roll-btn:hover {
   background: rgba(201, 169, 110, 0.15);
   border-color: rgba(201, 169, 110, 0.4);
 }
@@ -3617,34 +3669,75 @@
   box-shadow: 0 0 8px rgba(201, 169, 110, 0.2);
 }
 
-/* D66 Manual Roll Button (on tracks) */
-.track-btn .d66-manual-btn {
+/* D66 Broken Header Treatment */
+.dreadlight-chat .d66-broken-header .chat-portrait {
+  filter: saturate(0.2) brightness(0.6) contrast(1.1) sepia(0.3);
+}
+
+.dreadlight-chat .d66-broken-header .chat-portrait-fade {
+  background:
+    linear-gradient(to top, var(--dl-bg-primary) 0%, transparent 60%),
+    rgba(224, 85, 85, 0.12);
+}
+
+.dreadlight-chat .d66-broken-overlay {
   position: absolute;
-  right: 4px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 20px;
-  height: 20px;
+  inset: 0;
+  z-index: 3;
+  overflow: hidden;
   display: flex;
   align-items: center;
-  justify-content: center;
-  background: transparent;
-  border: none;
+  pointer-events: none;
+}
+
+.dreadlight-chat .d66-broken-overlay span {
+  white-space: nowrap;
+  font-family: var(--dl-font-primary);
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(224, 85, 85, 0.08);
+  user-select: none;
+}
+
+/* D66 Track Roll Buttons (below tracks) */
+.dreadlight .track-col {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
+}
+
+.dreadlight .track-col .track-btn {
+  flex: none;
+}
+
+.dreadlight .d66-track-roll {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--dl-border-subtle);
+  border-radius: 3px;
   color: var(--dl-text-muted);
-  font-size: 14px;
+  font-family: var(--dl-font-primary);
+  font-size: 7px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 2px 4px;
   cursor: pointer;
-  opacity: 0;
   transition: all 0.2s ease;
-  padding: 0;
-  z-index: 2;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.track-btn:hover .d66-manual-btn {
-  opacity: 0.6;
-}
-
-.track-btn .d66-manual-btn:hover {
-  opacity: 1;
+.dreadlight .d66-track-roll:hover {
   color: var(--dl-accent-gold);
-  filter: drop-shadow(0 0 4px rgba(201, 169, 110, 0.4));
+  border-color: var(--dl-border-gold);
+  background: rgba(201, 169, 110, 0.06);
 }
+
+.dreadlight .d66-track-roll.body:hover { color: var(--dl-track-body); border-color: rgba(85, 184, 122, 0.3); background: rgba(85, 184, 122, 0.06); }
+.dreadlight .d66-track-roll.mind:hover { color: var(--dl-track-mind); border-color: rgba(107, 157, 245, 0.3); background: rgba(107, 157, 245, 0.06); }
+.dreadlight .d66-track-roll.soul:hover { color: var(--dl-track-soul); border-color: rgba(168, 139, 245, 0.3); background: rgba(168, 139, 245, 0.06); }

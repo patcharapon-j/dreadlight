@@ -159,10 +159,12 @@
   "DREADLIGHT.D66RollCriticalInjury": "Roll Critical Injury",
   "DREADLIGHT.D66RollTrauma": "Roll Trauma",
   "DREADLIGHT.D66RollManifestation": "Roll Manifestation",
-  "DREADLIGHT.D66BrokenBody": "{name}'s Body is broken",
-  "DREADLIGHT.D66BrokenMind": "{name}'s Mind is broken",
-  "DREADLIGHT.D66BrokenSoul": "{name}'s Soul is broken",
+  "DREADLIGHT.D66BrokenBody": "Body is broken",
+  "DREADLIGHT.D66BrokenMind": "Mind is broken",
+  "DREADLIGHT.D66BrokenSoul": "Soul is broken",
   "DREADLIGHT.D66HealTime": "Recovery",
   "DREADLIGHT.D66Lethal": "LETHAL",
-  "DREADLIGHT.D66Result": "D66"
+  "DREADLIGHT.D66Result": "D66",
+
+  "DREADLIGHT.AdhocRoll": "Ad-Hoc Roll"
 }

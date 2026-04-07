@@ -1,50 +1,56 @@
 <div class="tracks-bar" data-dread="{{system.dread.value}}">
-  <div class="track-btn body {{#if system.tracks.body.broken}}is-broken{{/if}}">
-    <div class="track-icon body">♥</div>
-    <div class="track-info">
-      <div class="track-label body">
-        {{#if system.tracks.body.broken}}
-          <span class="broken-tag">{{localize "DREADLIGHT.Broken"}}</span>
-        {{else}}
-          {{localize "DREADLIGHT.TrackBody"}}
-        {{/if}}
+  <div class="track-col">
+    <div class="track-btn body {{#if system.tracks.body.broken}}is-broken{{/if}}">
+      <div class="track-icon body">♥</div>
+      <div class="track-info">
+        <div class="track-label body">
+          {{#if system.tracks.body.broken}}
+            <span class="broken-tag">{{localize "DREADLIGHT.Broken"}}</span>
+          {{else}}
+            {{localize "DREADLIGHT.TrackBody"}}
+          {{/if}}
+        </div>
+        <div class="track-pips">{{{trackPips system.tracks.body.value system.tracks.body.max "body"}}}</div>
       </div>
-      <div class="track-pips">{{{trackPips system.tracks.body.value system.tracks.body.max "body"}}}</div>
+      <span class="track-num">{{system.tracks.body.value}}</span>
     </div>
-    <span class="track-num">{{system.tracks.body.value}}</span>
-    <button type="button" class="d66-manual-btn" data-action="rollD66" data-track="body" title="{{localize "DREADLIGHT.D66RollCriticalInjury"}}">⚅</button>
+    <button type="button" class="d66-track-roll body" data-action="rollD66" data-track="body">⚅ {{localize "DREADLIGHT.D66CriticalInjury"}}</button>
   </div>
 
-  <div class="track-btn mind {{#if system.tracks.mind.broken}}is-broken{{/if}}">
-    <div class="track-icon mind">◈</div>
-    <div class="track-info">
-      <div class="track-label mind">
-        {{#if system.tracks.mind.broken}}
-          <span class="broken-tag">{{localize "DREADLIGHT.Broken"}}</span>
-        {{else}}
-          {{localize "DREADLIGHT.TrackMind"}}
-        {{/if}}
+  <div class="track-col">
+    <div class="track-btn mind {{#if system.tracks.mind.broken}}is-broken{{/if}}">
+      <div class="track-icon mind">◈</div>
+      <div class="track-info">
+        <div class="track-label mind">
+          {{#if system.tracks.mind.broken}}
+            <span class="broken-tag">{{localize "DREADLIGHT.Broken"}}</span>
+          {{else}}
+            {{localize "DREADLIGHT.TrackMind"}}
+          {{/if}}
+        </div>
+        <div class="track-pips">{{{trackPips system.tracks.mind.value system.tracks.mind.max "mind"}}}</div>
       </div>
-      <div class="track-pips">{{{trackPips system.tracks.mind.value system.tracks.mind.max "mind"}}}</div>
+      <span class="track-num">{{system.tracks.mind.value}}</span>
     </div>
-    <span class="track-num">{{system.tracks.mind.value}}</span>
-    <button type="button" class="d66-manual-btn" data-action="rollD66" data-track="mind" title="{{localize "DREADLIGHT.D66RollTrauma"}}">⚅</button>
+    <button type="button" class="d66-track-roll mind" data-action="rollD66" data-track="mind">⚅ {{localize "DREADLIGHT.D66Trauma"}}</button>
   </div>
 
-  <div class="track-btn soul {{#if system.tracks.soul.broken}}is-broken{{/if}}">
-    <div class="track-icon soul">◉</div>
-    <div class="track-info">
-      <div class="track-label soul">
-        {{#if system.tracks.soul.broken}}
-          <span class="broken-tag">{{localize "DREADLIGHT.Broken"}}</span>
-        {{else}}
-          {{localize "DREADLIGHT.TrackSoul"}}
-        {{/if}}
+  <div class="track-col">
+    <div class="track-btn soul {{#if system.tracks.soul.broken}}is-broken{{/if}}">
+      <div class="track-icon soul">◉</div>
+      <div class="track-info">
+        <div class="track-label soul">
+          {{#if system.tracks.soul.broken}}
+            <span class="broken-tag">{{localize "DREADLIGHT.Broken"}}</span>
+          {{else}}
+            {{localize "DREADLIGHT.TrackSoul"}}
+          {{/if}}
+        </div>
+        <div class="track-pips">{{{trackPips system.tracks.soul.value system.tracks.soul.max "soul"}}}</div>
       </div>
-      <div class="track-pips">{{{trackPips system.tracks.soul.value system.tracks.soul.max "soul"}}}</div>
+      <span class="track-num">{{system.tracks.soul.value}}</span>
     </div>
-    <span class="track-num">{{system.tracks.soul.value}}</span>
-    <button type="button" class="d66-manual-btn" data-action="rollD66" data-track="soul" title="{{localize "DREADLIGHT.D66RollManifestation"}}">⚅</button>
+    <button type="button" class="d66-track-roll soul" data-action="rollD66" data-track="soul">⚅ {{localize "DREADLIGHT.D66Manifestation"}}</button>
   </div>
 
   <div class="track-separator"></div>

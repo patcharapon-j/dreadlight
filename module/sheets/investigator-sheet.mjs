@@ -181,8 +181,7 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     for (const trackKey of ["body", "mind", "soul"]) {
       const btn = this.element.querySelector(`.track-btn.${trackKey}`);
       if (!btn) continue;
-      btn.addEventListener("click", (ev) => {
-        if (ev.target.closest(".d66-manual-btn")) return;
+      btn.addEventListener("click", () => {
         const track = this.actor.system.tracks[trackKey];
         if (track.value < track.max) this.actor.update({ [`system.tracks.${trackKey}.value`]: track.value + 1 });
       });

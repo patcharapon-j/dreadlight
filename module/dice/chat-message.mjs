@@ -79,7 +79,7 @@ export async function sendD66PromptToChat(actor, trackKey) {
     actorName: actor.name,
     actorId: actor.id,
     portraitChat: actor.system.portrait?.chat ?? { offsetX: 0, offsetY: 0, zoom: 1 },
-    brokenMessage: game.i18n.format(brokenLabel[trackKey], { name: actor.name }),
+    brokenMessage: game.i18n.localize(brokenLabel[trackKey]),
     rollLabel: game.i18n.localize(tableLabel[trackKey]),
   };
 
