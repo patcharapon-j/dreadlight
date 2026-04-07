@@ -36,7 +36,7 @@ export class DreadlightRoll {
   get extraSuccesses() { return Math.max(0, this.totalSixes - 1); }
 
   get omenGained() {
-    if (this.outcome === "failure") return 1;
+    if (this.outcome === "failure") return game.settings.get("dreadlight", "failureDreadGain");
     return 0;
   }
 

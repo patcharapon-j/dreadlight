@@ -141,7 +141,8 @@ async function sendAdhocRollToChat(roll, actor) {
     totalSixes: roll.totalSixes,
     extraSuccesses: roll.extraSuccesses,
     outcome: roll.outcome,
-    dreadGained: roll.dreadGained,
+    omenGained: roll.omenGained,
+    direFailure: roll.direFailure,
   };
 
   const content = await foundry.applications.handlebars.renderTemplate(
