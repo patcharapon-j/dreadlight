@@ -35,19 +35,21 @@ export class DreadlightRoll {
 
   get extraSuccesses() { return Math.max(0, this.totalSixes - 1); }
 
-  get dreadGained() {
-    let dread = 0;
-    if (this.outcome === "failure") dread += game.settings.get("dreadlight", "failureDreadGain");
-    if (this.outcome === "tainted" || this.outcome === "dire") dread += this.dreadSixes;
-    return dread;
+  get omenGained() {
+    if (this.outcome === "failure") return 1;
+    return 0;
+  }
+
+  get direFailure() {
+    return this.outcome === "failure" && this.dreadOnes > 0;
   }
 
   async evaluate() {
-    // Build a single Roll formula using custom denominations (db/dd/dg)
+    // Build a single Roll formula using custom denominations (db/dr/dg)
     // so DSN automatically applies the correct colorset per pool.
     const parts = [];
     if (this.baseDice > 0) parts.push(`${this.baseDice}db`);
-    if (this.dreadDice > 0) parts.push(`${this.dreadDice}dd`);
+    if (this.dreadDice > 0) parts.push(`${this.dreadDice}dr`);
     if (this.gearDice > 0) parts.push(`${this.gearDice}dg`);
     if (parts.length === 0) { this.evaluated = true; return this; }
 
@@ -76,7 +78,7 @@ export class DreadlightRoll {
   async push() {
     this.pushed = true;
 
-    // Re-rolled dice use the same custom denominations (db/dd/dg) so DSN
+    // Re-rolled dice use the same custom denominations (db/dr/dg) so DSN
     // automatically applies the correct colorset and face icons per pool.
     // Count how many dice need re-rolling per pool (not locked 1s/6s)
     const rerollCount = (results) => results.filter(v => v !== 1 && v !== 6).length;
@@ -88,7 +90,7 @@ export class DreadlightRoll {
     const parts = [];
     const poolMap = []; // track which term index maps to which pool
     if (baseRerolls > 0) { parts.push(`${baseRerolls}db`); poolMap.push("base"); }
-    if (dreadRerolls > 0) { parts.push(`${dreadRerolls}dd`); poolMap.push("dread"); }
+    if (dreadRerolls > 0) { parts.push(`${dreadRerolls}dr`); poolMap.push("dread"); }
     if (gearRerolls > 0) { parts.push(`${gearRerolls}dg`); poolMap.push("gear"); }
 
     this._dsnRoll = null;
@@ -119,11 +121,14 @@ export class DreadlightRoll {
 
   get pushConsequences() {
     if (!this.pushed) return null;
+    // omenGain: +1 if any Dread 6s landed on the push AND outcome is not failure
+    // (failure already grants +1 Omen via omenGained — no double dip)
+    const omenGain = (this.dreadSixes > 0 && this.outcome !== "failure") ? 1 : 0;
     return {
       mindLoss: this.baseOnes,
       soulLoss: this.dreadOnes,
       gearDamage: this.gearOnes,
-      dreadGain: game.settings.get("dreadlight", "pushDreadGain"),
+      omenGain,
     };
   }
 
@@ -149,7 +154,8 @@ export class DreadlightRoll {
       totalSixes: this.totalSixes,
       extraSuccesses: this.extraSuccesses,
       outcome: this.outcome,
-      dreadGained: this.dreadGained,
+      omenGained: this.omenGained,
+      direFailure: this.direFailure,
       pushed: this.pushed,
       consequences: this.pushConsequences,
     };
