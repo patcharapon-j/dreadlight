@@ -53,9 +53,14 @@ export function registerDSN(dice3d) {
 
   // Custom d6 preset — face 1 = thorny vine (bane), face 6 = fireflake (success)
   // Icons use white fill + dark outline so they're visible on all die colors
+  // bumpMaps use pre-generated inverted icons (black on white) for indented/engraved effect
   dice3d.addDicePreset({
     type: "d6",
     labels: [`${ICON_PATH}/bane.png`, "", "", "", "", `${ICON_PATH}/success.png`],
+    bumpMaps: [`${ICON_PATH}/bane-bump.png`, "", "", "", "", `${ICON_PATH}/success-bump.png`],
+    emissiveMaps: [`${ICON_PATH}/bane.png`, "", "", "", "", `${ICON_PATH}/success.png`],
+    emissive: 0xffffff,
+    emissiveIntensity: 0.3,
     system: "dreadlight",
   });
 
