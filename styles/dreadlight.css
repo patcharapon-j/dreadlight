@@ -2364,36 +2364,188 @@
 
 /* Color variants — border on the parent message */
 .chat-message:has(.chat-success) {
-  border-color: rgba(201, 169, 110, 0.2) !important;
+  border-color: rgba(201, 169, 110, 0.35) !important;
+  box-shadow: 0 0 8px rgba(201, 169, 110, 0.08);
 }
 
 .dreadlight-chat.chat-success .chat-accent {
-  background: linear-gradient(90deg, transparent 0%, var(--dl-accent-gold) 30%, transparent 100%);
+  height: 4px;
+  background: linear-gradient(90deg, transparent 0%, var(--dl-accent-gold) 20%, var(--dl-accent-gold) 80%, transparent 100%);
+  box-shadow: 0 1px 6px rgba(201, 169, 110, 0.4);
 }
 
 .chat-message:has(.chat-tainted) {
-  border-color: rgba(168, 139, 245, 0.2) !important;
+  border-color: rgba(168, 139, 245, 0.35) !important;
+  box-shadow: 0 0 8px rgba(168, 139, 245, 0.08);
 }
 
 .dreadlight-chat.chat-tainted .chat-accent {
-  background: linear-gradient(90deg, transparent 0%, var(--dl-track-soul) 30%, transparent 100%);
+  height: 4px;
+  background: linear-gradient(90deg, transparent 0%, var(--dl-track-soul) 20%, var(--dl-track-soul) 80%, transparent 100%);
+  box-shadow: 0 1px 6px rgba(168, 139, 245, 0.4);
 }
 
 .chat-message:has(.chat-failure) {
-  border-color: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(120, 120, 135, 0.2) !important;
 }
 
 .dreadlight-chat.chat-failure .chat-accent {
-  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.1) 30%, transparent 100%);
+  height: 4px;
+  background: linear-gradient(90deg, transparent 0%, rgba(120, 120, 135, 0.25) 20%, rgba(120, 120, 135, 0.25) 80%, transparent 100%);
+}
+
+.chat-message:has(.chat-dire) {
+  border-color: rgba(224, 85, 85, 0.4) !important;
+  box-shadow: 0 0 10px rgba(224, 85, 85, 0.1);
+}
+
+.dreadlight-chat.chat-dire .chat-accent {
+  height: 4px;
+  background: linear-gradient(90deg, transparent 0%, var(--dl-accent-red) 20%, var(--dl-accent-red) 80%, transparent 100%);
+  box-shadow: 0 1px 8px rgba(224, 85, 85, 0.5);
 }
 
 .chat-message:has(.chat-pushed) {
-  border-color: rgba(201, 169, 110, 0.15) !important;
+  border-color: rgba(201, 169, 110, 0.25) !important;
 }
 
 .dreadlight-chat.chat-pushed .chat-accent {
-  background: linear-gradient(90deg, transparent 0%, rgba(201, 169, 110, 0.5) 30%, transparent 100%);
+  height: 4px;
+  background: linear-gradient(90deg, transparent 0%, rgba(201, 169, 110, 0.6) 20%, rgba(201, 169, 110, 0.6) 80%, transparent 100%);
+  box-shadow: 0 1px 6px rgba(201, 169, 110, 0.3);
 }
+
+/* ----------------------------------------------------------
+   PROGRESSIVE SUCCESS INTENSITY
+   The more 6s rolled, the more radiant the card becomes.
+   ---------------------------------------------------------- */
+
+/* --- 2 successes --- */
+.chat-message:has(.chat-success[data-sixes="2"]) {
+  border-color: rgba(201, 169, 110, 0.45) !important;
+  box-shadow: 0 0 10px rgba(201, 169, 110, 0.12);
+}
+.dreadlight-chat.chat-success[data-sixes="2"] .chat-accent {
+  box-shadow: 0 1px 8px rgba(201, 169, 110, 0.5);
+}
+.dreadlight-chat.chat-success[data-sixes="2"] .chat-portrait-bg {
+  background:
+    radial-gradient(ellipse at 30% 40%, rgba(201, 169, 110, 0.3) 0%, transparent 70%),
+    linear-gradient(135deg, rgba(201, 169, 110, 0.15) 0%, rgba(160, 130, 70, 0.08) 50%, transparent 100%);
+}
+.dreadlight-chat.chat-success[data-sixes="2"] .result-row::before { opacity: 0.16; }
+
+/* --- 3 successes --- */
+.chat-message:has(.chat-success[data-sixes="3"]) {
+  border-color: rgba(201, 169, 110, 0.55) !important;
+  box-shadow: 0 0 14px rgba(201, 169, 110, 0.16);
+}
+.dreadlight-chat.chat-success[data-sixes="3"] .chat-accent {
+  height: 5px;
+  box-shadow: 0 1px 10px rgba(201, 169, 110, 0.6);
+}
+.dreadlight-chat.chat-success[data-sixes="3"] .chat-portrait-bg {
+  background:
+    radial-gradient(ellipse at 30% 40%, rgba(201, 169, 110, 0.38) 0%, transparent 70%),
+    linear-gradient(135deg, rgba(201, 169, 110, 0.2) 0%, rgba(160, 130, 70, 0.1) 50%, transparent 100%);
+}
+.dreadlight-chat.chat-success[data-sixes="3"] .result-row::before { opacity: 0.2; }
+.dreadlight-chat.chat-success[data-sixes="3"] .result-row { border-left-width: 4px; }
+
+/* --- 4+ successes --- */
+.chat-message:has(.chat-success[data-sixes="4"]),
+.chat-message:has(.chat-success[data-sixes="5"]),
+.chat-message:has(.chat-success[data-sixes="6"]),
+.chat-message:has(.chat-success[data-sixes="7"]),
+.chat-message:has(.chat-success[data-sixes="8"]) {
+  border-color: rgba(201, 169, 110, 0.65) !important;
+  box-shadow: 0 0 18px rgba(201, 169, 110, 0.2), 0 0 4px rgba(201, 169, 110, 0.1) inset;
+}
+.dreadlight-chat.chat-success[data-sixes="4"] .chat-accent,
+.dreadlight-chat.chat-success[data-sixes="5"] .chat-accent,
+.dreadlight-chat.chat-success[data-sixes="6"] .chat-accent,
+.dreadlight-chat.chat-success[data-sixes="7"] .chat-accent,
+.dreadlight-chat.chat-success[data-sixes="8"] .chat-accent {
+  height: 5px;
+  box-shadow: 0 1px 14px rgba(201, 169, 110, 0.7);
+  animation: accent-pulse-gold 2.5s ease-in-out infinite;
+}
+.dreadlight-chat.chat-success[data-sixes="4"] .chat-portrait-bg,
+.dreadlight-chat.chat-success[data-sixes="5"] .chat-portrait-bg,
+.dreadlight-chat.chat-success[data-sixes="6"] .chat-portrait-bg,
+.dreadlight-chat.chat-success[data-sixes="7"] .chat-portrait-bg,
+.dreadlight-chat.chat-success[data-sixes="8"] .chat-portrait-bg {
+  background:
+    radial-gradient(ellipse at 30% 40%, rgba(201, 169, 110, 0.45) 0%, rgba(201, 169, 110, 0.1) 60%, transparent 80%),
+    linear-gradient(135deg, rgba(201, 169, 110, 0.25) 0%, rgba(160, 130, 70, 0.12) 50%, transparent 100%);
+}
+.dreadlight-chat.chat-success[data-sixes="4"] .result-row::before,
+.dreadlight-chat.chat-success[data-sixes="5"] .result-row::before,
+.dreadlight-chat.chat-success[data-sixes="6"] .result-row::before,
+.dreadlight-chat.chat-success[data-sixes="7"] .result-row::before,
+.dreadlight-chat.chat-success[data-sixes="8"] .result-row::before { opacity: 0.25; }
+.dreadlight-chat.chat-success[data-sixes="4"] .result-row,
+.dreadlight-chat.chat-success[data-sixes="5"] .result-row,
+.dreadlight-chat.chat-success[data-sixes="6"] .result-row,
+.dreadlight-chat.chat-success[data-sixes="7"] .result-row,
+.dreadlight-chat.chat-success[data-sixes="8"] .result-row { border-left-width: 4px; }
+
+/* --- Tainted progressive (2+) --- */
+.chat-message:has(.chat-tainted[data-sixes="2"]) {
+  border-color: rgba(168, 139, 245, 0.45) !important;
+  box-shadow: 0 0 10px rgba(168, 139, 245, 0.12);
+}
+.dreadlight-chat.chat-tainted[data-sixes="2"] .chat-accent {
+  box-shadow: 0 1px 8px rgba(168, 139, 245, 0.5);
+}
+.dreadlight-chat.chat-tainted[data-sixes="2"] .chat-portrait-bg {
+  background:
+    radial-gradient(ellipse at 30% 40%, rgba(168, 139, 245, 0.3) 0%, transparent 70%),
+    linear-gradient(135deg, rgba(168, 139, 245, 0.15) 0%, rgba(120, 90, 200, 0.08) 50%, transparent 100%);
+}
+.dreadlight-chat.chat-tainted[data-sixes="2"] .result-row::before { opacity: 0.16; }
+
+.chat-message:has(.chat-tainted[data-sixes="3"]),
+.chat-message:has(.chat-tainted[data-sixes="4"]),
+.chat-message:has(.chat-tainted[data-sixes="5"]),
+.chat-message:has(.chat-tainted[data-sixes="6"]),
+.chat-message:has(.chat-tainted[data-sixes="7"]),
+.chat-message:has(.chat-tainted[data-sixes="8"]) {
+  border-color: rgba(168, 139, 245, 0.55) !important;
+  box-shadow: 0 0 14px rgba(168, 139, 245, 0.16);
+}
+.dreadlight-chat.chat-tainted[data-sixes="3"] .chat-accent,
+.dreadlight-chat.chat-tainted[data-sixes="4"] .chat-accent,
+.dreadlight-chat.chat-tainted[data-sixes="5"] .chat-accent,
+.dreadlight-chat.chat-tainted[data-sixes="6"] .chat-accent,
+.dreadlight-chat.chat-tainted[data-sixes="7"] .chat-accent,
+.dreadlight-chat.chat-tainted[data-sixes="8"] .chat-accent {
+  height: 5px;
+  box-shadow: 0 1px 12px rgba(168, 139, 245, 0.6);
+  animation: accent-pulse-purple 2.5s ease-in-out infinite;
+}
+.dreadlight-chat.chat-tainted[data-sixes="3"] .chat-portrait-bg,
+.dreadlight-chat.chat-tainted[data-sixes="4"] .chat-portrait-bg,
+.dreadlight-chat.chat-tainted[data-sixes="5"] .chat-portrait-bg,
+.dreadlight-chat.chat-tainted[data-sixes="6"] .chat-portrait-bg,
+.dreadlight-chat.chat-tainted[data-sixes="7"] .chat-portrait-bg,
+.dreadlight-chat.chat-tainted[data-sixes="8"] .chat-portrait-bg {
+  background:
+    radial-gradient(ellipse at 30% 40%, rgba(168, 139, 245, 0.4) 0%, rgba(168, 139, 245, 0.1) 60%, transparent 80%),
+    linear-gradient(135deg, rgba(168, 139, 245, 0.22) 0%, rgba(120, 90, 200, 0.1) 50%, transparent 100%);
+}
+.dreadlight-chat.chat-tainted[data-sixes="3"] .result-row::before,
+.dreadlight-chat.chat-tainted[data-sixes="4"] .result-row::before,
+.dreadlight-chat.chat-tainted[data-sixes="5"] .result-row::before,
+.dreadlight-chat.chat-tainted[data-sixes="6"] .result-row::before,
+.dreadlight-chat.chat-tainted[data-sixes="7"] .result-row::before,
+.dreadlight-chat.chat-tainted[data-sixes="8"] .result-row::before { opacity: 0.22; }
+.dreadlight-chat.chat-tainted[data-sixes="3"] .result-row,
+.dreadlight-chat.chat-tainted[data-sixes="4"] .result-row,
+.dreadlight-chat.chat-tainted[data-sixes="5"] .result-row,
+.dreadlight-chat.chat-tainted[data-sixes="6"] .result-row,
+.dreadlight-chat.chat-tainted[data-sixes="7"] .result-row,
+.dreadlight-chat.chat-tainted[data-sixes="8"] .result-row { border-left-width: 4px; }
 
 /* Chat header */
 .dreadlight-chat .chat-header {
@@ -2435,6 +2587,37 @@
   bottom: 0;
   background: linear-gradient(to top, var(--dl-bg-primary) 0%, transparent 60%);
   z-index: 2;
+}
+
+/* Portrait background tint per outcome */
+.dreadlight-chat .chat-portrait-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.dreadlight-chat.chat-success .chat-portrait-bg {
+  background:
+    radial-gradient(ellipse at 30% 40%, rgba(201, 169, 110, 0.25) 0%, transparent 70%),
+    linear-gradient(135deg, rgba(201, 169, 110, 0.12) 0%, rgba(160, 130, 70, 0.06) 50%, transparent 100%);
+}
+
+.dreadlight-chat.chat-tainted .chat-portrait-bg {
+  background:
+    radial-gradient(ellipse at 30% 40%, rgba(168, 139, 245, 0.25) 0%, transparent 70%),
+    linear-gradient(135deg, rgba(168, 139, 245, 0.12) 0%, rgba(120, 90, 200, 0.06) 50%, transparent 100%);
+}
+
+.dreadlight-chat.chat-failure .chat-portrait-bg {
+  background:
+    radial-gradient(ellipse at 30% 40%, rgba(80, 80, 95, 0.3) 0%, transparent 70%),
+    linear-gradient(135deg, rgba(60, 60, 75, 0.15) 0%, rgba(40, 40, 50, 0.08) 50%, transparent 100%);
+}
+
+.dreadlight-chat.chat-dire .chat-portrait-bg {
+  background:
+    radial-gradient(ellipse at 30% 40%, rgba(224, 85, 85, 0.3) 0%, transparent 70%),
+    linear-gradient(135deg, rgba(224, 85, 85, 0.15) 0%, rgba(180, 50, 50, 0.08) 50%, transparent 100%);
 }
 
 /* Name overlays the portrait — anchored to bottom of header */
@@ -2494,6 +2677,7 @@
 .dreadlight-chat .dice-group {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   gap: 3px;
   padding: 4px;
   border-radius: 4px;
@@ -2731,28 +2915,35 @@
   content: '';
   position: absolute;
   inset: 0;
-  opacity: 0.06;
+  opacity: 0.12;
   z-index: 0;
 }
 
 
 .dreadlight-chat.chat-success .result-row::before {
-  background: linear-gradient(90deg, var(--dl-accent-gold), transparent);
+  background: linear-gradient(90deg, var(--dl-accent-gold), transparent 80%);
 }
 .dreadlight-chat.chat-success .result-row {
-  border-left: 2px solid var(--dl-accent-gold);
+  border-left: 3px solid var(--dl-accent-gold);
 }
 .dreadlight-chat.chat-tainted .result-row::before {
-  background: linear-gradient(90deg, var(--dl-track-soul), transparent);
+  background: linear-gradient(90deg, var(--dl-track-soul), transparent 80%);
 }
 .dreadlight-chat.chat-tainted .result-row {
-  border-left: 2px solid var(--dl-track-soul);
+  border-left: 3px solid var(--dl-track-soul);
 }
 .dreadlight-chat.chat-failure .result-row::before {
-  background: linear-gradient(90deg, rgba(255,255,255,0.3), transparent);
+  background: linear-gradient(90deg, rgba(120, 120, 135, 0.3), transparent 80%);
+  opacity: 0.08;
 }
 .dreadlight-chat.chat-failure .result-row {
-  border-left: 2px solid rgba(255,255,255,0.1);
+  border-left: 3px solid rgba(120, 120, 135, 0.3);
+}
+.dreadlight-chat.chat-dire .result-row::before {
+  background: linear-gradient(90deg, var(--dl-accent-red), transparent 80%);
+}
+.dreadlight-chat.chat-dire .result-row {
+  border-left: 3px solid var(--dl-accent-red);
 }
 
 .dreadlight-chat .result-row > * {
@@ -2786,6 +2977,7 @@
 .dreadlight-chat.chat-success .result-label { color: var(--dl-accent-gold); }
 .dreadlight-chat.chat-tainted .result-label { color: var(--dl-track-soul); }
 .dreadlight-chat.chat-failure .result-label { color: var(--dl-text-muted); text-shadow: none; }
+.dreadlight-chat.chat-dire .result-label { color: var(--dl-accent-red); }
 .dreadlight-chat.chat-pushed .result-label { color: var(--dl-accent-gold); }
 
 .dreadlight-chat .result-count {
@@ -2807,6 +2999,7 @@
 .dreadlight-chat.chat-success .result-count-num { color: var(--dl-accent-gold); }
 .dreadlight-chat.chat-tainted .result-count-num { color: var(--dl-track-soul); }
 .dreadlight-chat.chat-failure .result-count-num { color: var(--dl-text-muted); }
+.dreadlight-chat.chat-dire .result-count-num { color: var(--dl-accent-red); }
 
 .dreadlight-chat .consequence {
   display: flex;
@@ -2917,6 +3110,16 @@
 @keyframes dire-glow {
   0%, 100% { opacity: 0.5; }
   50% { opacity: 1; }
+}
+
+@keyframes accent-pulse-gold {
+  0%, 100% { box-shadow: 0 1px 10px rgba(201, 169, 110, 0.5); }
+  50% { box-shadow: 0 1px 18px rgba(201, 169, 110, 0.8); }
+}
+
+@keyframes accent-pulse-purple {
+  0%, 100% { box-shadow: 0 1px 10px rgba(168, 139, 245, 0.4); }
+  50% { box-shadow: 0 1px 16px rgba(168, 139, 245, 0.7); }
 }
 
 /* ----------------------------------------------------------
@@ -3692,3 +3895,114 @@
 .dreadlight .d66-track-roll.body:hover { color: var(--dl-track-body); border-color: rgba(85, 184, 122, 0.3); background: rgba(85, 184, 122, 0.06); }
 .dreadlight .d66-track-roll.mind:hover { color: var(--dl-track-mind); border-color: rgba(107, 157, 245, 0.3); background: rgba(107, 157, 245, 0.06); }
 .dreadlight .d66-track-roll.soul:hover { color: var(--dl-track-soul); border-color: rgba(168, 139, 245, 0.3); background: rgba(168, 139, 245, 0.06); }
+
+/* ----------------------------------------------------------
+   OMEN TRACKER HUD
+   ---------------------------------------------------------- */
+
+.dreadlight.omen-tracker {
+  position: fixed;
+  top: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, rgba(224, 85, 85, 0.08) 0%, rgba(8, 8, 12, 0.95) 60%);
+  border: 1px solid rgba(224, 85, 85, 0.25);
+  border-radius: 4px;
+  padding: 6px 16px 6px 12px;
+  user-select: none;
+  backdrop-filter: blur(8px);
+  transition: border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+              background 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dreadlight.omen-tracker::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(224, 85, 85, 0.4), transparent);
+}
+
+.dreadlight.omen-tracker:hover {
+  border-color: rgba(224, 85, 85, 0.45);
+  box-shadow: 0 0 12px rgba(224, 85, 85, 0.15);
+}
+
+/* Icon */
+.dreadlight.omen-tracker .omen-icon {
+  font-size: 14px;
+  color: var(--dl-accent-red);
+  filter: drop-shadow(0 0 4px rgba(224, 85, 85, 0.5));
+  transition: color 0.3s, filter 0.3s;
+}
+
+/* Label */
+.dreadlight.omen-tracker .omen-label {
+  font-family: var(--dl-font-primary);
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--dl-text-muted);
+}
+
+/* Value */
+.dreadlight.omen-tracker .omen-value {
+  font-family: var(--dl-font-primary);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--dl-accent-red);
+  text-shadow: 0 0 8px rgba(224, 85, 85, 0.4);
+  min-width: 20px;
+  text-align: center;
+  transition: color 0.3s, text-shadow 0.3s;
+}
+
+/* Pulse animation on value change */
+.dreadlight.omen-tracker .omen-value.omen-pulse {
+  animation: omen-pulse 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes omen-pulse {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+/* --- Escalation: Dormant (omen = 0) --- */
+
+.dreadlight.omen-tracker[data-omen="0"] {
+  border-color: rgba(224, 85, 85, 0.1);
+  background: linear-gradient(135deg, rgba(224, 85, 85, 0.03) 0%, rgba(8, 8, 12, 0.95) 60%);
+}
+
+.dreadlight.omen-tracker[data-omen="0"] .omen-icon {
+  color: var(--dl-text-muted);
+  filter: none;
+}
+
+.dreadlight.omen-tracker[data-omen="0"] .omen-value {
+  color: var(--dl-text-muted);
+  text-shadow: none;
+}
+
+/* --- Escalation: High (omen >= 5) --- */
+
+.dreadlight.omen-tracker[data-omen="high"] {
+  border-color: rgba(224, 85, 85, 0.5);
+  box-shadow: 0 0 18px rgba(224, 85, 85, 0.15);
+}
+
+.dreadlight.omen-tracker[data-omen="high"] .omen-value {
+  text-shadow: 0 0 14px rgba(224, 85, 85, 0.6);
+}
+
+.dreadlight.omen-tracker[data-omen="high"] .omen-icon {
+  filter: drop-shadow(0 0 6px rgba(224, 85, 85, 0.7));
+}
