@@ -26,7 +26,7 @@ export function registerDSN(dice3d) {
     font: FONT,
   });
 
-  // Dread dice — deep red
+  // Dread dice — deep red with fiery texture
   dice3d.addColorset({
     name: "dreadlight-dread",
     description: "Dreadlight Dread",
@@ -36,7 +36,7 @@ export function registerDSN(dice3d) {
     outline: "#4a1010",
     edge: "#c93030",
     material: "metal",
-    texture: "metal",
+    texture: "fire",
     font: FONT,
   });
 
@@ -66,38 +66,38 @@ export function registerDSN(dice3d) {
   // ── Per-denomination presets ────────────────────────────────────────
   // Each custom denomination gets its own preset + default colorset.
 
-  // Base die (db)
+  // Base die (db) — pale blue moonlight glow
   dice3d.addDicePreset({
     type: "db",
     labels,
     bumpMaps,
     emissiveMaps,
-    emissive: 0xffffff,
-    emissiveIntensity: 0.3,
+    emissive: 0x88ccff,
+    emissiveIntensity: 0.35,
     colorset: "dreadlight-base",
     system: "dreadlight",
   });
 
-  // Dread die (dd)
+  // Dread die (dd) — sinister red glow
   dice3d.addDicePreset({
     type: "dd",
     labels,
     bumpMaps,
     emissiveMaps,
-    emissive: 0xffffff,
-    emissiveIntensity: 0.3,
+    emissive: 0xff2020,
+    emissiveIntensity: 0.5,
     colorset: "dreadlight-dread",
     system: "dreadlight",
   });
 
-  // Gear die (dg)
+  // Gear die (dg) — warm amber glow
   dice3d.addDicePreset({
     type: "dg",
     labels,
     bumpMaps,
     emissiveMaps,
-    emissive: 0xffffff,
-    emissiveIntensity: 0.3,
+    emissive: 0xffcc44,
+    emissiveIntensity: 0.35,
     colorset: "dreadlight-gear",
     system: "dreadlight",
   });
