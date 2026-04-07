@@ -5,9 +5,16 @@
  * Each pool type (base / dread / gear) has its own Die denomination
  * (db, dd, dg) so DSN can apply distinct colorsets and face labels
  * without overriding the standard d6.
+ *
+ * Icon assets live in per-type subdirectories so each die can have
+ * unique art:
+ *   assets/dice/base/   — base die icons
+ *   assets/dice/dread/  — dread die icons
+ *   assets/dice/gear/   — gear die icons
+ * To customize a die type's icons, replace the PNGs in its folder.
  */
 export function registerDSN(dice3d) {
-  const ICON_PATH = "systems/dreadlight/assets/dice";
+  const DICE_PATH = "systems/dreadlight/assets/dice";
   const FONT = "Monaspace Krypton";
 
   // ── Colorsets ──────────────────────────────────────────────────────
@@ -57,21 +64,26 @@ export function registerDSN(dice3d) {
   // ── System ─────────────────────────────────────────────────────────
   dice3d.addSystem({ id: "dreadlight", name: "Dreadlight" }, "preferred");
 
-  // ── Shared face configuration ──────────────────────────────────────
-  // Face 1 = thorny vine (bane), Face 6 = fireflake (success), 2-5 blank
-  const labels = [`${ICON_PATH}/bane.png`, "", "", "", "", `${ICON_PATH}/success.png`];
-  const bumpMaps = [`${ICON_PATH}/bane-bump.png`, "", "", "", "", `${ICON_PATH}/success-bump.png`];
-  const emissiveMaps = [`${ICON_PATH}/bane.png`, "", "", "", "", `${ICON_PATH}/success.png`];
+  // ── Per-denomination face icons ────────────────────────────────────
+  // Each die type has its own icon set so artists can give them
+  // distinct motifs (e.g. cog for gear success, cracked eye for dread bane).
+  // Face 1 = bane, Face 6 = success, Faces 2-5 = blank (texture only).
+
+  function faceConfig(subdir) {
+    const p = `${DICE_PATH}/${subdir}`;
+    return {
+      labels: [`${p}/bane.png`, "", "", "", "", `${p}/success.png`],
+      bumpMaps: [`${p}/bane-bump.png`, "", "", "", "", `${p}/success-bump.png`],
+      emissiveMaps: [`${p}/bane.png`, "", "", "", "", `${p}/success.png`],
+    };
+  }
 
   // ── Per-denomination presets ────────────────────────────────────────
-  // Each custom denomination gets its own preset + default colorset.
 
   // Base die (db) — pale blue moonlight glow
   dice3d.addDicePreset({
     type: "db",
-    labels,
-    bumpMaps,
-    emissiveMaps,
+    ...faceConfig("base"),
     emissive: 0x88ccff,
     emissiveIntensity: 0.35,
     colorset: "dreadlight-base",
@@ -81,9 +93,7 @@ export function registerDSN(dice3d) {
   // Dread die (dd) — sinister red glow
   dice3d.addDicePreset({
     type: "dd",
-    labels,
-    bumpMaps,
-    emissiveMaps,
+    ...faceConfig("dread"),
     emissive: 0xff2020,
     emissiveIntensity: 0.5,
     colorset: "dreadlight-dread",
@@ -93,9 +103,7 @@ export function registerDSN(dice3d) {
   // Gear die (dg) — warm amber glow
   dice3d.addDicePreset({
     type: "dg",
-    labels,
-    bumpMaps,
-    emissiveMaps,
+    ...faceConfig("gear"),
     emissive: 0xffcc44,
     emissiveIntensity: 0.35,
     colorset: "dreadlight-gear",

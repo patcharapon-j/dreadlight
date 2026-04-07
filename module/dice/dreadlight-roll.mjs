@@ -76,6 +76,8 @@ export class DreadlightRoll {
   async push() {
     this.pushed = true;
 
+    // Re-rolled dice use the same custom denominations (db/dd/dg) so DSN
+    // automatically applies the correct colorset and face icons per pool.
     // Count how many dice need re-rolling per pool (not locked 1s/6s)
     const rerollCount = (results) => results.filter(v => v !== 1 && v !== 6).length;
     const baseRerolls = rerollCount(this.baseResults);
