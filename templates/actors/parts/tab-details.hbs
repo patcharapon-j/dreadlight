@@ -6,10 +6,19 @@
     {{#if ../editMode}}
       <input type="text" name="system.backgrounds.{{@index}}.name" value="{{this.name}}" placeholder="Background name..." />
       <textarea name="system.backgrounds.{{@index}}.desc" rows="2" placeholder="Skills, knowledge...">{{this.desc}}</textarea>
+      <div class="field-label vantage-label">{{localize "DREADLIGHT.Vantage"}}</div>
+      <input type="text" name="system.backgrounds.{{@index}}.vantage" value="{{this.vantage}}" placeholder="{{localize "DREADLIGHT.VantagePlaceholder"}}" />
     {{else}}
       <div class="bg-name">{{this.name}}</div>
       {{#if this.desc}}
         <div class="bg-desc">{{this.desc}}</div>
+      {{/if}}
+      {{#if this.vantage}}
+        <div class="vantage-list">
+          {{#each (split this.vantage ";")}}
+            <span class="vantage-tag">{{this}}</span>
+          {{/each}}
+        </div>
       {{/if}}
     {{/if}}
   </div>

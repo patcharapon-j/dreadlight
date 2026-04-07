@@ -15,14 +15,21 @@
   </figure>
   <div class="header-identity">
     <input class="name-input" type="text" name="name" value="{{actor.name}}" placeholder="Character Name" />
-    <input class="concept-input" type="text" name="system.concept" value="{{system.concept}}" placeholder="One-sentence concept..." />
-    <div class="tags">
-      {{#each system.backgrounds}}
-        {{#if this.name}}<span class="tag tag-bg">{{this.name}}</span>{{/if}}
-      {{/each}}
+    <div class="concept-row">
       {{#if system.details.drive}}
-        <span class="tag tag-drive">{{system.details.drive}}</span>
+        <span class="tag tag-drive header-drive">{{system.details.drive}}</span>
       {{/if}}
+      <input class="concept-input" type="text" name="system.concept" value="{{system.concept}}" placeholder="One-sentence concept..." />
+    </div>
+    <div class="tags">
+      {{#each backgroundTags}}
+        <span class="tag-group">
+          <span class="tag tag-bg">{{this.name}}</span>
+          {{#each this.vantages}}
+            <span class="tag tag-vantage">{{this}}</span>
+          {{/each}}
+        </span>
+      {{/each}}
     </div>
   </div>
 </div>

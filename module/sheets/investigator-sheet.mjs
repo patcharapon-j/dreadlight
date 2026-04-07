@@ -489,7 +489,7 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     const previewHTML = `
       <div class="chat-portrait-setup">
         <p class="setup-hint">${game.i18n.localize("DREADLIGHT.PortraitChatHint")}</p>
-        <div class="dreadlight-chat chat-clean">
+        <div class="dreadlight-chat chat-success">
           <div class="chat-accent"></div>
           <div class="chat-header">
             <div class="chat-portrait" id="chat-portrait-preview"
@@ -518,7 +518,7 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
           <div class="chat-result">
             <div class="result-row">
               <span class="result-icon gold">✦</span>
-              <span class="result-label">${game.i18n.localize("DREADLIGHT.ResultCleanSuccess")}</span>
+              <span class="result-label">${game.i18n.localize("DREADLIGHT.ResultSuccess")}</span>
               <span class="result-count">1 ${game.i18n.localize("DREADLIGHT.Success")}</span>
             </div>
           </div>

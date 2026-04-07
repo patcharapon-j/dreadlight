@@ -90,13 +90,13 @@
   "DREADLIGHT.RollAttribute": "Attribute",
   "DREADLIGHT.RollTalent": "Talent",
   "DREADLIGHT.RollEquipment": "Equipment",
+  "DREADLIGHT.RollHelp": "Help",
   "DREADLIGHT.RollDifficulty": "Difficulty",
   "DREADLIGHT.RollPool": "Dice Pool",
   "DREADLIGHT.RollButton": "Roll",
   "DREADLIGHT.RollNone": "None",
-  "DREADLIGHT.ResultCleanSuccess": "Clean Success",
+  "DREADLIGHT.ResultSuccess": "Success",
   "DREADLIGHT.ResultTaintedSuccess": "Tainted Success",
-  "DREADLIGHT.ResultDireSuccess": "Dire Success",
   "DREADLIGHT.ResultFailure": "Failure",
   "DREADLIGHT.ResultDireFailure": "Dire Failure",
   "DREADLIGHT.DireFailureFlavorText": "You fail, and the darkness notices. Something shifts in the wrong direction.",
@@ -109,7 +109,7 @@
   "DREADLIGHT.PushCostSoul": "Soul",
   "DREADLIGHT.PushCostGear": "Gear",
   "DREADLIGHT.OmenGain": "GM gains Omen",
-  "DREADLIGHT.DireFlavorText": "You achieve something beyond what you attempted. The wrongness is proportionally worse.",
+  "DREADLIGHT.TaintedFlavorText": "You succeed, but something wrong bleeds through. The darkness carried you.",
   "DREADLIGHT.Base": "Base",
   "DREADLIGHT.Dread": "Dread",
   "DREADLIGHT.RangeEngaged": "Engaged",
@@ -187,6 +187,6 @@
   "DREADLIGHT.SettingShowDreadVeinsHint": "Display the corruption veins overlay on the character sheet as dread increases.",
   "DREADLIGHT.SettingShowChatPortrait": "Show Chat Portraits",
   "DREADLIGHT.SettingShowChatPortraitHint": "Display character portraits in chat roll cards.",
-  "DREADLIGHT.SettingShowDireFlavorText": "Show Dire Flavor Text",
-  "DREADLIGHT.SettingShowDireFlavorTextHint": "Display the atmospheric flavor text when a dire success occurs."
+  "DREADLIGHT.SettingShowTaintedFlavorText": "Show Tainted Flavor Text",
+  "DREADLIGHT.SettingShowTaintedFlavorTextHint": "Display the atmospheric flavor text when a tainted success occurs."
 }

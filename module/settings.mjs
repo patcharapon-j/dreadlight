@@ -93,9 +93,9 @@ export function registerSettings() {
     default: true,
   });
 
-  game.settings.register("dreadlight", "showDireFlavorText", {
-    name: "DREADLIGHT.SettingShowDireFlavorText",
-    hint: "DREADLIGHT.SettingShowDireFlavorTextHint",
+  game.settings.register("dreadlight", "showTaintedFlavorText", {
+    name: "DREADLIGHT.SettingShowTaintedFlavorText",
+    hint: "DREADLIGHT.SettingShowTaintedFlavorTextHint",
     scope: "world",
     config: true,
     type: Boolean,

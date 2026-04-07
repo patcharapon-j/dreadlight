@@ -7,7 +7,7 @@
  *
  * Denomination keys:
  *   db — Base die
- *   dd — Dread die
+ *   dr — Dread die
  *   dg — Gear die
  */
 
@@ -26,7 +26,7 @@ export class DreadDie extends foundry.dice.terms.Die {
   }
 
   /** @override */
-  static DENOMINATION = "d";
+  static DENOMINATION = "r";
 }
 
 export class GearDie extends foundry.dice.terms.Die {

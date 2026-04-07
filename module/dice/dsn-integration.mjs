@@ -3,7 +3,7 @@
  * Called from diceSoNiceReady hook in dreadlight.mjs.
  *
  * Each pool type (base / dread / gear) has its own Die denomination
- * (db, dd, dg) so DSN can apply distinct colorsets and face labels
+ * (db, dr, dg) so DSN can apply distinct colorsets and face labels
  * without overriding the standard d6.
  *
  * Icon assets live in per-type subdirectories so each die can have
@@ -74,7 +74,7 @@ export function registerDSN(dice3d) {
     return {
       labels: [`${p}/bane.png`, "", "", "", "", `${p}/success.png`],
       bumpMaps: [`${p}/bane-bump.png`, "", "", "", "", `${p}/success-bump.png`],
-      emissiveMaps: [`${p}/bane.png`, "", "", "", "", `${p}/success.png`],
+      emissiveMaps: [`${p}/bane-emissive.png`, "", "", "", "", `${p}/success-emissive.png`],
     };
   }
 
@@ -90,9 +90,9 @@ export function registerDSN(dice3d) {
     system: "dreadlight",
   });
 
-  // Dread die (dd) — sinister red glow
+  // Dread die (dr) — sinister red glow
   dice3d.addDicePreset({
-    type: "dd",
+    type: "dr",
     ...faceConfig("dread"),
     emissive: 0xff2020,
     emissiveIntensity: 0.5,
@@ -110,5 +110,5 @@ export function registerDSN(dice3d) {
     system: "dreadlight",
   });
 
-  console.log("Dreadlight | Dice So Nice presets registered (db, dd, dg)");
+  console.log("Dreadlight | Dice So Nice presets registered (db, dr, dg)");
 }

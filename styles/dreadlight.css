@@ -1980,6 +1980,51 @@
   font-size: 12px;
 }
 
+/* ── Help Toggles (The Clean Hand) ── */
+.dreadlight-roll-form .help-row {
+  display: flex;
+  gap: 2px;
+}
+
+.dreadlight-roll-form .help-btn {
+  flex: 1;
+  padding: 5px 2px;
+  background: var(--dl-bg-card);
+  border: 1px solid rgba(201, 169, 110, 0.06);
+  border-radius: 2px;
+  text-align: center;
+  color: var(--dl-text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  font-family: var(--dl-font-primary);
+}
+
+.dreadlight-roll-form .help-btn:hover {
+  border-color: rgba(201, 169, 110, 0.2);
+  color: var(--dl-text-secondary);
+}
+
+.dreadlight-roll-form .help-btn.active {
+  background: rgba(201, 169, 110, 0.1);
+  border-color: rgba(201, 169, 110, 0.3);
+  color: var(--dl-accent-gold);
+  font-weight: 700;
+}
+
+.dreadlight-roll-form .help-icon {
+  font-size: 10px;
+}
+
+.dreadlight-roll-form .help-mod {
+  font-size: 8px;
+  display: block;
+  margin-top: 1px;
+}
+
 /* ── Difficulty Buttons ── */
 .dreadlight-roll-form .difficulty-row {
   display: flex;
@@ -2318,11 +2363,11 @@
 
 
 /* Color variants — border on the parent message */
-.chat-message:has(.chat-clean) {
+.chat-message:has(.chat-success) {
   border-color: rgba(201, 169, 110, 0.2) !important;
 }
 
-.dreadlight-chat.chat-clean .chat-accent {
+.dreadlight-chat.chat-success .chat-accent {
   background: linear-gradient(90deg, transparent 0%, var(--dl-accent-gold) 30%, transparent 100%);
 }
 
@@ -2332,15 +2377,6 @@
 
 .dreadlight-chat.chat-tainted .chat-accent {
   background: linear-gradient(90deg, transparent 0%, var(--dl-track-soul) 30%, transparent 100%);
-}
-
-.chat-message:has(.chat-dire) {
-  border-color: rgba(224, 85, 85, 0.25) !important;
-  animation: dire-pulse 3s ease-in-out infinite;
-}
-
-.dreadlight-chat.chat-dire .chat-accent {
-  background: linear-gradient(90deg, transparent 0%, var(--dl-accent-red) 20%, var(--dl-track-soul) 80%, transparent 100%);
 }
 
 .chat-message:has(.chat-failure) {
@@ -2700,10 +2736,10 @@
 }
 
 
-.dreadlight-chat.chat-clean .result-row::before {
+.dreadlight-chat.chat-success .result-row::before {
   background: linear-gradient(90deg, var(--dl-accent-gold), transparent);
 }
-.dreadlight-chat.chat-clean .result-row {
+.dreadlight-chat.chat-success .result-row {
   border-left: 2px solid var(--dl-accent-gold);
 }
 .dreadlight-chat.chat-tainted .result-row::before {
@@ -2711,12 +2747,6 @@
 }
 .dreadlight-chat.chat-tainted .result-row {
   border-left: 2px solid var(--dl-track-soul);
-}
-.dreadlight-chat.chat-dire .result-row::before {
-  background: linear-gradient(90deg, var(--dl-accent-red), transparent);
-}
-.dreadlight-chat.chat-dire .result-row {
-  border-left: 2px solid var(--dl-accent-red);
 }
 .dreadlight-chat.chat-failure .result-row::before {
   background: linear-gradient(90deg, rgba(255,255,255,0.3), transparent);
@@ -2753,9 +2783,8 @@
   text-shadow: 0 0 10px currentColor;
 }
 
-.dreadlight-chat.chat-clean .result-label { color: var(--dl-accent-gold); }
+.dreadlight-chat.chat-success .result-label { color: var(--dl-accent-gold); }
 .dreadlight-chat.chat-tainted .result-label { color: var(--dl-track-soul); }
-.dreadlight-chat.chat-dire .result-label { color: var(--dl-accent-red); }
 .dreadlight-chat.chat-failure .result-label { color: var(--dl-text-muted); text-shadow: none; }
 .dreadlight-chat.chat-pushed .result-label { color: var(--dl-accent-gold); }
 
@@ -2775,9 +2804,8 @@
   opacity: 1;
 }
 
-.dreadlight-chat.chat-clean .result-count-num { color: var(--dl-accent-gold); }
+.dreadlight-chat.chat-success .result-count-num { color: var(--dl-accent-gold); }
 .dreadlight-chat.chat-tainted .result-count-num { color: var(--dl-track-soul); }
-.dreadlight-chat.chat-dire .result-count-num { color: var(--dl-accent-red); }
 .dreadlight-chat.chat-failure .result-count-num { color: var(--dl-text-muted); }
 
 .dreadlight-chat .consequence {

@@ -90,6 +90,7 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
       talentLevel,
       gearBonus,
       difficultyMod: 0,
+      helpDice: 0,
     });
     context.pool = pool;
 
@@ -111,6 +112,17 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
     el.querySelector("[name=gear]")?.addEventListener("change", (e) => {
       this.#updateGearDisplay(e.target);
       this.#updatePoolPreview();
+    });
+
+    // Help toggles — click to set help dice (click active = deselect)
+    el.querySelectorAll(".help-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const val = parseInt(btn.dataset.help);
+        const current = this.#getHelpDice();
+        const next = (val === current) ? val - 1 : val;
+        this.#setHelpDice(next);
+        this.#updatePoolPreview();
+      });
     });
 
     // Difficulty radios → update pool
@@ -154,6 +166,20 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
     countEl.classList.toggle("gear-color", bonus > 0);
   }
 
+  /** Get current help dice value from the toggle state */
+  #getHelpDice() {
+    const active = this.element.querySelectorAll(".help-btn.active");
+    return active.length;
+  }
+
+  /** Set help dice — light up buttons up to count */
+  #setHelpDice(count) {
+    this.element.querySelectorAll(".help-btn").forEach(b => {
+      const val = parseInt(b.dataset.help);
+      b.classList.toggle("active", val <= count);
+    });
+  }
+
   /** Read current form state and rebuild the pool preview */
   #updatePoolPreview() {
     const form = this.element;
@@ -162,6 +188,7 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
     const talentId = form.querySelector("[name=talent]")?.value || "";
     const gearId = form.querySelector("[name=gear]")?.value || "";
     const diffMod = parseInt(form.querySelector("[name=difficulty]:checked")?.value || "0");
+    const helpDice = this.#getHelpDice();
 
     const selectedTalent = talentId ? this.#actor.items.get(talentId) : null;
     const selectedGear = gearId ? this.#actor.items.get(gearId) : null;
@@ -172,6 +199,7 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
       talentLevel: selectedTalent?.system.level || 0,
       gearBonus: selectedGear?.system.gearBonus || 0,
       difficultyMod: diffMod,
+      helpDice,
     });
 
     this.#renderPoolDOM(pool);
@@ -239,6 +267,7 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
     const gearId = form.querySelector("[name=gear]")?.value || "";
     const diffChecked = form.querySelector("[name=difficulty]:checked");
     const diffMod = parseInt(diffChecked?.value || "0");
+    const helpDice = this.#getHelpDice();
 
     const selectedTalent = talentId ? this.#actor.items.get(talentId) : null;
     const selectedGear = gearId ? this.#actor.items.get(gearId) : null;
@@ -249,6 +278,7 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
       talentLevel: selectedTalent?.system.level || 0,
       gearBonus: selectedGear?.system.gearBonus || 0,
       difficultyMod: diffMod,
+      helpDice,
     });
 
     const diffName = Object.keys(CONFIG.DREADLIGHT.difficulties)

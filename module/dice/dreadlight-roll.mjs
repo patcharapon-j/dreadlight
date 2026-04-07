@@ -28,9 +28,8 @@ export class DreadlightRoll {
 
   get outcome() {
     if (this.totalSixes === 0) return "failure";
-    if (this.dreadSixes > 0 && this.baseSixes === 0 && this.gearSixes === 0) return "dire";
-    if (this.dreadSixes > 0) return "tainted";
-    return "clean";
+    if (this.baseSixes === 0 && this.gearSixes === 0) return "tainted";
+    return "success";
   }
 
   get extraSuccesses() { return Math.max(0, this.totalSixes - 1); }
@@ -121,9 +120,8 @@ export class DreadlightRoll {
 
   get pushConsequences() {
     if (!this.pushed) return null;
-    // omenGain: +1 if any Dread 6s landed on the push AND outcome is not failure
-    // (failure already grants +1 Omen via omenGained — no double dip)
-    const omenGain = (this.dreadSixes > 0 && this.outcome !== "failure") ? 1 : 0;
+    // omenGain: +1 per Dread 6 rolled on push
+    const omenGain = this.dreadSixes;
     return {
       mindLoss: this.baseOnes,
       soulLoss: this.dreadOnes,
@@ -140,7 +138,7 @@ export class DreadlightRoll {
       actorName: this.actor.name,
       portraitChat: this.actor.system.portrait?.chat ?? { offsetX: 50, offsetY: 50, zoom: 1 },
       showPortrait: game.settings.get("dreadlight", "showChatPortrait"),
-      showDireFlavorText: game.settings.get("dreadlight", "showDireFlavorText"),
+      showTaintedFlavorText: game.settings.get("dreadlight", "showTaintedFlavorText"),
       attribute: this.attribute,
       talentName: this.talentName,
       gearName: this.gearName,
@@ -167,7 +165,7 @@ export class DreadlightRoll {
   }
 }
 
-export function buildPool({ actor, attribute, talentLevel = 0, gearBonus = 0, difficultyMod = 0 }) {
+export function buildPool({ actor, attribute, talentLevel = 0, gearBonus = 0, difficultyMod = 0, helpDice = 0 }) {
   const system = actor.system;
   const attrValue = system.attributes[attribute].value;
   const dread = system.dread.value;
@@ -177,9 +175,12 @@ export function buildPool({ actor, attribute, talentLevel = 0, gearBonus = 0, di
   let totalPool = Math.max(rawBase, dread);
   let dreadDice = dread;
   let baseDice = Math.max(0, totalPool - dreadDice);
+  // Help dice (The Clean Hand) — always base, max 3
+  const clampedHelp = Math.min(helpDice, 3);
+  baseDice += clampedHelp;
   if (baseDice + dreadDice === 0) {
     if (dread > 0) dreadDice = 1;
     else baseDice = 1;
   }
-  return { baseDice, dreadDice, gearDice: gearBonus, totalPool: baseDice + dreadDice + gearBonus };
+  return { baseDice, dreadDice, gearDice: gearBonus, helpDice: clampedHelp, totalPool: baseDice + dreadDice + gearBonus };
 }
