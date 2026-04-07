@@ -1,0 +1,32 @@
+<div class="dreadlight-chat d66-result d66-{{tableKey}} {{#if entry.lethal}}d66-lethal{{/if}}">
+  <div class="chat-accent"></div>
+
+  <div class="chat-header">
+    <div class="chat-portrait" style="background-image: url('{{actorImg}}'); transform: translate({{portraitChat.offsetX}}px, {{portraitChat.offsetY}}px) scale({{portraitChat.zoom}});"></div>
+    <div class="chat-portrait-fade"></div>
+    <div class="chat-name">{{actorName}}</div>
+  </div>
+
+  <div class="chat-info">
+    <div class="chat-action d66-table-label">
+      {{#if (eq tableKey "body")}}{{localize "DREADLIGHT.D66CriticalInjury"}}{{/if}}
+      {{#if (eq tableKey "mind")}}{{localize "DREADLIGHT.D66Trauma"}}{{/if}}
+      {{#if (eq tableKey "soul")}}{{localize "DREADLIGHT.D66Manifestation"}}{{/if}}
+    </div>
+  </div>
+
+  <div class="d66-dice-display">
+    <div class="d66-die">{{roll1}}</div>
+    <div class="d66-die">{{roll2}}</div>
+    <span class="d66-key">{{d66Key}}</span>
+  </div>
+
+  <div class="d66-result-body">
+    <div class="d66-result-name">{{entry.name}}</div>
+    <div class="d66-effect">{{entry.effect}}</div>
+    <div class="d66-meta">
+      <span class="d66-heal-badge">{{localize "DREADLIGHT.D66HealTime"}}: {{entry.healTime}}</span>
+      {{#if entry.lethal}}<span class="d66-lethal-badge">☠ {{localize "DREADLIGHT.D66Lethal"}}</span>{{/if}}
+    </div>
+  </div>
+</div>

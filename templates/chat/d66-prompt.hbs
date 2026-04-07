@@ -1,0 +1,16 @@
+<div class="dreadlight-chat d66-prompt d66-{{tableKey}}">
+  <div class="chat-accent"></div>
+
+  <div class="chat-header">
+    <div class="chat-portrait" style="background-image: url('{{actorImg}}'); transform: translate({{portraitChat.offsetX}}px, {{portraitChat.offsetY}}px) scale({{portraitChat.zoom}});"></div>
+    <div class="chat-portrait-fade"></div>
+    <div class="chat-name">{{actorName}}</div>
+  </div>
+
+  <div class="d66-prompt-body">
+    <p class="d66-prompt-message">{{brokenMessage}}</p>
+    <button type="button" class="d66-roll-btn" data-table-key="{{tableKey}}" data-actor-id="{{actorId}}">
+      {{rollLabel}}
+    </button>
+  </div>
+</div>

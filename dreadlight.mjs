@@ -9,6 +9,7 @@ import { TalentSheet } from "./module/sheets/talent-sheet.mjs";
 import { WeaponSheet, ArmorSheet, EquipmentSheet } from "./module/sheets/item-sheet.mjs";
 import { registerDSN } from "./module/dice/dsn-integration.mjs";
 import { registerChatListeners } from "./module/dice/chat-message.mjs";
+import { registerAdhocRoller } from "./module/dice/adhoc-roller.mjs";
 import { registerHandlebarsHelpers } from "./module/helpers/handlebars.mjs";
 import { d66Tables } from "./module/data/d66-tables.mjs";
 
@@ -91,6 +92,9 @@ Hooks.once("init", () => {
     "systems/dreadlight/templates/chat/roll-result.hbs",
     "systems/dreadlight/templates/chat/armor-result.hbs",
     "systems/dreadlight/templates/dialogs/roll-dialog.hbs",
+    "systems/dreadlight/templates/chat/adhoc-roll-result.hbs",
+    "systems/dreadlight/templates/chat/d66-result.hbs",
+    "systems/dreadlight/templates/chat/d66-prompt.hbs",
   ]);
 
   // Register Handlebars helpers
@@ -98,6 +102,9 @@ Hooks.once("init", () => {
 
   // Register chat card listeners
   registerChatListeners();
+
+  // Register ad-hoc roller above chat input
+  registerAdhocRoller();
 
   console.log("Dreadlight | System initialized");
 });
