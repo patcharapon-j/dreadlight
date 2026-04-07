@@ -1,0 +1,181 @@
+<div class="dreadlight sheet actor npc tier-{{system.tier}}">
+  <div class="corner tl"></div>
+  <div class="corner tr"></div>
+  <div class="corner bl"></div>
+  <div class="corner br"></div>
+  <div class="accent-top"></div>
+
+  {{> "systems/dreadlight/templates/actors/parts/npc-header.hbs"}}
+
+  {{!-- Important tier: key stats + tracks --}}
+  {{#if (eq system.tier "important")}}
+    {{> "systems/dreadlight/templates/actors/parts/npc-key-stats.hbs"}}
+
+    <div class="npc-tracks">
+      <div class="track-col">
+        <div class="track-btn body {{#if system.body.broken}}is-broken{{/if}}">
+          <div class="track-icon body">♥</div>
+          <div class="track-info">
+            <div class="track-label body">{{localize "DREADLIGHT.TrackBody"}}</div>
+            <div class="track-pips">{{{trackPips system.body.value system.body.max "body"}}}</div>
+          </div>
+          <span class="track-num">{{system.body.value}}</span>
+        </div>
+      </div>
+      <div class="track-col">
+        <div class="track-btn mind {{#if system.mind.broken}}is-broken{{/if}}">
+          <div class="track-icon mind">◈</div>
+          <div class="track-info">
+            <div class="track-label mind">{{localize "DREADLIGHT.TrackMind"}}</div>
+            <div class="track-pips">{{{trackPips system.mind.value system.mind.max "mind"}}}</div>
+          </div>
+          <span class="track-num">{{system.mind.value}}</span>
+        </div>
+      </div>
+    </div>
+
+    {{!-- Notable gear --}}
+    <div class="npc-gear">
+      <div class="section-header"><span>{{localize "DREADLIGHT.Gear"}}</span><div class="section-line"></div></div>
+      {{#each weapons}}
+        <div class="item-row weapon-row" data-item-id="{{this.id}}">
+          <div class="item-icon red">⚔</div>
+          <div class="item-info">
+            <div class="item-name">{{this.name}}</div>
+          </div>
+          <div class="item-stat stat-red">DMG {{this.system.damage}}</div>
+          {{#if this.system.gearBonusMax}}
+            <div class="item-stat stat-gold">+{{this.system.gearBonus}}</div>
+          {{/if}}
+        </div>
+      {{/each}}
+      {{#each equipment}}
+        <div class="item-row gear-row" data-item-id="{{this.id}}">
+          <div class="item-icon gold">⬡</div>
+          <div class="item-info">
+            <div class="item-name">{{this.name}}</div>
+          </div>
+          {{#if this.system.gearBonusMax}}
+            <div class="item-stat stat-gold">+{{this.system.gearBonus}}</div>
+          {{/if}}
+        </div>
+      {{/each}}
+      <div class="drop-zone">{{localize "DREADLIGHT.DropItems"}}</div>
+    </div>
+  {{/if}}
+
+  {{!-- Major tier: full attributes + tracks + items --}}
+  {{#if (eq system.tier "major")}}
+    <div class="npc-major-body">
+      <div class="section-header">
+        <span>{{localize "DREADLIGHT.RollAttribute"}}</span>
+        <div class="section-line"></div>
+      </div>
+      <div class="attr-grid">
+        {{#each attributeList}}
+          <div class="attr-cell" data-attr="{{this.key}}">
+            <div class="attr-roll-area" data-action="rollAttribute" data-attr="{{this.key}}">
+              <div class="attr-abbr">{{attrAbbr this.key}}</div>
+              <input class="attr-value-input" type="number"
+                     name="system.attributes.{{this.key}}.value"
+                     value="{{this.value}}" min="0" max="6" data-dtype="Number" />
+              <div class="attr-name">{{attrName this.key}}</div>
+            </div>
+          </div>
+        {{/each}}
+      </div>
+
+      <div class="npc-tracks">
+        <div class="track-col">
+          <div class="track-btn body {{#if system.body.broken}}is-broken{{/if}}">
+            <div class="track-icon body">♥</div>
+            <div class="track-info">
+              <div class="track-label body">{{localize "DREADLIGHT.TrackBody"}}</div>
+              <div class="track-pips">{{{trackPips system.body.value system.body.max "body"}}}</div>
+            </div>
+            <span class="track-num">{{system.body.value}}</span>
+          </div>
+        </div>
+        <div class="track-col">
+          <div class="track-btn mind {{#if system.mind.broken}}is-broken{{/if}}">
+            <div class="track-icon mind">◈</div>
+            <div class="track-info">
+              <div class="track-label mind">{{localize "DREADLIGHT.TrackMind"}}</div>
+              <div class="track-pips">{{{trackPips system.mind.value system.mind.max "mind"}}}</div>
+            </div>
+            <span class="track-num">{{system.mind.value}}</span>
+          </div>
+        </div>
+        <div class="track-col">
+          <div class="track-btn soul {{#if system.soul.broken}}is-broken{{/if}}">
+            <div class="track-icon soul">◉</div>
+            <div class="track-info">
+              <div class="track-label soul">{{localize "DREADLIGHT.TrackSoul"}}</div>
+              <div class="track-pips">{{{trackPips system.soul.value system.soul.max "soul"}}}</div>
+            </div>
+            <span class="track-num">{{system.soul.value}}</span>
+          </div>
+        </div>
+      </div>
+
+      {{!-- Items: talents, weapons, armor, equipment --}}
+      <div class="npc-items">
+        <div class="section-header"><span>{{localize "DREADLIGHT.TabTalents"}}</span><div class="section-line"></div></div>
+        {{#each talents}}
+          <div class="item-row talent-row" data-item-id="{{this.id}}">
+            <div class="item-icon gold">◆</div>
+            <div class="item-info" data-action="openItem">
+              <div class="item-name">{{this.name}}</div>
+            </div>
+            <div class="item-stat stat-gold">L{{this.system.level}}</div>
+          </div>
+        {{/each}}
+
+        <div class="section-header"><span>{{localize "DREADLIGHT.Weapons"}}</span><div class="section-line"></div></div>
+        {{#each weapons}}
+          <div class="item-row weapon-row" data-item-id="{{this.id}}">
+            <div class="item-icon red">⚔</div>
+            <div class="item-info" data-action="openItem">
+              <div class="item-name">{{this.name}}</div>
+            </div>
+            <div class="item-stat stat-red">DMG {{this.system.damage}}</div>
+            <div class="item-stat stat-gold">CRIT {{this.system.critThreshold}}</div>
+          </div>
+        {{/each}}
+
+        <div class="section-header"><span>{{localize "DREADLIGHT.Armor"}}</span><div class="section-line"></div></div>
+        {{#each armors}}
+          <div class="item-row armor-row" data-item-id="{{this.id}}">
+            <div class="item-icon mind">🛡</div>
+            <div class="item-info" data-action="openItem">
+              <div class="item-name">{{this.name}}</div>
+            </div>
+            <div class="item-stat stat-blue">AR {{this.system.armorRating}}</div>
+          </div>
+        {{/each}}
+
+        <div class="section-header"><span>{{localize "DREADLIGHT.Gear"}}</span><div class="section-line"></div></div>
+        {{#each equipment}}
+          <div class="item-row gear-row" data-item-id="{{this.id}}">
+            <div class="item-icon gold">⬡</div>
+            <div class="item-info" data-action="openItem">
+              <div class="item-name">{{this.name}}</div>
+            </div>
+          </div>
+        {{/each}}
+
+        <div class="drop-zone">{{localize "DREADLIGHT.DropItems"}}</div>
+      </div>
+    </div>
+  {{/if}}
+
+  {{!-- Notes — all tiers --}}
+  <div class="npc-notes">
+    <div class="section-header"><span>{{localize "DREADLIGHT.Notes"}}</span><div class="section-line"></div></div>
+    <div class="notes-editor">
+      {{editor system.notes target="system.notes" button=true editable=editable}}
+    </div>
+  </div>
+
+  <div class="accent-bottom"></div>
+</div>

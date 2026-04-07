@@ -1,0 +1,50 @@
+<div class="npc-key-stats">
+  <div class="section-header">
+    <span>{{localize "DREADLIGHT.KeyAttribute"}}</span>
+    <div class="section-line"></div>
+  </div>
+  <div class="key-attr-list">
+    {{#each keyAttributes}}
+      <div class="key-attr-entry" data-index="{{@index}}">
+        <div class="key-attr-roll" data-action="rollKeyAttribute" data-index="{{@index}}">
+          <div class="attr-abbr">{{attrAbbr this.attr}}</div>
+          <div class="attr-value">{{this.value}}</div>
+        </div>
+        {{#if ../editable}}
+          <select name="system.keyAttributes.{{@index}}.attr" class="key-attr-select">
+            {{#each ../../attrOptions}}
+              <option value="{{this.value}}" {{#if (eq this.value ../attr)}}selected{{/if}}>{{this.label}}</option>
+            {{/each}}
+          </select>
+          <input type="number" name="system.keyAttributes.{{@index}}.value" value="{{this.value}}" min="2" max="5" class="key-attr-value-input" />
+          <button type="button" class="remove-btn" data-action="removeKeyAttribute" data-index="{{@index}}"><i class="fa-solid fa-xmark"></i></button>
+        {{/if}}
+      </div>
+    {{/each}}
+    {{#if canAddKeyAttribute}}
+      <button type="button" class="add-btn" data-action="addKeyAttribute"><i class="fa-solid fa-plus"></i> {{localize "DREADLIGHT.AddKeyAttribute"}}</button>
+    {{/if}}
+  </div>
+
+  <div class="section-header">
+    <span>{{localize "DREADLIGHT.KeyTalent"}}</span>
+    <div class="section-line"></div>
+  </div>
+  <div class="key-talent-list">
+    {{#each keyTalents}}
+      <div class="key-talent-entry" data-index="{{@index}}">
+        <input type="text" name="system.keyTalents.{{@index}}.name" value="{{this.name}}" placeholder="Talent name..." class="key-talent-name" />
+        <div class="key-talent-level">
+          {{{talentPips this.level "gold"}}}
+        </div>
+        <input type="number" name="system.keyTalents.{{@index}}.level" value="{{this.level}}" min="0" max="3" class="key-talent-level-input" />
+        {{#if ../editable}}
+          <button type="button" class="remove-btn" data-action="removeKeyTalent" data-index="{{@index}}"><i class="fa-solid fa-xmark"></i></button>
+        {{/if}}
+      </div>
+    {{/each}}
+    {{#if canAddKeyTalent}}
+      <button type="button" class="add-btn" data-action="addKeyTalent"><i class="fa-solid fa-plus"></i> {{localize "DREADLIGHT.AddKeyTalent"}}</button>
+    {{/if}}
+  </div>
+</div>
