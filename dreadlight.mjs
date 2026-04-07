@@ -4,9 +4,13 @@ import { TalentData } from "./module/data/talent.mjs";
 import { WeaponData } from "./module/data/weapon.mjs";
 import { ArmorData } from "./module/data/armor.mjs";
 import { EquipmentData } from "./module/data/equipment.mjs";
+import { NpcData } from "./module/data/npc.mjs";
+import { CreatureData } from "./module/data/creature.mjs";
 import { InvestigatorSheet } from "./module/sheets/investigator-sheet.mjs";
 import { TalentSheet } from "./module/sheets/talent-sheet.mjs";
 import { WeaponSheet, ArmorSheet, EquipmentSheet } from "./module/sheets/item-sheet.mjs";
+import { NpcSheet } from "./module/sheets/npc-sheet.mjs";
+import { CreatureSheet } from "./module/sheets/creature-sheet.mjs";
 import { BaseDie, DreadDie, GearDie } from "./module/dice/terms.mjs";
 import { registerDSN } from "./module/dice/dsn-integration.mjs";
 import { registerChatListeners, sendD66PromptToChat } from "./module/dice/chat-message.mjs";
@@ -43,6 +47,16 @@ Hooks.once("init", () => {
     },
   };
   CONFIG.DREADLIGHT.d66Tables = d66Tables;
+  CONFIG.DREADLIGHT.npcTiers = {
+    minor: "DREADLIGHT.TierMinor",
+    important: "DREADLIGHT.TierImportant",
+    major: "DREADLIGHT.TierMajor",
+  };
+  CONFIG.DREADLIGHT.threatLevels = {
+    minor: "DREADLIGHT.ThreatMinor",
+    moderate: "DREADLIGHT.ThreatModerate",
+    major: "DREADLIGHT.ThreatMajor",
+  };
 
   // Register custom dice terms (db = base, dd = dread, dg = gear)
   CONFIG.Dice.terms.b = BaseDie;
@@ -50,7 +64,11 @@ Hooks.once("init", () => {
   CONFIG.Dice.terms.g = GearDie;
 
   // Register Data Models
-  Object.assign(CONFIG.Actor.dataModels, { investigator: InvestigatorData });
+  Object.assign(CONFIG.Actor.dataModels, {
+    investigator: InvestigatorData,
+    npc: NpcData,
+    creature: CreatureData,
+  });
   Object.assign(CONFIG.Item.dataModels, {
     talent: TalentData, weapon: WeaponData,
     armor: ArmorData, equipment: EquipmentData,
@@ -64,6 +82,16 @@ Hooks.once("init", () => {
     types: ["investigator"],
     makeDefault: true,
     label: "DREADLIGHT.SheetInvestigator",
+  });
+  Actors.registerSheet("dreadlight", NpcSheet, {
+    types: ["npc"],
+    makeDefault: true,
+    label: "DREADLIGHT.SheetNpc",
+  });
+  Actors.registerSheet("dreadlight", CreatureSheet, {
+    types: ["creature"],
+    makeDefault: true,
+    label: "DREADLIGHT.SheetCreature",
   });
 
   Items.unregisterSheet("core", ItemSheet);
@@ -103,6 +131,11 @@ Hooks.once("init", () => {
     "systems/dreadlight/templates/chat/adhoc-roll-result.hbs",
     "systems/dreadlight/templates/chat/d66-result.hbs",
     "systems/dreadlight/templates/chat/d66-prompt.hbs",
+    "systems/dreadlight/templates/actors/npc-sheet.hbs",
+    "systems/dreadlight/templates/actors/creature-sheet.hbs",
+    "systems/dreadlight/templates/actors/parts/npc-header.hbs",
+    "systems/dreadlight/templates/actors/parts/npc-key-stats.hbs",
+    "systems/dreadlight/templates/actors/parts/creature-attacks.hbs",
   ]);
 
   // Register system settings
