@@ -10,6 +10,7 @@ import { WeaponSheet, ArmorSheet, EquipmentSheet } from "./module/sheets/item-sh
 import { registerDSN } from "./module/dice/dsn-integration.mjs";
 import { registerChatListeners } from "./module/dice/chat-message.mjs";
 import { registerHandlebarsHelpers } from "./module/helpers/handlebars.mjs";
+import { d66Tables } from "./module/data/d66-tables.mjs";
 
 Hooks.once("init", () => {
   console.log("Dreadlight | Initializing system");
@@ -37,6 +38,7 @@ Hooks.once("init", () => {
       demanding: -1, hard: -2, insane: -3,
     },
   };
+  CONFIG.DREADLIGHT.d66Tables = d66Tables;
 
   // Register Data Models
   Object.assign(CONFIG.Actor.dataModels, { investigator: InvestigatorData });
