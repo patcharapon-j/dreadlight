@@ -43,30 +43,28 @@ export class DreadlightRoll {
   }
 
   async evaluate() {
-    // Build a single Roll formula with all pools so DSN animates them together
+    // Build a single Roll formula using custom denominations (db/dd/dg)
+    // so DSN automatically applies the correct colorset per pool.
     const parts = [];
-    if (this.baseDice > 0) parts.push(`${this.baseDice}d6`);
-    if (this.dreadDice > 0) parts.push(`${this.dreadDice}d6`);
-    if (this.gearDice > 0) parts.push(`${this.gearDice}d6`);
+    if (this.baseDice > 0) parts.push(`${this.baseDice}db`);
+    if (this.dreadDice > 0) parts.push(`${this.dreadDice}dd`);
+    if (this.gearDice > 0) parts.push(`${this.gearDice}dg`);
     if (parts.length === 0) { this.evaluated = true; return this; }
 
     const combined = new Roll(parts.join(" + "));
     await combined.evaluate();
 
-    // Assign colorsets to each die term and extract results
+    // Extract results from each die term
     let termIdx = 0;
     if (this.baseDice > 0) {
-      applyAppearance(combined.dice[termIdx], "dreadlight-base");
       this.baseResults = combined.dice[termIdx].results.map(r => r.result);
       termIdx++;
     }
     if (this.dreadDice > 0) {
-      applyAppearance(combined.dice[termIdx], "dreadlight-dread");
       this.dreadResults = combined.dice[termIdx].results.map(r => r.result);
       termIdx++;
     }
     if (this.gearDice > 0) {
-      applyAppearance(combined.dice[termIdx], "dreadlight-gear");
       this.gearResults = combined.dice[termIdx].results.map(r => r.result);
       termIdx++;
     }
@@ -78,6 +76,8 @@ export class DreadlightRoll {
   async push() {
     this.pushed = true;
 
+    // Re-rolled dice use the same custom denominations (db/dd/dg) so DSN
+    // automatically applies the correct colorset and face icons per pool.
     // Count how many dice need re-rolling per pool (not locked 1s/6s)
     const rerollCount = (results) => results.filter(v => v !== 1 && v !== 6).length;
     const baseRerolls = rerollCount(this.baseResults);
@@ -87,20 +87,14 @@ export class DreadlightRoll {
     // Build a single combined Roll for re-rolled dice so DSN animates them together
     const parts = [];
     const poolMap = []; // track which term index maps to which pool
-    if (baseRerolls > 0) { parts.push(`${baseRerolls}d6`); poolMap.push("base"); }
-    if (dreadRerolls > 0) { parts.push(`${dreadRerolls}d6`); poolMap.push("dread"); }
-    if (gearRerolls > 0) { parts.push(`${gearRerolls}d6`); poolMap.push("gear"); }
+    if (baseRerolls > 0) { parts.push(`${baseRerolls}db`); poolMap.push("base"); }
+    if (dreadRerolls > 0) { parts.push(`${dreadRerolls}dd`); poolMap.push("dread"); }
+    if (gearRerolls > 0) { parts.push(`${gearRerolls}dg`); poolMap.push("gear"); }
 
     this._dsnRoll = null;
     if (parts.length > 0) {
       const combined = new Roll(parts.join(" + "));
       await combined.evaluate();
-
-      // Assign colorsets and merge results
-      const colorMap = { base: "dreadlight-base", dread: "dreadlight-dread", gear: "dreadlight-gear" };
-      for (let i = 0; i < poolMap.length; i++) {
-        applyAppearance(combined.dice[i], colorMap[poolMap[i]]);
-      }
 
       const merge = (results, dieTermResults) => {
         let idx = 0;
@@ -163,12 +157,6 @@ export class DreadlightRoll {
     if (!game.dice3d || !this._dsnRoll) return;
     await game.dice3d.showForRoll(this._dsnRoll, game.user, true);
   }
-}
-
-function applyAppearance(dieTerm, colorset) {
-  const appearance = (dieTerm.options.appearance ||= {});
-  appearance.colorset = colorset;
-  appearance.system = "dreadlight";
 }
 
 export function buildPool({ actor, attribute, talentLevel = 0, gearBonus = 0, difficultyMod = 0, markPenalty = 0 }) {

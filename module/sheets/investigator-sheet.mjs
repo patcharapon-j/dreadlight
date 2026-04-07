@@ -633,11 +633,8 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       return;
     }
 
-    const roll = new Roll(`${dice}d6`);
+    const roll = new Roll(`${dice}dg`);
     await roll.evaluate();
-
-    // Apply DSN colorset
-    if (roll.dice[0]) roll.dice[0].options.appearance = { colorset: "dreadlight-base" };
 
     // Show Dice So Nice
     if (game.dice3d) await game.dice3d.showForRoll(roll, game.user, true);
