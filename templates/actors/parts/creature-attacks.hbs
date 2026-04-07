@@ -1,0 +1,49 @@
+<div class="creature-attacks">
+  <div class="section-header creature-section-header">
+    <span>{{localize "DREADLIGHT.Attack"}}</span>
+    <div class="section-line"></div>
+  </div>
+  {{#each attacks}}
+    <div class="attack-card" data-index="{{@index}}">
+      <div class="attack-header">
+        <input type="text" name="system.attacks.{{@index}}.name" value="{{this.name}}" placeholder="Attack name..." class="attack-name-input" />
+        {{#if ../editable}}
+          <button type="button" class="remove-btn" data-action="removeAttack" data-index="{{@index}}"><i class="fa-solid fa-xmark"></i></button>
+        {{/if}}
+      </div>
+      <div class="attack-stats">
+        <div class="attack-stat">
+          <span class="attack-stat-label">{{localize "DREADLIGHT.AttackPool"}}</span>
+          <select name="system.attacks.{{@index}}.attribute" class="attack-attr-select">
+            {{#each ../attrOptions}}
+              <option value="{{this.value}}" {{#if (eq this.value ../attribute)}}selected{{/if}}>{{this.label}}</option>
+            {{/each}}
+          </select>
+          <span class="attack-stat-value">{{this.poolValue}}</span>
+        </div>
+        <div class="attack-stat">
+          <span class="attack-stat-label">{{localize "DREADLIGHT.AttackDamage"}}</span>
+          <input type="number" name="system.attacks.{{@index}}.damage" value="{{this.damage}}" min="0" class="attack-stat-input" />
+        </div>
+        <div class="attack-stat">
+          <span class="attack-stat-label">{{localize "DREADLIGHT.AttackCrit"}}</span>
+          <input type="number" name="system.attacks.{{@index}}.critThreshold" value="{{this.critThreshold}}" min="1" max="6" class="attack-stat-input" />
+        </div>
+        <div class="attack-stat">
+          <span class="attack-stat-label">{{localize "DREADLIGHT.AttackRange"}}</span>
+          <select name="system.attacks.{{@index}}.range" class="attack-range-select">
+            <option value="engaged" {{#if (eq this.range "engaged")}}selected{{/if}}>{{localize "DREADLIGHT.RangeEngaged"}}</option>
+            <option value="short" {{#if (eq this.range "short")}}selected{{/if}}>{{localize "DREADLIGHT.RangeShort"}}</option>
+            <option value="medium" {{#if (eq this.range "medium")}}selected{{/if}}>{{localize "DREADLIGHT.RangeMedium"}}</option>
+            <option value="long" {{#if (eq this.range "long")}}selected{{/if}}>{{localize "DREADLIGHT.RangeLong"}}</option>
+            <option value="extreme" {{#if (eq this.range "extreme")}}selected{{/if}}>{{localize "DREADLIGHT.RangeExtreme"}}</option>
+          </select>
+        </div>
+      </div>
+      <button type="button" class="roll-attack-btn" data-action="rollAttack" data-index="{{@index}}">{{localize "DREADLIGHT.RollButton"}}</button>
+    </div>
+  {{/each}}
+  {{#if canAddAttack}}
+    <button type="button" class="add-btn" data-action="addAttack"><i class="fa-solid fa-plus"></i> {{localize "DREADLIGHT.AddAttack"}}</button>
+  {{/if}}
+</div>

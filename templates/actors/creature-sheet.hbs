@@ -1,0 +1,125 @@
+<div class="dreadlight sheet actor creature">
+  <div class="corner tl"></div>
+  <div class="corner tr"></div>
+  <div class="corner bl"></div>
+  <div class="corner br"></div>
+  <div class="accent-top creature-accent"></div>
+
+  {{!-- Header --}}
+  <div class="sheet-header creature-header">
+    <figure class="portrait-figure creature-portrait">
+      <img src="{{actor.img}}" alt="{{actor.name}}" />
+      {{#if editable}}
+        <div class="portrait-edit-overlay" data-action="editPortrait"><i class="fa-solid fa-camera"></i></div>
+      {{/if}}
+    </figure>
+    <div class="header-identity">
+      <input class="name-input creature-name" type="text" name="name" value="{{actor.name}}" placeholder="Creature Name" />
+      <div class="threat-row">
+        <select name="system.threatLevel" class="threat-select">
+          {{#each threatOptions}}
+            <option value="{{this.value}}" {{#if this.selected}}selected{{/if}}>{{localize this.label}}</option>
+          {{/each}}
+        </select>
+      </div>
+      <textarea class="appearance-textarea" name="system.appearance" placeholder="{{localize 'DREADLIGHT.Appearance'}}..." rows="2">{{system.appearance}}</textarea>
+    </div>
+  </div>
+
+  {{!-- Attributes --}}
+  <div class="creature-attributes">
+    <div class="section-header creature-section-header">
+      <span>{{localize "DREADLIGHT.RollAttribute"}}</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="creature-attr-row">
+      {{#each creatureAttributes}}
+        <div class="creature-attr-cell" data-index="{{@index}}">
+          <select name="system.attributes.{{@index}}.attr" class="creature-attr-select">
+            {{#each ../attrOptions}}
+              <option value="{{this.value}}" {{#if (eq this.value ../attr)}}selected{{/if}}>{{this.label}}</option>
+            {{/each}}
+          </select>
+          <input type="number" name="system.attributes.{{@index}}.value" value="{{this.value}}" min="1" max="8" class="creature-attr-value" />
+          {{#if ../editable}}
+            <button type="button" class="remove-btn" data-action="removeAttribute" data-index="{{@index}}"><i class="fa-solid fa-xmark"></i></button>
+          {{/if}}
+        </div>
+      {{/each}}
+      {{#if canAddAttribute}}
+        <button type="button" class="add-btn" data-action="addAttribute"><i class="fa-solid fa-plus"></i></button>
+      {{/if}}
+    </div>
+  </div>
+
+  {{!-- Body + Armor --}}
+  <div class="creature-body-armor">
+    <div class="creature-body">
+      <div class="track-btn body {{#if system.body.broken}}is-broken{{/if}}">
+        <div class="track-icon body">♥</div>
+        <div class="track-info">
+          <div class="track-label body">{{localize "DREADLIGHT.TrackBody"}}</div>
+          <div class="track-pips">{{{trackPips system.body.value system.body.max "body"}}}</div>
+        </div>
+        <span class="track-num">{{system.body.value}}</span>
+      </div>
+      {{#if editable}}
+        <div class="body-max-edit">
+          <label>Max:</label>
+          <input type="number" name="system.body.max" value="{{system.body.max}}" min="1" max="30" class="body-max-input" />
+        </div>
+      {{/if}}
+    </div>
+    <div class="creature-armor">
+      <div class="section-label">{{localize "DREADLIGHT.Armor"}}</div>
+      <input type="number" name="system.armor" value="{{system.armor}}" min="0" max="10" class="armor-value-input" />
+    </div>
+  </div>
+
+  {{!-- Attacks --}}
+  {{> "systems/dreadlight/templates/actors/parts/creature-attacks.hbs"}}
+
+  {{!-- Soul Damage --}}
+  <div class="creature-soul-damage">
+    <div class="section-header soul-section-header">
+      <span>{{localize "DREADLIGHT.SoulDamage"}}</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="soul-damage-row">
+      <input type="number" name="system.soulDamage.value" value="{{system.soulDamage.value}}" min="0" max="10" class="soul-damage-value" />
+      <input type="text" name="system.soulDamage.description" value="{{system.soulDamage.description}}" placeholder="{{localize 'DREADLIGHT.SoulDamageTrigger'}}..." class="soul-damage-desc" />
+    </div>
+  </div>
+
+  {{!-- Special Abilities --}}
+  <div class="creature-abilities">
+    <div class="section-header abilities-section-header">
+      <span>{{localize "DREADLIGHT.Abilities"}}</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="abilities-editor">
+      {{editor system.abilities target="system.abilities" button=true editable=editable}}
+    </div>
+  </div>
+
+  {{!-- Weakness --}}
+  <div class="creature-weakness">
+    <div class="section-header weakness-section-header">
+      <span>{{localize "DREADLIGHT.Weakness"}}</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="weakness-editor">
+      {{editor system.weakness target="system.weakness" button=true editable=editable}}
+    </div>
+  </div>
+
+  {{!-- Notes --}}
+  <div class="creature-notes">
+    <div class="section-header"><span>{{localize "DREADLIGHT.Notes"}}</span><div class="section-line"></div></div>
+    <div class="notes-editor">
+      {{editor system.notes target="system.notes" button=true editable=editable}}
+    </div>
+  </div>
+
+  <div class="accent-bottom creature-accent"></div>
+</div>
