@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dreadlight — Dialog v3 vs v4</title>
+<style>
+  @font-face {
+    font-family: 'Monaspace Krypton';
+    src: url('https://cdn.jsdelivr.net/gh/githubnext/monaspace@v1.101/fonts/webfonts/MonaspaceKrypton-Regular.woff') format('woff');
+    font-weight: 400;
+  }
+  @font-face {
+    font-family: 'Monaspace Krypton';
+    src: url('https://cdn.jsdelivr.net/gh/githubnext/monaspace@v1.101/fonts/webfonts/MonaspaceKrypton-Bold.woff') format('woff');
+    font-weight: 700;
+  }
+  @font-face {
+    font-family: 'Monaspace Neon';
+    src: url('https://cdn.jsdelivr.net/gh/githubnext/monaspace@v1.101/fonts/webfonts/MonaspaceNeon-Regular.woff') format('woff');
+    font-weight: 400;
+  }
+
+  :root {
+    --bg: #08080c; --bg2: #0e0e14; --bg3: #111118;
+    --t1: #ededf4; --t2: #8e8ea3; --t3: #555568;
+    --gold: #c9a96e; --red: #c93030;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: #111;
+    font-family: 'Monaspace Krypton', monospace;
+    color: var(--t2);
+    padding: 32px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+  h2 { color: var(--t1); font-size: 16px; text-align:center; }
+  .sub { color: var(--t3); font-size: 10px; text-align: center; }
+
+  .compare {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+  }
+  .compare-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .compare-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 3px 12px;
+    border-radius: 3px;
+  }
+
+  /* ═══════════════════════════════════════════ */
+  /* V3 STYLES (left)                           */
+  /* ═══════════════════════════════════════════ */
+  .v3 {
+    width: 340px;
+    background: var(--bg);
+    border: 1px solid rgba(201,169,110,0.15);
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px -12px rgba(0,0,0,0.8);
+  }
+  .v3 .da { height:2px; background:linear-gradient(90deg,transparent,rgba(201,169,110,0.35),transparent); }
+  .v3 .dh {
+    padding: 14px 16px 10px;
+    border-bottom: 1px solid rgba(201,169,110,0.06);
+  }
+  .v3 .dh-t { color: var(--t1); font-size: 14px; font-weight: 700; }
+  .v3 .dh-s { color: var(--t3); font-size: 9px; margin-top: 2px; font-family: 'Monaspace Neon', monospace; }
+  .v3 .db { padding: 12px 16px 16px; display:flex; flex-direction:column; gap:12px; }
+
+  .v3 .fl { font-size: 8px; color: var(--gold); letter-spacing: 0.12em; margin-bottom: 5px; }
+
+  .v3 .sr {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px; background: var(--bg3);
+    border: 1px solid rgba(201,169,110,0.08); border-radius: 4px;
+    cursor: pointer; transition: border-color 0.2s;
+  }
+  .v3 .sr:hover { border-color: rgba(201,169,110,0.2); }
+  .v3 .sr-s { cursor:default; }
+  .v3 .sr-s:hover { border-color: rgba(201,169,110,0.08); }
+  .v3 .sn { font-size: 11px; color: var(--t1); font-weight: 700; flex:1; }
+  .v3 .sm { font-size: 8px; color: var(--t3); margin-top:1px; }
+  .v3 .si { flex:1; }
+
+  .v3 .pips { display:flex; gap:2px; flex-shrink:0; }
+  .v3 .p { width:8px; height:8px; border-radius:2px; }
+  .v3 .pw { background: rgba(220,220,230,0.5); }
+  .v3 .pg { background: var(--gold); }
+  .v3 .cv { color: var(--t3); font-size: 8px; flex-shrink:0; margin-left:2px; }
+
+  .v3 .dr { display: flex; gap: 2px; }
+  .v3 .dd {
+    flex: 1; padding: 5px 2px;
+    background: var(--bg3); border: 1px solid rgba(201,169,110,0.06); border-radius: 2px;
+    text-align: center; font-size: 7px; letter-spacing: 0.05em; color: var(--t3);
+    cursor: pointer; transition: all 0.15s;
+  }
+  .v3 .dd:hover { border-color: rgba(201,169,110,0.2); color: var(--t2); }
+  .v3 .dd.on { background: rgba(201,169,110,0.1); border-color: rgba(201,169,110,0.3); color: var(--gold); font-weight: 700; }
+  .v3 .dm { font-size: 8px; display: block; margin-top: 1px; }
+
+  .v3 .pp {
+    background: var(--bg2);
+    border: 1px solid rgba(201,169,110,0.08);
+    border-radius: 4px;
+    padding: 10px 12px;
+  }
+  .v3 .pl { font-size: 8px; color: var(--gold); letter-spacing: 0.12em; margin-bottom: 10px; }
+
+  .v3 .pb { display: flex; align-items: center; gap: 0; }
+  .v3 .sq { width: 24px; height: 24px; border-radius: 3px; margin-right: 2px; }
+  .v3 .sq-b { background: rgba(220,220,230,0.1); border: 1px solid rgba(220,220,230,0.2); }
+  .v3 .sq-d { background: rgba(180,40,40,0.18); border: 1px solid rgba(200,48,48,0.4); }
+  .v3 .sq-g { background: rgba(201,169,110,0.1); border: 1px solid rgba(201,169,110,0.25); }
+  .v3 .pg2 { width: 10px; }
+
+  .v3 .pr { display: flex; margin-top: 6px; align-items: flex-start; }
+  .v3 .rng { display: flex; flex-direction: column; align-items: center; }
+  .v3 .rb { width: 100%; height: 1px; position: relative; }
+  .v3 .rb::before, .v3 .rb::after { content:''; position:absolute; top:-2px; width:1px; height:5px; }
+  .v3 .rb::before { left:0; } .v3 .rb::after { right:0; }
+  .v3 .rb-b { background:rgba(220,220,230,0.15); }
+  .v3 .rb-b::before, .v3 .rb-b::after { background:rgba(220,220,230,0.15); }
+  .v3 .rb-d { background:rgba(200,48,48,0.3); }
+  .v3 .rb-d::before, .v3 .rb-d::after { background:rgba(200,48,48,0.3); }
+  .v3 .rb-g { background:rgba(201,169,110,0.2); }
+  .v3 .rb-g::before, .v3 .rb-g::after { background:rgba(201,169,110,0.2); }
+  .v3 .rl { font-size: 7px; letter-spacing: 0.1em; margin-top: 2px; }
+
+  .v3 .ps {
+    display: flex; align-items: center; margin-top: 10px; padding-top: 8px;
+    border-top: 1px solid rgba(201,169,110,0.06); gap: 10px; font-size: 9px;
+  }
+  .v3 .psi { display:flex; align-items:center; gap:3px; }
+  .v3 .psd { width:5px; height:5px; border-radius:1px; }
+  .v3 .psn { color:var(--t1); font-weight:700; }
+  .v3 .psl { color:var(--t3); }
+  .v3 .pst { margin-left:auto; font-size:10px; color:var(--t3); }
+  .v3 .pst strong { color:var(--t1); font-size:16px; }
+
+  .v3 .rb2 {
+    width: 100%; padding: 10px;
+    background: linear-gradient(180deg, rgba(201,169,110,0.12), rgba(201,169,110,0.06));
+    border: 1px solid rgba(201,169,110,0.25); border-radius: 4px;
+    color: var(--gold); font-family: inherit; font-size: 12px; font-weight: 700;
+    letter-spacing: 0.15em; cursor: pointer; text-align: center;
+  }
+
+  /* ═══════════════════════════════════════════ */
+  /* V4 STYLES (right)                          */
+  /* ═══════════════════════════════════════════ */
+  .v4 {
+    width: 300px;
+    background: var(--bg);
+    border: 1px solid rgba(201,169,110,0.14);
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px -12px rgba(0,0,0,0.8);
+  }
+  .v4 .da { height:2px; background:linear-gradient(90deg,transparent,rgba(201,169,110,0.3),transparent); }
+  .v4 .dh {
+    padding: 10px 14px 8px;
+    border-bottom: 1px solid rgba(201,169,110,0.06);
+    display: flex; align-items: baseline; gap: 6px;
+  }
+  .v4 .dh-t { color: var(--t1); font-size: 13px; font-weight: 700; }
+  .v4 .dh-c { color: var(--t3); font-size: 9px; }
+  .v4 .db { padding: 10px 14px 14px; display:flex; flex-direction:column; gap:8px; }
+
+  .v4 .src {
+    display: flex; align-items: center; height: 32px;
+    padding: 0 10px; background: var(--bg3);
+    border: 1px solid rgba(255,255,255,0.04); border-radius: 3px;
+    gap: 8px; cursor: pointer; transition: border-color 0.15s;
+  }
+  .v4 .src:hover { border-color: rgba(201,169,110,0.18); }
+  .v4 .src-s { cursor:default; }
+  .v4 .src-s:hover { border-color: rgba(255,255,255,0.04); }
+  .v4 .sn { font-size: 10px; color: var(--t1); font-weight: 700; flex:1; }
+  .v4 .sd { font-size: 8px; color: var(--t3); margin-right:4px; }
+
+  .v4 .pips { display:flex; gap:2px; }
+  .v4 .p { width:6px; height:6px; border-radius:1.5px; }
+  .v4 .pw { background: rgba(220,220,230,0.45); }
+  .v4 .pg { background: var(--gold); }
+  .v4 .cv { color: var(--t3); font-size: 7px; margin-left:2px; }
+
+  .v4 .dr { display: flex; gap: 1px; }
+  .v4 .dd {
+    flex: 1; height: 24px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--bg3); border: 1px solid transparent; border-radius: 2px;
+    font-size: 8px; color: var(--t3); cursor: pointer; transition: all 0.12s;
+  }
+  .v4 .dd:hover { color: var(--t2); border-color: rgba(201,169,110,0.12); }
+  .v4 .dd.on { background: rgba(201,169,110,0.08); border-color: rgba(201,169,110,0.25); color: var(--gold); font-weight: 700; }
+
+  .v4 .pp {
+    background: var(--bg2); border: 1px solid rgba(201,169,110,0.06);
+    border-radius: 4px; padding: 10px;
+  }
+
+  .v4 .pb { display: flex; align-items: center; gap: 0; }
+  .v4 .sq { width: 20px; height: 20px; border-radius: 2px; margin-right: 2px; }
+  .v4 .sq-b { background: rgba(220,220,230,0.1); border: 1px solid rgba(220,220,230,0.18); }
+  .v4 .sq-d { background: linear-gradient(135deg, rgba(180,40,40,0.2), rgba(139,32,32,0.12)); border: 1px solid rgba(200,48,48,0.35); }
+  .v4 .sq-g { background: rgba(201,169,110,0.08); border: 1px solid rgba(201,169,110,0.22); }
+  .v4 .pg2 { width: 8px; }
+
+  .v4 .pr { display: flex; margin-top: 4px; height: 14px; align-items: flex-start; }
+  .v4 .rng { display: flex; flex-direction: column; align-items: center; }
+  .v4 .rb { width: 100%; height: 1px; position: relative; }
+  .v4 .rb::before, .v4 .rb::after { content:''; position:absolute; top:-1px; width:1px; height:3px; }
+  .v4 .rb::before { left:0; } .v4 .rb::after { right:0; }
+  .v4 .rb-b { background:rgba(220,220,230,0.12); }
+  .v4 .rb-b::before, .v4 .rb-b::after { background:rgba(220,220,230,0.12); }
+  .v4 .rb-d { background:rgba(200,48,48,0.25); }
+  .v4 .rb-d::before, .v4 .rb-d::after { background:rgba(200,48,48,0.25); }
+  .v4 .rb-g { background:rgba(201,169,110,0.15); }
+  .v4 .rb-g::before, .v4 .rb-g::after { background:rgba(201,169,110,0.15); }
+  .v4 .rl { font-size: 7px; letter-spacing: 0.08em; margin-top: 1px; }
+
+  .v4 .ps {
+    display: flex; align-items: center; margin-top: 8px; padding-top: 7px;
+    border-top: 1px solid rgba(255,255,255,0.03); gap: 10px; font-size: 8px;
+  }
+  .v4 .psi { display:flex; align-items:center; gap:3px; }
+  .v4 .psd { width:5px; height:5px; border-radius:1px; }
+  .v4 .psn { color:var(--t1); font-weight:700; }
+  .v4 .pst { margin-left:auto; font-size:9px; color:var(--t3); }
+  .v4 .pst strong { color:var(--t1); font-size:14px; margin-right:2px; }
+
+  .v4 .rb2 {
+    height: 36px;
+    background: linear-gradient(180deg, rgba(201,169,110,0.1), rgba(201,169,110,0.04));
+    border: 1px solid rgba(201,169,110,0.2); border-radius: 3px;
+    color: var(--gold); font-family: inherit; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.18em; cursor: pointer; text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<h2>Side by Side — v3 vs v4</h2>
+<p class="sub">Same information, different density. Click to select your preference.</p>
+
+<div class="compare">
+
+  <!-- ═══ V3 ═══ -->
+  <div class="compare-col">
+    <div class="compare-label" style="background:rgba(201,169,110,0.08); color:var(--gold);">v3 — SPACIOUS</div>
+
+    <div class="v3" onclick="document.querySelectorAll('.compare-col').forEach(c=>c.style.opacity=0.4); this.closest('.compare-col').style.opacity=1;">
+      <div class="da"></div>
+      <div class="dh">
+        <div class="dh-t">Roll — Logic</div>
+        <div class="dh-s">Dr. Yuki Tanaka</div>
+      </div>
+      <div class="db">
+        <div>
+          <div class="fl">ATTRIBUTE</div>
+          <div class="sr sr-s">
+            <div class="si"><div class="sn">Logic</div><div class="sm">Base attribute</div></div>
+            <div class="pips"><div class="p pw"></div><div class="p pw"></div><div class="p pw"></div><div class="p pw"></div><div class="p pw"></div></div>
+            <span style="font-size:10px;color:var(--t1);font-weight:700;width:16px;text-align:right;">5</span>
+          </div>
+        </div>
+        <div>
+          <div class="fl">TALENT</div>
+          <div class="sr">
+            <div class="si"><div class="sn">Investigator</div><div class="sm">Level 2 — Scene Reading</div></div>
+            <div class="pips"><div class="p pw"></div><div class="p pw"></div></div>
+            <span style="font-size:10px;color:var(--t1);font-weight:700;width:16px;text-align:right;">2</span>
+            <span class="cv">▾</span>
+          </div>
+        </div>
+        <div>
+          <div class="fl">EQUIPMENT</div>
+          <div class="sr">
+            <div class="si"><div class="sn">Forensics Kit</div><div class="sm">Gear bonus</div></div>
+            <div class="pips"><div class="p pg"></div><div class="p pg"></div></div>
+            <span style="font-size:10px;color:var(--gold);font-weight:700;width:16px;text-align:right;">2</span>
+            <span class="cv">▾</span>
+          </div>
+        </div>
+        <div>
+          <div class="fl">DIFFICULTY</div>
+          <div class="dr">
+            <div class="dd"><span>EFF</span><span class="dm">+3</span></div>
+            <div class="dd"><span>RTN</span><span class="dm">+2</span></div>
+            <div class="dd"><span>EAS</span><span class="dm">+1</span></div>
+            <div class="dd on"><span>NRM</span><span class="dm">±0</span></div>
+            <div class="dd"><span>DEM</span><span class="dm">−1</span></div>
+            <div class="dd"><span>HRD</span><span class="dm">−2</span></div>
+            <div class="dd"><span>INS</span><span class="dm">−3</span></div>
+          </div>
+        </div>
+        <div class="pp">
+          <div class="pl">DICE POOL</div>
+          <div class="pb">
+            <div class="sq sq-b"></div><div class="sq sq-b"></div><div class="sq sq-b"></div><div class="sq sq-b"></div><div class="sq sq-b"></div>
+            <div class="sq sq-d"></div><div class="sq sq-d"></div>
+            <div class="pg2"></div>
+            <div class="sq sq-g"></div><div class="sq sq-g"></div>
+          </div>
+          <div class="pr">
+            <div class="rng" style="width:calc(5*26px);"><div class="rb rb-b"></div><span class="rl" style="color:rgba(220,220,230,0.35);">BASE <span style="color:var(--t1);font-weight:700;">5</span></span></div>
+            <div class="rng" style="width:calc(2*26px);"><div class="rb rb-d"></div><span class="rl" style="color:rgba(200,48,48,0.5);">DREAD <span style="color:var(--red);font-weight:700;">2</span></span></div>
+            <div style="width:10px;"></div>
+            <div class="rng" style="width:calc(2*26px);"><div class="rb rb-g"></div><span class="rl" style="color:rgba(201,169,110,0.4);">GEAR <span style="color:var(--gold);font-weight:700;">2</span></span></div>
+          </div>
+          <div class="ps">
+            <div class="psi"><div class="psd" style="background:rgba(220,220,230,0.45);"></div><span class="psn">5</span><span class="psl">base</span></div>
+            <div class="psi"><div class="psd" style="background:var(--red);"></div><span class="psn" style="color:var(--red);">2</span><span class="psl">dread</span></div>
+            <div class="psi"><div class="psd" style="background:var(--gold);"></div><span class="psn" style="color:var(--gold);">2</span><span class="psl">gear</span></div>
+            <div class="pst"><strong>9</strong> dice</div>
+          </div>
+        </div>
+        <div class="rb2">ROLL</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ V4 ═══ -->
+  <div class="compare-col">
+    <div class="compare-label" style="background:rgba(201,169,110,0.08); color:var(--gold);">v4 — COMPACT</div>
+
+    <div class="v4" onclick="document.querySelectorAll('.compare-col').forEach(c=>c.style.opacity=0.4); this.closest('.compare-col').style.opacity=1;">
+      <div class="da"></div>
+      <div class="dh">
+        <span class="dh-t">Logic</span>
+        <span class="dh-c">Dr. Yuki Tanaka</span>
+      </div>
+      <div class="db">
+        <div class="src src-s">
+          <span class="sn">Logic</span>
+          <div class="pips"><div class="p pw"></div><div class="p pw"></div><div class="p pw"></div><div class="p pw"></div><div class="p pw"></div></div>
+        </div>
+        <div class="src">
+          <span class="sn">Investigator</span>
+          <span class="sd">L2</span>
+          <div class="pips"><div class="p pw"></div><div class="p pw"></div></div>
+          <span class="cv">▾</span>
+        </div>
+        <div class="src">
+          <span class="sn">Forensics Kit</span>
+          <span class="sd">gear</span>
+          <div class="pips"><div class="p pg"></div><div class="p pg"></div></div>
+          <span class="cv">▾</span>
+        </div>
+        <div class="dr">
+          <div class="dd">+3</div><div class="dd">+2</div><div class="dd">+1</div>
+          <div class="dd on">±0</div>
+          <div class="dd">−1</div><div class="dd">−2</div><div class="dd">−3</div>
+        </div>
+        <div class="pp">
+          <div class="pb">
+            <div class="sq sq-b"></div><div class="sq sq-b"></div><div class="sq sq-b"></div><div class="sq sq-b"></div><div class="sq sq-b"></div>
+            <div class="sq sq-d"></div><div class="sq sq-d"></div>
+            <div class="pg2"></div>
+            <div class="sq sq-g"></div><div class="sq sq-g"></div>
+          </div>
+          <div class="pr">
+            <div class="rng" style="width:calc(5*22px);"><div class="rb rb-b"></div><span class="rl" style="color:rgba(220,220,230,0.35);">BASE <span style="color:var(--t1);font-weight:700;">5</span></span></div>
+            <div class="rng" style="width:calc(2*22px);"><div class="rb rb-d"></div><span class="rl" style="color:rgba(200,48,48,0.5);">DREAD <span style="color:var(--red);font-weight:700;">2</span></span></div>
+            <div style="width:8px;"></div>
+            <div class="rng" style="width:calc(2*22px);"><div class="rb rb-g"></div><span class="rl" style="color:rgba(201,169,110,0.4);">GEAR <span style="color:var(--gold);font-weight:700;">2</span></span></div>
+          </div>
+          <div class="ps">
+            <div class="psi"><div class="psd" style="background:rgba(220,220,230,0.45);"></div><span class="psn">5</span></div>
+            <div class="psi"><div class="psd" style="background:var(--red);"></div><span class="psn" style="color:var(--red);">2</span></div>
+            <div class="psi"><div class="psd" style="background:var(--gold);"></div><span class="psn" style="color:var(--gold);">2</span></div>
+            <div class="pst"><strong>9</strong>dice</div>
+          </div>
+        </div>
+        <button class="rb2">ROLL</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div style="max-width:680px; padding:12px 16px; background:rgba(201,169,110,0.03); border:1px solid rgba(201,169,110,0.08); border-radius:6px; font-size:11px; line-height:1.7; color:var(--t2);">
+  <strong style="color:var(--t1);">Differences:</strong>
+  v3 has section labels (ATTRIBUTE, TALENT, etc.), sub-descriptions, larger pips (8px), named difficulty buttons, and "DICE POOL" label.
+  v4 drops all section labels, uses context-only (name + pips is enough), smaller pips (6px), number-only difficulty, no pool label.
+  Same pool visualization in both. Click either card to highlight your pick.
+</div>
+
+</body>
+</html>

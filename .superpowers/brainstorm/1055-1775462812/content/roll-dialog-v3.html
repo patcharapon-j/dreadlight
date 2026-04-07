@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dreadlight — Roll Dialog v3</title>
+<style>
+  @font-face {
+    font-family: 'Monaspace Krypton';
+    src: url('https://cdn.jsdelivr.net/gh/githubnext/monaspace@v1.101/fonts/webfonts/MonaspaceKrypton-Regular.woff') format('woff');
+    font-weight: 400;
+  }
+  @font-face {
+    font-family: 'Monaspace Krypton';
+    src: url('https://cdn.jsdelivr.net/gh/githubnext/monaspace@v1.101/fonts/webfonts/MonaspaceKrypton-Bold.woff') format('woff');
+    font-weight: 700;
+  }
+  @font-face {
+    font-family: 'Monaspace Neon';
+    src: url('https://cdn.jsdelivr.net/gh/githubnext/monaspace@v1.101/fonts/webfonts/MonaspaceNeon-Regular.woff') format('woff');
+    font-weight: 400;
+  }
+
+  :root {
+    --bg-primary: #08080c;
+    --bg-surface: #0e0e14;
+    --bg-card: #111118;
+    --text-primary: #ededf4;
+    --text-secondary: #8e8ea3;
+    --text-muted: #555568;
+    --accent-gold: #c9a96e;
+    --dread-red: #c93030;
+    --dread-bg: rgba(180,40,40,0.12);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: #111;
+    font-family: 'Monaspace Krypton', monospace;
+    color: var(--text-secondary);
+    padding: 32px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+  }
+
+  h2 { color: var(--text-primary); font-size: 18px; letter-spacing: 0.04em; text-align:center; }
+  .subtitle { color: var(--text-muted); font-size: 11px; margin-top: 4px; text-align: center; }
+
+  /* ─── DIALOG ─── */
+  .roll-dialog {
+    width: 340px;
+    background: var(--bg-primary);
+    border: 1px solid rgba(201,169,110,0.15);
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 24px 80px -16px rgba(0,0,0,0.8), 0 0 40px -8px rgba(201,169,110,0.06);
+  }
+  .dialog-accent { height:2px; background:linear-gradient(90deg,transparent,rgba(201,169,110,0.35),transparent); }
+  .dialog-header {
+    padding: 14px 16px 10px;
+    border-bottom: 1px solid rgba(201,169,110,0.06);
+  }
+  .dialog-title { color: var(--text-primary); font-size: 14px; font-weight: 700; }
+  .dialog-subtitle { color: var(--text-muted); font-size: 9px; margin-top: 2px; font-family: 'Monaspace Neon', monospace; }
+  .dialog-body { padding: 12px 16px 16px; display:flex; flex-direction:column; gap:12px; }
+
+  .field-label { font-size: 8px; color: var(--accent-gold); letter-spacing: 0.12em; margin-bottom: 5px; }
+
+  /* Source rows with pips */
+  .source-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    background: var(--bg-card);
+    border: 1px solid rgba(201,169,110,0.08);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .source-row:hover { border-color: rgba(201,169,110,0.2); }
+
+  .source-info { flex: 1; min-width: 0; }
+  .source-name { color: var(--text-primary); font-size: 11px; font-weight: 700; }
+  .source-meta { color: var(--text-muted); font-size: 8px; margin-top: 1px; }
+
+  .source-pips { display: flex; gap: 2px; flex-shrink: 0; }
+  .pip {
+    width: 8px; height: 8px;
+    border-radius: 2px;
+    transition: all 0.2s;
+  }
+  .pip.base { background: rgba(220,220,230,0.5); }
+  .pip.base.empty { background: transparent; border: 1px solid rgba(220,220,230,0.15); }
+  .pip.dread { background: var(--dread-red); }
+  .pip.gear { background: var(--accent-gold); }
+
+  .source-chevron { color: var(--text-muted); font-size: 8px; flex-shrink: 0; }
+
+  /* Difficulty */
+  .difficulty-row { display: flex; gap: 2px; }
+  .diff-btn {
+    flex: 1; padding: 5px 2px;
+    background: var(--bg-card); border: 1px solid rgba(201,169,110,0.06); border-radius: 2px;
+    text-align: center; font-size: 7px; letter-spacing: 0.05em; color: var(--text-muted);
+    cursor: pointer; transition: all 0.15s;
+  }
+  .diff-btn:hover { border-color: rgba(201,169,110,0.2); color: var(--text-secondary); }
+  .diff-btn.active { background: rgba(201,169,110,0.1); border-color: rgba(201,169,110,0.3); color: var(--accent-gold); font-weight: 700; }
+  .diff-mod { font-size: 8px; display: block; margin-top: 1px; }
+
+  /* ─── POOL PREVIEW — unified bar showing dread eating into base ─── */
+  .pool-preview {
+    background: var(--bg-surface);
+    border: 1px solid rgba(201,169,110,0.08);
+    border-radius: 4px;
+    padding: 12px;
+  }
+  .pool-label { font-size: 8px; color: var(--accent-gold); letter-spacing: 0.12em; margin-bottom: 10px; }
+
+  /* The main pool: one continuous row of squares */
+  .pool-bar {
+    display: flex;
+    gap: 0;
+    align-items: center;
+  }
+
+  .pool-block {
+    width: 24px; height: 24px;
+    border-radius: 3px;
+    display: flex; align-items: center; justify-content: center;
+    margin-right: 2px;
+    position: relative;
+  }
+
+  /* Base dice squares */
+  .pool-block.base {
+    background: rgba(220,220,230,0.1);
+    border: 1px solid rgba(220,220,230,0.2);
+  }
+
+  /* Dread dice squares — visually "biting" into the base pool */
+  .pool-block.dread {
+    background: rgba(180,40,40,0.18);
+    border: 1px solid rgba(200,48,48,0.4);
+    position: relative;
+  }
+  /* Diagonal bite mark on transition from base to dread */
+  .pool-block.dread.first::before {
+    content: '';
+    position: absolute;
+    left: -6px;
+    top: 0; bottom: 0;
+    width: 6px;
+    background: linear-gradient(135deg, transparent 50%, rgba(180,40,40,0.18) 50%);
+  }
+
+  /* Gear dice squares — after a gap */
+  .pool-block.gear {
+    background: rgba(201,169,110,0.1);
+    border: 1px solid rgba(201,169,110,0.25);
+  }
+
+  .pool-gap { width: 10px; }
+
+  /* Labels under the pool */
+  .pool-labels {
+    display: flex;
+    margin-top: 6px;
+    font-size: 7px;
+    letter-spacing: 0.1em;
+  }
+  .pool-range-label {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+  .pool-range-label .range-line {
+    height: 1px;
+    flex: 1;
+  }
+  .pool-range-label .range-count { font-weight: 700; }
+
+  /* Pool summary row */
+  .pool-summary {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(201,169,110,0.06);
+  }
+  .pool-stat {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 9px;
+  }
+  .pool-stat .stat-pip {
+    width: 6px; height: 6px; border-radius: 1px;
+  }
+  .pool-stat .stat-count { color: var(--text-primary); font-weight: 700; }
+  .pool-stat .stat-label { color: var(--text-muted); }
+  .pool-total-final {
+    margin-left: auto;
+    font-size: 10px;
+    color: var(--text-muted);
+  }
+  .pool-total-final strong {
+    color: var(--text-primary);
+    font-size: 16px;
+  }
+
+  /* Roll button */
+  .roll-button {
+    width: 100%; padding: 10px;
+    background: linear-gradient(180deg, rgba(201,169,110,0.12), rgba(201,169,110,0.06));
+    border: 1px solid rgba(201,169,110,0.25); border-radius: 4px;
+    color: var(--accent-gold); font-family: 'Monaspace Krypton', monospace;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.15em;
+    cursor: pointer; transition: all 0.25s; text-align: center;
+  }
+  .roll-button:hover {
+    background: linear-gradient(180deg, rgba(201,169,110,0.2), rgba(201,169,110,0.1));
+    border-color: rgba(201,169,110,0.45);
+    box-shadow: 0 0 20px -6px rgba(201,169,110,0.25);
+  }
+
+  /* Notes */
+  .notes {
+    max-width: 380px;
+    padding: 14px 16px;
+    background: rgba(201,169,110,0.03);
+    border: 1px solid rgba(201,169,110,0.08);
+    border-radius: 6px;
+    font-size: 11px;
+    line-height: 1.8;
+  }
+  .notes strong { color: var(--text-primary); }
+  .notes ul { padding-left: 16px; margin-top: 6px; color: var(--text-secondary); }
+</style>
+</head>
+<body>
+
+<div style="text-align:center;">
+  <h2>Roll Dialog — v3</h2>
+  <p class="subtitle">Pips on sources, unified pool bar with dread biting into base</p>
+</div>
+
+<!-- ─── THE DIALOG ─── -->
+<div class="roll-dialog">
+  <div class="dialog-accent"></div>
+  <div class="dialog-header">
+    <div class="dialog-title">Roll — Logic</div>
+    <div class="dialog-subtitle">Dr. Yuki Tanaka</div>
+  </div>
+  <div class="dialog-body">
+
+    <!-- ATTRIBUTE with pips -->
+    <div>
+      <div class="field-label">ATTRIBUTE</div>
+      <div class="source-row" style="cursor:default;">
+        <div class="source-info">
+          <div class="source-name">Logic</div>
+          <div class="source-meta">Base attribute</div>
+        </div>
+        <div class="source-pips">
+          <div class="pip base"></div>
+          <div class="pip base"></div>
+          <div class="pip base"></div>
+          <div class="pip base"></div>
+          <div class="pip base"></div>
+        </div>
+        <span style="font-size:10px; color:var(--text-primary); font-weight:700; width:16px; text-align:right;">5</span>
+      </div>
+    </div>
+
+    <!-- TALENT with pips -->
+    <div>
+      <div class="field-label">TALENT</div>
+      <div class="source-row">
+        <div class="source-info">
+          <div class="source-name">Investigator</div>
+          <div class="source-meta">Level 2 — Scene Reading</div>
+        </div>
+        <div class="source-pips">
+          <div class="pip base"></div>
+          <div class="pip base"></div>
+        </div>
+        <span style="font-size:10px; color:var(--text-primary); font-weight:700; width:16px; text-align:right;">2</span>
+        <span class="source-chevron">▾</span>
+      </div>
+    </div>
+
+    <!-- EQUIPMENT with pips -->
+    <div>
+      <div class="field-label">EQUIPMENT</div>
+      <div class="source-row">
+        <div class="source-info">
+          <div class="source-name">Forensics Kit</div>
+          <div class="source-meta">Gear bonus</div>
+        </div>
+        <div class="source-pips">
+          <div class="pip gear"></div>
+          <div class="pip gear"></div>
+        </div>
+        <span style="font-size:10px; color:var(--accent-gold); font-weight:700; width:16px; text-align:right;">2</span>
+        <span class="source-chevron">▾</span>
+      </div>
+    </div>
+
+    <!-- DIFFICULTY -->
+    <div>
+      <div class="field-label">DIFFICULTY</div>
+      <div class="difficulty-row">
+        <div class="diff-btn"><span>EFF</span><span class="diff-mod">+3</span></div>
+        <div class="diff-btn"><span>RTN</span><span class="diff-mod">+2</span></div>
+        <div class="diff-btn"><span>EAS</span><span class="diff-mod">+1</span></div>
+        <div class="diff-btn active"><span>NRM</span><span class="diff-mod">±0</span></div>
+        <div class="diff-btn"><span>DEM</span><span class="diff-mod">−1</span></div>
+        <div class="diff-btn"><span>HRD</span><span class="diff-mod">−2</span></div>
+        <div class="diff-btn"><span>INS</span><span class="diff-mod">−3</span></div>
+      </div>
+    </div>
+
+    <!-- POOL PREVIEW — dread eats into base -->
+    <div class="pool-preview">
+      <div class="pool-label">DICE POOL</div>
+
+      <!-- Unified pool bar -->
+      <!-- Attribute(5) + Talent(2) = 7 total. Dread(2) replaces 2 of those. So: 5 base + 2 dread. Then 2 gear separate. -->
+      <div class="pool-bar">
+        <!-- Base dice (attribute + talent - dread) = 5 -->
+        <div class="pool-block base"></div>
+        <div class="pool-block base"></div>
+        <div class="pool-block base"></div>
+        <div class="pool-block base"></div>
+        <div class="pool-block base"></div>
+        <!-- Dread dice replace the last 2 — visually contiguous but red -->
+        <div class="pool-block dread first"></div>
+        <div class="pool-block dread"></div>
+
+        <div class="pool-gap"></div>
+
+        <!-- Gear dice — separate -->
+        <div class="pool-block gear"></div>
+        <div class="pool-block gear"></div>
+      </div>
+
+      <!-- Labels -->
+      <div style="display:flex; margin-top:6px; gap:0; align-items:flex-start;">
+        <!-- Base range -->
+        <div style="display:flex; flex-direction:column; align-items:center; width: calc(5 * 26px);">
+          <div style="width:100%; height:1px; background:rgba(220,220,230,0.15); position:relative;">
+            <div style="position:absolute; left:0; top:-2px; width:1px; height:5px; background:rgba(220,220,230,0.15);"></div>
+            <div style="position:absolute; right:0; top:-2px; width:1px; height:5px; background:rgba(220,220,230,0.15);"></div>
+          </div>
+          <span style="font-size:7px; letter-spacing:0.1em; color:rgba(220,220,230,0.4); margin-top:2px;">BASE <span style="color:var(--text-primary); font-weight:700;">5</span></span>
+        </div>
+        <!-- Dread range -->
+        <div style="display:flex; flex-direction:column; align-items:center; width: calc(2 * 26px);">
+          <div style="width:100%; height:1px; background:rgba(200,48,48,0.3); position:relative;">
+            <div style="position:absolute; left:0; top:-2px; width:1px; height:5px; background:rgba(200,48,48,0.3);"></div>
+            <div style="position:absolute; right:0; top:-2px; width:1px; height:5px; background:rgba(200,48,48,0.3);"></div>
+          </div>
+          <span style="font-size:7px; letter-spacing:0.1em; color:rgba(200,48,48,0.6); margin-top:2px;">DREAD <span style="color:var(--dread-red); font-weight:700;">2</span></span>
+        </div>
+        <!-- Gap spacer -->
+        <div style="width:10px;"></div>
+        <!-- Gear range -->
+        <div style="display:flex; flex-direction:column; align-items:center; width: calc(2 * 26px);">
+          <div style="width:100%; height:1px; background:rgba(201,169,110,0.2); position:relative;">
+            <div style="position:absolute; left:0; top:-2px; width:1px; height:5px; background:rgba(201,169,110,0.2);"></div>
+            <div style="position:absolute; right:0; top:-2px; width:1px; height:5px; background:rgba(201,169,110,0.2);"></div>
+          </div>
+          <span style="font-size:7px; letter-spacing:0.1em; color:rgba(201,169,110,0.4); margin-top:2px;">GEAR <span style="color:var(--accent-gold); font-weight:700;">2</span></span>
+        </div>
+      </div>
+
+      <!-- Summary -->
+      <div class="pool-summary">
+        <div class="pool-stat">
+          <div class="stat-pip" style="background:rgba(220,220,230,0.5);"></div>
+          <span class="stat-count">5</span>
+          <span class="stat-label">base</span>
+        </div>
+        <div class="pool-stat">
+          <div class="stat-pip" style="background:var(--dread-red);"></div>
+          <span class="stat-count" style="color:var(--dread-red);">2</span>
+          <span class="stat-label">dread</span>
+        </div>
+        <div class="pool-stat">
+          <div class="stat-pip" style="background:var(--accent-gold);"></div>
+          <span class="stat-count" style="color:var(--accent-gold);">2</span>
+          <span class="stat-label">gear</span>
+        </div>
+        <div class="pool-total-final">
+          <strong>9</strong> dice
+        </div>
+      </div>
+    </div>
+
+    <div class="roll-button">ROLL</div>
+  </div>
+</div>
+
+<!-- ─── HIGH DREAD EXAMPLE ─── -->
+<div style="text-align:center;">
+  <p class="subtitle" style="color:var(--dread-red);">High Dread example — Dread 4 eating most of the pool</p>
+</div>
+
+<div class="roll-dialog">
+  <div class="dialog-accent" style="background:linear-gradient(90deg,transparent,rgba(200,48,48,0.3),transparent);"></div>
+  <div class="dialog-header">
+    <div class="dialog-title">Roll — Insight</div>
+    <div class="dialog-subtitle">Dr. Yuki Tanaka — <span style="color:var(--dread-red);">Dread 4</span></div>
+  </div>
+  <div class="dialog-body">
+
+    <div>
+      <div class="field-label">ATTRIBUTE</div>
+      <div class="source-row" style="cursor:default;">
+        <div class="source-info">
+          <div class="source-name">Insight</div>
+        </div>
+        <div class="source-pips">
+          <div class="pip base"></div>
+          <div class="pip base"></div>
+          <div class="pip base"></div>
+          <div class="pip base"></div>
+        </div>
+        <span style="font-size:10px; color:var(--text-primary); font-weight:700; width:16px; text-align:right;">4</span>
+      </div>
+    </div>
+
+    <div>
+      <div class="field-label">TALENT</div>
+      <div class="source-row">
+        <div class="source-info">
+          <div class="source-name">Occult</div>
+          <div class="source-meta" style="color:#a88bf5;">Level 2 — Forbidden Insight (1 Soul)</div>
+        </div>
+        <div class="source-pips">
+          <div class="pip base"></div>
+          <div class="pip base"></div>
+        </div>
+        <span style="font-size:10px; color:var(--text-primary); font-weight:700; width:16px; text-align:right;">2</span>
+        <span class="source-chevron">▾</span>
+      </div>
+    </div>
+
+    <div>
+      <div class="field-label">EQUIPMENT</div>
+      <div class="source-row">
+        <div class="source-info">
+          <div class="source-name" style="color:var(--text-muted);">None</div>
+        </div>
+        <span class="source-chevron">▾</span>
+      </div>
+    </div>
+
+    <div>
+      <div class="field-label">DIFFICULTY</div>
+      <div class="difficulty-row">
+        <div class="diff-btn"><span>EFF</span><span class="diff-mod">+3</span></div>
+        <div class="diff-btn"><span>RTN</span><span class="diff-mod">+2</span></div>
+        <div class="diff-btn"><span>EAS</span><span class="diff-mod">+1</span></div>
+        <div class="diff-btn active"><span>NRM</span><span class="diff-mod">±0</span></div>
+        <div class="diff-btn"><span>DEM</span><span class="diff-mod">−1</span></div>
+        <div class="diff-btn"><span>HRD</span><span class="diff-mod">−2</span></div>
+        <div class="diff-btn"><span>INS</span><span class="diff-mod">−3</span></div>
+      </div>
+    </div>
+
+    <!-- Pool: INS 4 + Talent 2 = 6. Dread 4 replaces 4. So: 2 base + 4 dread. No gear. -->
+    <div class="pool-preview" style="border-color: rgba(200,48,48,0.12);">
+      <div class="pool-label">DICE POOL</div>
+
+      <div class="pool-bar">
+        <div class="pool-block base"></div>
+        <div class="pool-block base"></div>
+        <div class="pool-block dread first"></div>
+        <div class="pool-block dread"></div>
+        <div class="pool-block dread"></div>
+        <div class="pool-block dread"></div>
+      </div>
+
+      <div style="display:flex; margin-top:6px; gap:0; align-items:flex-start;">
+        <div style="display:flex; flex-direction:column; align-items:center; width: calc(2 * 26px);">
+          <div style="width:100%; height:1px; background:rgba(220,220,230,0.15); position:relative;">
+            <div style="position:absolute; left:0; top:-2px; width:1px; height:5px; background:rgba(220,220,230,0.15);"></div>
+            <div style="position:absolute; right:0; top:-2px; width:1px; height:5px; background:rgba(220,220,230,0.15);"></div>
+          </div>
+          <span style="font-size:7px; letter-spacing:0.1em; color:rgba(220,220,230,0.4); margin-top:2px;">BASE <span style="color:var(--text-primary); font-weight:700;">2</span></span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; width: calc(4 * 26px);">
+          <div style="width:100%; height:1px; background:rgba(200,48,48,0.3); position:relative;">
+            <div style="position:absolute; left:0; top:-2px; width:1px; height:5px; background:rgba(200,48,48,0.3);"></div>
+            <div style="position:absolute; right:0; top:-2px; width:1px; height:5px; background:rgba(200,48,48,0.3);"></div>
+          </div>
+          <span style="font-size:7px; letter-spacing:0.1em; color:rgba(200,48,48,0.6); margin-top:2px;">DREAD <span style="color:var(--dread-red); font-weight:700;">4</span></span>
+        </div>
+      </div>
+
+      <div class="pool-summary">
+        <div class="pool-stat">
+          <div class="stat-pip" style="background:rgba(220,220,230,0.5);"></div>
+          <span class="stat-count">2</span>
+          <span class="stat-label">base</span>
+        </div>
+        <div class="pool-stat">
+          <div class="stat-pip" style="background:var(--dread-red);"></div>
+          <span class="stat-count" style="color:var(--dread-red);">4</span>
+          <span class="stat-label">dread</span>
+        </div>
+        <div class="pool-total-final">
+          <strong>6</strong> dice
+        </div>
+      </div>
+    </div>
+
+    <div class="roll-button">ROLL</div>
+  </div>
+</div>
+
+<!-- Notes -->
+<div class="notes">
+  <strong>v3 Changes</strong>
+  <ul>
+    <li><strong>Source pips</strong> — Attribute, Talent, Equipment each show small square pips for their dice contribution</li>
+    <li><strong>No d6 labels</strong> — pool shows plain squares, no text. Always d6.</li>
+    <li><strong>Dread bites into base</strong> — one continuous row where red dread squares replace the rightmost base squares. Visually clear that dread is eating your pool, not separate.</li>
+    <li><strong>Gear separated by gap</strong> — gear is the only truly separate pool</li>
+    <li><strong>Bracket labels</strong> — small labeled ranges underneath show the split</li>
+    <li><strong>High Dread example</strong> — shows Dread 4 consuming most of the pool (only 2 base remain)</li>
+    <li><strong>No formula</strong> — just pips and squares, the math is implicit from the visual</li>
+  </ul>
+</div>
+
+</body>
+</html>

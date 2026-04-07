@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dreadlight — Investigator Sheet v2</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/geist-mono@5/index.css">
+<style>
+  @font-face {
+    font-family: 'Monaspace Krypton';
+    src: url('https://cdn.jsdelivr.net/gh/githubnext/monaspace@v1.101/fonts/webfonts/MonaspaceKrypton-Regular.woff') format('woff');
+    font-weight: 400;
+  }
+  @font-face {
+    font-family: 'Monaspace Krypton';
+    src: url('https://cdn.jsdelivr.net/gh/githubnext/monaspace@v1.101/fonts/webfonts/MonaspaceKrypton-Bold.woff') format('woff');
+    font-weight: 700;
+  }
+  @font-face {
+    font-family: 'Monaspace Neon';
+    src: url('https://cdn.jsdelivr.net/gh/githubnext/monaspace@v1.101/fonts/webfonts/MonaspaceNeon-Regular.woff') format('woff');
+    font-weight: 400;
+  }
+
+  :root {
+    --bg-primary: #08080c;
+    --bg-surface: #0e0e14;
+    --bg-elevated: #16161f;
+    --bg-card: #111118;
+    --border-subtle: rgba(255,255,255,0.08);
+    --border-medium: rgba(255,255,255,0.14);
+    --text-primary: #ededf4;
+    --text-secondary: #8e8ea3;
+    --text-muted: #555568;
+    --accent-gold: #c9a96e;
+    --track-body: #55b87a;
+    --track-mind: #6b9df5;
+    --track-soul: #a88bf5;
+    --dread-color: #666;
+    --danger: #e05555;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: #111;
+    font-family: 'Monaspace Krypton', 'Geist Mono', monospace;
+    color: var(--text-secondary);
+    display: flex;
+    justify-content: center;
+    padding: 32px 16px;
+  }
+
+  .page-title {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .page-title h2 {
+    color: var(--text-primary);
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .page-title p {
+    color: var(--text-muted);
+    font-size: 12px;
+    margin-top: 4px;
+  }
+
+  /* ─── THE SHEET ─── */
+  .sheet {
+    width: 720px;
+    background: var(--bg-primary);
+    border: 1px solid rgba(201,169,110,0.12);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Geometric corners */
+  .sheet::before, .sheet::after { content:''; position:absolute; z-index:10; pointer-events:none; }
+  .corner { position:absolute; z-index:10; pointer-events:none; }
+  .corner-tl { top:6px; left:6px; width:16px; height:16px; border-top:1px solid rgba(201,169,110,0.18); border-left:1px solid rgba(201,169,110,0.18); }
+  .corner-tr { top:6px; right:6px; width:16px; height:16px; border-top:1px solid rgba(201,169,110,0.18); border-right:1px solid rgba(201,169,110,0.18); }
+  .corner-bl { bottom:6px; left:6px; width:16px; height:16px; border-bottom:1px solid rgba(201,169,110,0.18); border-left:1px solid rgba(201,169,110,0.18); }
+  .corner-br { bottom:6px; right:6px; width:16px; height:16px; border-bottom:1px solid rgba(201,169,110,0.18); border-right:1px solid rgba(201,169,110,0.18); }
+
+  /* Top accent line */
+  .accent-top { height:2px; background:linear-gradient(90deg,transparent,rgba(201,169,110,0.35),transparent); }
+  .accent-bottom { height:1px; background:linear-gradient(90deg,transparent,rgba(201,169,110,0.15),transparent); }
+
+  /* ─── HEADER with large image ─── */
+  .header {
+    position: relative;
+    height: 140px;
+    overflow: hidden;
+    background: var(--bg-surface);
+  }
+
+  /* Character image as full header background */
+  .header-image {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #1a1520 0%, #12101a 40%, #0a0a12 100%);
+    /* In real usage this would be the character portrait */
+    /* Simulating a moody portrait with gradient */
+  }
+  .header-image::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 30% 50%, rgba(168,139,245,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse at 70% 30%, rgba(107,157,245,0.05) 0%, transparent 50%);
+  }
+  /* Fade edges — the "frameless" effect */
+  .header-image::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to right, var(--bg-primary) 0%, transparent 15%, transparent 85%, var(--bg-primary) 100%),
+      linear-gradient(to bottom, transparent 40%, var(--bg-primary) 100%);
+    pointer-events: none;
+  }
+
+  /* Simulated portrait figure */
+  .portrait-figure {
+    position: absolute;
+    left: 20px;
+    top: 0;
+    bottom: 0;
+    width: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: rgba(201,169,110,0.3);
+    letter-spacing: 0.15em;
+  }
+
+  /* Identity overlay on header */
+  .header-identity {
+    position: absolute;
+    bottom: 12px;
+    left: 200px;
+    right: 18px;
+    z-index: 5;
+  }
+  .header-identity .char-name {
+    color: var(--text-primary);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.8);
+  }
+  .header-identity .char-concept {
+    color: var(--text-secondary);
+    font-size: 10px;
+    font-family: 'Monaspace Neon', monospace;
+    font-style: italic;
+    margin-top: 2px;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.8);
+  }
+  .header-identity .char-tags {
+    display: flex;
+    gap: 6px;
+    margin-top: 6px;
+    flex-wrap: wrap;
+  }
+  .tag {
+    font-size: 9px;
+    padding: 2px 8px;
+    border-radius: 2px;
+    letter-spacing: 0.05em;
+  }
+  .tag-bg {
+    background: rgba(201,169,110,0.1);
+    border: 1px solid rgba(201,169,110,0.2);
+    color: var(--accent-gold);
+  }
+  .tag-drive {
+    background: rgba(168,139,245,0.08);
+    border: 1px solid rgba(168,139,245,0.15);
+    color: #a88bf5;
+  }
+
+  /* ─── TRACKS BAR ─── */
+  .tracks-bar {
+    display: flex;
+    gap: 6px;
+    padding: 10px 18px;
+    background: var(--bg-surface);
+    border-bottom: 1px solid rgba(201,169,110,0.06);
+    align-items: center;
+  }
+
+  .track-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: var(--bg-card);
+    border: 1px solid;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.22,1,0.36,1);
+    flex: 1;
+  }
+  .track-btn:hover {
+    transform: translateY(-1px);
+  }
+  .track-btn.body { border-color: rgba(85,184,122,0.15); }
+  .track-btn.body:hover { border-color: rgba(85,184,122,0.35); box-shadow: 0 0 16px -4px rgba(85,184,122,0.2); }
+  .track-btn.mind { border-color: rgba(107,157,245,0.15); }
+  .track-btn.mind:hover { border-color: rgba(107,157,245,0.35); box-shadow: 0 0 16px -4px rgba(107,157,245,0.2); }
+  .track-btn.soul { border-color: rgba(168,139,245,0.15); }
+  .track-btn.soul:hover { border-color: rgba(168,139,245,0.35); box-shadow: 0 0 16px -4px rgba(168,139,245,0.2); }
+  .track-btn.dread { border-color: rgba(100,100,100,0.2); }
+  .track-btn.dread:hover { border-color: rgba(100,100,100,0.4); box-shadow: 0 0 16px -4px rgba(100,100,100,0.2); }
+  .track-btn.supply { border-color: rgba(201,169,110,0.12); }
+  .track-btn.supply:hover { border-color: rgba(201,169,110,0.3); box-shadow: 0 0 16px -4px rgba(201,169,110,0.15); }
+
+  .track-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .track-icon.body { background: rgba(85,184,122,0.12); color: var(--track-body); }
+  .track-icon.mind { background: rgba(107,157,245,0.12); color: var(--track-mind); }
+  .track-icon.soul { background: rgba(168,139,245,0.12); color: var(--track-soul); }
+  .track-icon.dread { background: rgba(100,100,100,0.15); color: #888; }
+  .track-icon.supply { background: rgba(201,169,110,0.1); color: var(--accent-gold); }
+
+  .track-info { display:flex; flex-direction:column; gap:1px; }
+  .track-label { font-size:7px; letter-spacing:0.15em; font-weight:700; }
+  .track-label.body { color: var(--track-body); }
+  .track-label.mind { color: var(--track-mind); }
+  .track-label.soul { color: var(--track-soul); }
+  .track-label.dread { color: #888; }
+  .track-label.supply { color: var(--accent-gold); }
+
+  .track-value { font-size: 10px; color: var(--text-primary); font-weight: 700; }
+  .track-value span { color: var(--text-muted); font-weight: 400; }
+
+  .track-bar-mini { width:48px; height:3px; background:#1a1a24; border-radius:2px; overflow:hidden; margin-top:2px; }
+  .track-bar-fill { height:100%; border-radius:2px; }
+
+  .dread-pips { display:flex; gap:2px; margin-top:2px; }
+  .dread-pip { width:5px; height:5px; border-radius:1px; }
+  .dread-pip.filled { background:#666; }
+  .dread-pip.empty { border:1px solid #333; }
+
+  /* Separator */
+  .track-sep { width:1px; height:28px; background:rgba(201,169,110,0.08); margin:0 2px; }
+
+  /* ─── BODY: Two columns ─── */
+  .body-area {
+    display: flex;
+    gap: 14px;
+    padding: 14px 18px 18px;
+  }
+
+  /* Left column */
+  .col-left { width: 240px; flex-shrink:0; display:flex; flex-direction:column; gap:10px; }
+
+  .section-header {
+    font-size: 8px;
+    color: var(--accent-gold);
+    letter-spacing: 0.15em;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .section-header .line { flex:1; height:1px; background:rgba(201,169,110,0.1); }
+
+  /* ─── MERGED ATTRIBUTE + CONDITION GRID ─── */
+  .attr-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+  }
+
+  .attr-cell {
+    background: var(--bg-card);
+    border: 1px solid rgba(201,169,110,0.1);
+    border-radius: 3px;
+    padding: 8px 4px 6px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.22,1,0.36,1);
+    position: relative;
+  }
+  .attr-cell:hover {
+    border-color: rgba(201,169,110,0.3);
+    box-shadow: 0 0 14px -4px rgba(201,169,110,0.18);
+    transform: translateY(-1px);
+  }
+  .attr-abbr { font-size:8px; color:var(--accent-gold); letter-spacing:0.15em; }
+  .attr-value { color:var(--text-primary); font-size:22px; font-weight:700; line-height:1.1; }
+  .attr-name { font-size:7px; color:var(--text-muted); margin-top:2px; }
+
+  /* Condition indicator merged into attribute */
+  .attr-condition {
+    margin-top: 4px;
+    padding: 2px 0;
+    border-top: 1px solid rgba(255,255,255,0.04);
+  }
+  .condition-inactive { font-size:7px; color:#2a2a35; letter-spacing:0.05em; }
+  .condition-active {
+    font-size: 7px;
+    color: var(--danger);
+    letter-spacing: 0.05em;
+    font-weight: 700;
+    text-shadow: 0 0 8px rgba(224,85,85,0.3);
+  }
+  .condition-penalty {
+    font-size: 7px;
+    color: var(--danger);
+    opacity: 0.7;
+  }
+
+  /* Active condition styling on the cell */
+  .attr-cell.has-condition {
+    border-color: rgba(224,85,85,0.2);
+    background: linear-gradient(180deg, var(--bg-card) 60%, rgba(224,85,85,0.04) 100%);
+  }
+  .attr-cell.has-condition .attr-value {
+    color: #c0b8b8;
+  }
+
+  /* ─── SPIRAL / MARKS ─── */
+  .spiral-area { }
+  .spiral-pips {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .spiral-pip {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  .spiral-pip.empty { border: 1px solid rgba(255,255,255,0.08); }
+  .spiral-pip.filled { border: 1px solid; }
+  .spiral-pip.filled .pip-dot { width:10px; height:10px; border-radius:50%; }
+  .spiral-pip.final { border:1px solid rgba(224,85,85,0.2); }
+  .spiral-pip.final .pip-x { font-size:8px; color:rgba(224,85,85,0.3); }
+
+  .spiral-state {
+    font-size: 8px;
+    color: var(--text-muted);
+    margin-left: auto;
+  }
+
+  .mark-entry {
+    margin-top: 6px;
+    background: var(--bg-card);
+    border-radius: 3px;
+    padding: 6px 8px;
+  }
+  .mark-header {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .mark-dot { width:6px; height:6px; border-radius:50%; }
+  .mark-name { color:var(--text-primary); font-size:10px; font-weight:700; }
+  .mark-type { font-size:8px; color:var(--text-muted); margin-left:auto; }
+  .mark-desc { font-size:8px; color:var(--text-muted); margin-top:3px; }
+
+  /* ─── XP ─── */
+  .xp-row {
+    display: flex;
+    gap: 4px;
+  }
+  .xp-box {
+    flex:1;
+    background: var(--bg-card);
+    border: 1px solid rgba(201,169,110,0.08);
+    border-radius: 3px;
+    padding: 6px;
+    text-align: center;
+  }
+  .xp-label { font-size:8px; color:var(--accent-gold); letter-spacing:0.1em; }
+  .xp-value { color:var(--text-primary); font-size:16px; font-weight:700; }
+  .xp-sub { font-size:7px; color:var(--text-muted); }
+
+  /* ─── RIGHT COLUMN ─── */
+  .col-right { flex:1; display:flex; flex-direction:column; min-width:0; }
+
+  .tab-bar {
+    display: flex;
+    gap: 0;
+    margin-bottom: 10px;
+    border-bottom: 1px solid rgba(201,169,110,0.08);
+  }
+  .tab {
+    padding: 6px 14px;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .tab.active {
+    color: var(--accent-gold);
+    border-bottom: 2px solid var(--accent-gold);
+  }
+  .tab:not(.active) {
+    color: var(--text-muted);
+  }
+  .tab:not(.active):hover { color: var(--text-secondary); }
+
+  /* Talent rows */
+  .talent-list { display:flex; flex-direction:column; gap:3px; }
+
+  .talent-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    background: var(--bg-card);
+    border: 1px solid rgba(201,169,110,0.08);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .talent-row:hover {
+    border-color: rgba(201,169,110,0.2);
+  }
+  .talent-row.occult {
+    background: rgba(168,139,245,0.04);
+    border-color: rgba(168,139,245,0.1);
+  }
+  .talent-row.occult:hover { border-color: rgba(168,139,245,0.25); }
+
+  .talent-pips { display:flex; gap:2px; }
+  .talent-pip { width:6px; height:6px; border-radius:1px; }
+  .talent-pip.filled { background: var(--accent-gold); }
+  .talent-pip.filled.occult { background: #a88bf5; }
+  .talent-pip.empty { border:1px solid #333; }
+
+  .talent-info { flex:1; }
+  .talent-name { color:var(--text-primary); font-size:11px; font-weight:700; }
+  .talent-sub { font-size:8px; color:var(--text-muted); }
+  .talent-sub.occult { color: #a88bf5; }
+
+  .talent-level { font-size:9px; font-weight:700; }
+  .talent-level.gold { color: var(--accent-gold); }
+  .talent-level.purple { color: #a88bf5; }
+
+  .roll-btn {
+    width: 22px;
+    height: 22px;
+    border: 1px solid rgba(201,169,110,0.15);
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 11px;
+    color: var(--accent-gold);
+    transition: all 0.2s;
+    background: transparent;
+  }
+  .roll-btn:hover {
+    border-color: rgba(201,169,110,0.4);
+    box-shadow: 0 0 10px -3px rgba(201,169,110,0.2);
+    background: rgba(201,169,110,0.06);
+  }
+  .roll-btn.occult { border-color:rgba(168,139,245,0.2); color:#a88bf5; }
+  .roll-btn.occult:hover { border-color:rgba(168,139,245,0.4); box-shadow:0 0 10px -3px rgba(168,139,245,0.2); }
+
+  /* Notes */
+  .design-notes {
+    margin-top: 24px;
+    padding: 14px 18px;
+    background: rgba(201,169,110,0.03);
+    border: 1px solid rgba(201,169,110,0.08);
+    border-radius: 6px;
+    max-width: 720px;
+  }
+  .design-notes h3 { color:var(--text-primary); font-size:13px; margin-bottom:8px; }
+  .design-notes ul { padding-left:18px; font-size:12px; line-height:1.7; color:var(--text-secondary); }
+  .design-notes strong { color:var(--text-primary); }
+</style>
+</head>
+<body>
+
+<div>
+  <div class="page-title">
+    <h2>Investigator Sheet — v2</h2>
+    <p>Large portrait header, tactile track buttons, merged attribute+conditions, Monaspace font</p>
+  </div>
+
+  <!-- THE SHEET -->
+  <div class="sheet">
+    <div class="corner corner-tl"></div>
+    <div class="corner corner-tr"></div>
+    <div class="corner corner-bl"></div>
+    <div class="corner corner-br"></div>
+
+    <div class="accent-top"></div>
+
+    <!-- HEADER — Large character image -->
+    <div class="header">
+      <div class="header-image"></div>
+      <div class="portrait-figure">
+        <!-- In FVTT this would be the actor's portrait image -->
+        <span>CHARACTER<br>PORTRAIT</span>
+      </div>
+      <div class="header-identity">
+        <div class="char-name">Dr. Yuki Tanaka</div>
+        <div class="char-concept">A nurse who started seeing things in the morgue after the night shift</div>
+        <div class="char-tags">
+          <span class="tag tag-bg">Medical</span>
+          <span class="tag tag-bg">Occult Dabbler</span>
+          <span class="tag tag-drive">Curiosity</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRACKS BAR — Tactile icon buttons -->
+    <div class="tracks-bar">
+      <div class="track-btn body">
+        <div class="track-icon body">♥</div>
+        <div class="track-info">
+          <div class="track-label body">BODY</div>
+          <div class="track-value">7 <span>/ 10</span></div>
+          <div class="track-bar-mini"><div class="track-bar-fill" style="width:70%; background:var(--track-body);"></div></div>
+        </div>
+      </div>
+
+      <div class="track-btn mind">
+        <div class="track-icon mind">◈</div>
+        <div class="track-info">
+          <div class="track-label mind">MIND</div>
+          <div class="track-value">9 <span>/ 11</span></div>
+          <div class="track-bar-mini"><div class="track-bar-fill" style="width:82%; background:var(--track-mind);"></div></div>
+        </div>
+      </div>
+
+      <div class="track-btn soul">
+        <div class="track-icon soul">◉</div>
+        <div class="track-info">
+          <div class="track-label soul">SOUL</div>
+          <div class="track-value">5 <span>/ 8</span></div>
+          <div class="track-bar-mini"><div class="track-bar-fill" style="width:62%; background:var(--track-soul);"></div></div>
+        </div>
+      </div>
+
+      <div class="track-sep"></div>
+
+      <div class="track-btn dread">
+        <div class="track-icon dread">◼</div>
+        <div class="track-info">
+          <div class="track-label dread">DREAD</div>
+          <div class="dread-pips">
+            <div class="dread-pip filled"></div>
+            <div class="dread-pip filled"></div>
+            <div class="dread-pip empty"></div>
+            <div class="dread-pip empty"></div>
+            <div class="dread-pip empty"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="track-sep"></div>
+
+      <div class="track-btn supply">
+        <div class="track-icon supply">⬡</div>
+        <div class="track-info">
+          <div class="track-label supply">SUPPLY</div>
+          <div class="track-value">7</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BODY AREA -->
+    <div class="body-area">
+
+      <!-- LEFT COLUMN -->
+      <div class="col-left">
+
+        <!-- Attributes + Conditions merged -->
+        <div>
+          <div class="section-header">
+            <span>ATTRIBUTES</span>
+            <div class="line"></div>
+          </div>
+          <div class="attr-grid">
+            <!-- STR — Exhausted inactive -->
+            <div class="attr-cell">
+              <div class="attr-abbr">STR</div>
+              <div class="attr-value">4</div>
+              <div class="attr-name">Strength</div>
+              <div class="attr-condition">
+                <div class="condition-inactive">Exhausted</div>
+              </div>
+            </div>
+            <!-- AGL — Dazed inactive -->
+            <div class="attr-cell">
+              <div class="attr-abbr">AGL</div>
+              <div class="attr-value">3</div>
+              <div class="attr-name">Agility</div>
+              <div class="attr-condition">
+                <div class="condition-inactive">Dazed</div>
+              </div>
+            </div>
+            <!-- LOG — Confused inactive -->
+            <div class="attr-cell">
+              <div class="attr-abbr">LOG</div>
+              <div class="attr-value">5</div>
+              <div class="attr-name">Logic</div>
+              <div class="attr-condition">
+                <div class="condition-inactive">Confused</div>
+              </div>
+            </div>
+            <!-- PER — Distracted inactive -->
+            <div class="attr-cell">
+              <div class="attr-abbr">PER</div>
+              <div class="attr-value">4</div>
+              <div class="attr-name">Perception</div>
+              <div class="attr-condition">
+                <div class="condition-inactive">Distracted</div>
+              </div>
+            </div>
+            <!-- INS — SHAKEN ACTIVE -->
+            <div class="attr-cell has-condition">
+              <div class="attr-abbr">INS</div>
+              <div class="attr-value">4</div>
+              <div class="attr-name">Insight</div>
+              <div class="attr-condition">
+                <div class="condition-active">Shaken <span class="condition-penalty">−2</span></div>
+              </div>
+            </div>
+            <!-- EMP — Disheartened inactive -->
+            <div class="attr-cell">
+              <div class="attr-abbr">EMP</div>
+              <div class="attr-value">5</div>
+              <div class="attr-name">Empathy</div>
+              <div class="attr-condition">
+                <div class="condition-inactive">Disheartened</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Spiral / Marks -->
+        <div class="spiral-area">
+          <div class="section-header">
+            <span>THE SPIRAL</span>
+            <div class="line"></div>
+            <span class="spiral-state">Scarred</span>
+          </div>
+          <div class="spiral-pips">
+            <div class="spiral-pip filled" style="border-color:rgba(85,184,122,0.4);">
+              <div class="pip-dot" style="background:var(--track-body);"></div>
+            </div>
+            <div class="spiral-pip empty"></div>
+            <div class="spiral-pip empty"></div>
+            <div class="spiral-pip empty"></div>
+            <div class="spiral-pip final">
+              <span class="pip-x">✕</span>
+            </div>
+          </div>
+          <div class="mark-entry" style="border:1px solid rgba(85,184,122,0.12);">
+            <div class="mark-header">
+              <div class="mark-dot" style="background:var(--track-body);"></div>
+              <span class="mark-name">The Limp</span>
+              <span class="mark-type">Body</span>
+            </div>
+            <div class="mark-desc">When you need to run or chase: −1 die to Athletics</div>
+          </div>
+        </div>
+
+        <!-- XP -->
+        <div class="xp-row">
+          <div class="xp-box">
+            <div class="xp-label">XP</div>
+            <div class="xp-value">12</div>
+            <div class="xp-sub">spent: 5</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div class="col-right">
+        <div class="tab-bar">
+          <div class="tab active">TALENTS</div>
+          <div class="tab">EQUIPMENT</div>
+          <div class="tab">DETAILS</div>
+        </div>
+
+        <div class="talent-list">
+          <!-- Investigator L2 -->
+          <div class="talent-row">
+            <div class="talent-pips">
+              <div class="talent-pip filled"></div>
+              <div class="talent-pip filled"></div>
+              <div class="talent-pip empty"></div>
+            </div>
+            <div class="talent-info">
+              <div class="talent-name">Investigator</div>
+              <div class="talent-sub">LOG / PER — Scene Reading</div>
+            </div>
+            <div class="talent-level gold">L2</div>
+            <div class="roll-btn" title="Roll">⬡</div>
+          </div>
+
+          <!-- Occult L2 -->
+          <div class="talent-row occult">
+            <div class="talent-pips">
+              <div class="talent-pip filled occult"></div>
+              <div class="talent-pip filled occult"></div>
+              <div class="talent-pip empty"></div>
+            </div>
+            <div class="talent-info">
+              <div class="talent-name">Occult</div>
+              <div class="talent-sub occult">LOG / INS — Forbidden Insight <span style="color:var(--text-muted);">(1 Soul)</span></div>
+            </div>
+            <div class="talent-level purple">L2</div>
+            <div class="roll-btn occult" title="Roll">⬡</div>
+          </div>
+
+          <!-- Composure L1 -->
+          <div class="talent-row">
+            <div class="talent-pips">
+              <div class="talent-pip filled"></div>
+              <div class="talent-pip empty"></div>
+              <div class="talent-pip empty"></div>
+            </div>
+            <div class="talent-info">
+              <div class="talent-name">Composure</div>
+              <div class="talent-sub">EMP</div>
+            </div>
+            <div class="talent-level gold">L1</div>
+            <div class="roll-btn" title="Roll">⬡</div>
+          </div>
+
+          <!-- First Aid L1 -->
+          <div class="talent-row">
+            <div class="talent-pips">
+              <div class="talent-pip filled"></div>
+              <div class="talent-pip empty"></div>
+              <div class="talent-pip empty"></div>
+            </div>
+            <div class="talent-info">
+              <div class="talent-name">First Aid</div>
+              <div class="talent-sub">LOG</div>
+            </div>
+            <div class="talent-level gold">L1</div>
+            <div class="roll-btn" title="Roll">⬡</div>
+          </div>
+
+          <!-- Marksman L1 -->
+          <div class="talent-row">
+            <div class="talent-pips">
+              <div class="talent-pip filled"></div>
+              <div class="talent-pip empty"></div>
+              <div class="talent-pip empty"></div>
+            </div>
+            <div class="talent-info">
+              <div class="talent-name">Marksman</div>
+              <div class="talent-sub">AGL</div>
+            </div>
+            <div class="talent-level gold">L1</div>
+            <div class="roll-btn" title="Roll">⬡</div>
+          </div>
+
+          <!-- Stealth L1 -->
+          <div class="talent-row">
+            <div class="talent-pips">
+              <div class="talent-pip filled"></div>
+              <div class="talent-pip empty"></div>
+              <div class="talent-pip empty"></div>
+            </div>
+            <div class="talent-info">
+              <div class="talent-name">Stealth</div>
+              <div class="talent-sub">AGL</div>
+            </div>
+            <div class="talent-level gold">L1</div>
+            <div class="roll-btn" title="Roll">⬡</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accent-bottom"></div>
+  </div>
+
+  <!-- Design notes -->
+  <div class="design-notes">
+    <h3>Changes in v2</h3>
+    <ul>
+      <li><strong>Large frameless portrait</strong> — Character image fills the entire header with gradient fade-out on edges. Name/concept/tags overlay the bottom.</li>
+      <li><strong>Tactile track buttons</strong> — Body, Mind, Soul, Supply are icon+label buttons rather than raw numbers. Clickable, hoverable, with glow feedback.</li>
+      <li><strong>Dread as pips</strong> — Five dark squares filled/empty rather than a number. Visceral.</li>
+      <li><strong>Merged attribute + condition</strong> — Each attribute cell shows its paired condition. Inactive = ghosted text. Active = red highlight with −2 indicator. The "Shaken" on INS example shows how a condition visually degrades the attribute.</li>
+      <li><strong>Monaspace Krypton</strong> — GitHub's monospace font throughout. Labels use letter-spacing for the terminal/sci-fi feel.</li>
+    </ul>
+  </div>
+</div>
+
+</body>
+</html>

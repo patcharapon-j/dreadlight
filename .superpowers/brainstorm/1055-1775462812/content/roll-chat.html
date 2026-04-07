@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dreadlight — Roll Dialog & Chat Cards</title>
+<style>
+  @font-face {
+    font-family: 'Monaspace Krypton';
+    src: url('https://cdn.jsdelivr.net/gh/githubnext/monaspace@v1.101/fonts/webfonts/MonaspaceKrypton-Regular.woff') format('woff');
+    font-weight: 400;
+  }
+  @font-face {
+    font-family: 'Monaspace Krypton';
+    src: url('https://cdn.jsdelivr.net/gh/githubnext/monaspace@v1.101/fonts/webfonts/MonaspaceKrypton-Bold.woff') format('woff');
+    font-weight: 700;
+  }
+  @font-face {
+    font-family: 'Monaspace Neon';
+    src: url('https://cdn.jsdelivr.net/gh/githubnext/monaspace@v1.101/fonts/webfonts/MonaspaceNeon-Regular.woff') format('woff');
+    font-weight: 400;
+  }
+
+  :root {
+    --bg-primary: #08080c;
+    --bg-surface: #0e0e14;
+    --bg-card: #111118;
+    --bg-elevated: #16161f;
+    --text-primary: #ededf4;
+    --text-secondary: #8e8ea3;
+    --text-muted: #555568;
+    --accent-gold: #c9a96e;
+    --track-body: #55b87a;
+    --track-mind: #6b9df5;
+    --track-soul: #a88bf5;
+    --dread-red: #e05555;
+    --dread-deep: #8b2020;
+    --danger: #e05555;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: #111;
+    font-family: 'Monaspace Krypton', monospace;
+    color: var(--text-secondary);
+    padding: 32px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+  }
+
+  h2 { color: var(--text-primary); font-size: 18px; letter-spacing: 0.04em; text-align:center; }
+  .subtitle { color: var(--text-muted); font-size: 11px; margin-top: 4px; text-align: center; }
+  h3 { color: var(--accent-gold); font-size: 13px; letter-spacing: 0.1em; margin-bottom: 16px; text-align:center; }
+
+  /* ─── ROLL DIALOG ─── */
+  .roll-dialog {
+    width: 340px;
+    background: var(--bg-primary);
+    border: 1px solid rgba(201,169,110,0.15);
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 24px 80px -16px rgba(0,0,0,0.8), 0 0 40px -8px rgba(201,169,110,0.06);
+  }
+
+  .dialog-accent { height:2px; background:linear-gradient(90deg,transparent,rgba(201,169,110,0.35),transparent); }
+
+  .dialog-header {
+    padding: 14px 16px 10px;
+    border-bottom: 1px solid rgba(201,169,110,0.06);
+  }
+  .dialog-title {
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+  .dialog-subtitle {
+    color: var(--text-muted);
+    font-size: 9px;
+    margin-top: 2px;
+    font-family: 'Monaspace Neon', monospace;
+  }
+
+  .dialog-body { padding: 12px 16px 16px; display:flex; flex-direction:column; gap:12px; }
+
+  .field-group { }
+  .field-label {
+    font-size: 8px;
+    color: var(--accent-gold);
+    letter-spacing: 0.12em;
+    margin-bottom: 5px;
+  }
+
+  /* Dropdown style */
+  .field-select {
+    width: 100%;
+    background: var(--bg-card);
+    border: 1px solid rgba(201,169,110,0.12);
+    border-radius: 3px;
+    padding: 7px 10px;
+    color: var(--text-primary);
+    font-family: 'Monaspace Krypton', monospace;
+    font-size: 11px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .field-select:hover { border-color: rgba(201,169,110,0.3); }
+  .field-select .chevron { color: var(--text-muted); font-size: 8px; }
+  .field-select .selected-value { color: var(--text-primary); }
+  .field-select .selected-meta { color: var(--text-muted); font-size: 9px; margin-left: 8px; }
+
+  /* Difficulty slider */
+  .difficulty-row {
+    display: flex;
+    gap: 2px;
+  }
+  .diff-btn {
+    flex: 1;
+    padding: 5px 2px;
+    background: var(--bg-card);
+    border: 1px solid rgba(201,169,110,0.06);
+    border-radius: 2px;
+    text-align: center;
+    font-size: 7px;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .diff-btn:hover { border-color: rgba(201,169,110,0.2); color: var(--text-secondary); }
+  .diff-btn.active {
+    background: rgba(201,169,110,0.1);
+    border-color: rgba(201,169,110,0.3);
+    color: var(--accent-gold);
+    font-weight: 700;
+  }
+  .diff-mod {
+    font-size: 8px;
+    display: block;
+    margin-top: 1px;
+  }
+
+  /* Pool preview */
+  .pool-preview {
+    background: var(--bg-surface);
+    border: 1px solid rgba(201,169,110,0.08);
+    border-radius: 4px;
+    padding: 10px 12px;
+  }
+  .pool-label {
+    font-size: 8px;
+    color: var(--accent-gold);
+    letter-spacing: 0.12em;
+    margin-bottom: 8px;
+  }
+  .pool-dice {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .pool-group {
+    display: flex;
+    gap: 3px;
+    align-items: center;
+  }
+  .pool-group-label {
+    font-size: 7px;
+    letter-spacing: 0.1em;
+    margin-right: 2px;
+  }
+  .die-preview {
+    width: 22px;
+    height: 22px;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+  }
+  .die-preview.base { background: rgba(220,220,230,0.12); border: 1px solid rgba(220,220,230,0.25); color: #dddde8; }
+  .die-preview.dread { background: rgba(139,32,32,0.2); border: 1px solid rgba(139,32,32,0.4); color: #c93030; }
+  .die-preview.gear { background: rgba(201,169,110,0.1); border: 1px solid rgba(201,169,110,0.25); color: var(--accent-gold); }
+  .pool-sep { width:1px; height:18px; background:rgba(201,169,110,0.08); margin:0 4px; }
+  .pool-total {
+    font-size: 9px;
+    color: var(--text-muted);
+    margin-left: auto;
+    padding-left: 8px;
+  }
+  .pool-total strong { color: var(--text-primary); font-size: 14px; }
+
+  /* Roll button */
+  .roll-button {
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(180deg, rgba(201,169,110,0.12), rgba(201,169,110,0.06));
+    border: 1px solid rgba(201,169,110,0.25);
+    border-radius: 4px;
+    color: var(--accent-gold);
+    font-family: 'Monaspace Krypton', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.22,1,0.36,1);
+    text-align: center;
+  }
+  .roll-button:hover {
+    background: linear-gradient(180deg, rgba(201,169,110,0.2), rgba(201,169,110,0.1));
+    border-color: rgba(201,169,110,0.45);
+    box-shadow: 0 0 20px -6px rgba(201,169,110,0.25);
+    transform: translateY(-1px);
+  }
+
+  /* ─── CHAT CARDS ─── */
+  .chat-section {
+    width: 360px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .chat-card {
+    background: var(--bg-primary);
+    border: 1px solid;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .chat-accent { height: 2px; }
+
+  .chat-header {
+    padding: 10px 14px 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .chat-avatar {
+    width: 28px; height: 28px;
+    border-radius: 3px;
+    background: var(--bg-elevated);
+    border: 1px solid rgba(201,169,110,0.15);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 7px; color: var(--accent-gold); opacity: 0.5;
+  }
+  .chat-meta { flex: 1; }
+  .chat-name { color: var(--text-primary); font-size: 11px; font-weight: 700; }
+  .chat-action { font-size: 9px; color: var(--text-muted); }
+  .chat-action span { font-weight: 700; }
+
+  /* Dice area */
+  .chat-dice {
+    padding: 8px 14px;
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .chat-dice-group {
+    display: flex;
+    gap: 3px;
+    align-items: center;
+    padding: 4px 6px;
+    border-radius: 3px;
+  }
+  .chat-dice-group.base { background: rgba(220,220,230,0.04); }
+  .chat-dice-group.dread { background: rgba(139,32,32,0.08); }
+  .chat-dice-group.gear { background: rgba(201,169,110,0.04); }
+
+  .chat-dice-label {
+    font-size: 7px;
+    letter-spacing: 0.1em;
+    margin-right: 4px;
+  }
+  .chat-dice-label.base { color: rgba(220,220,230,0.5); }
+  .chat-dice-label.dread { color: rgba(200,48,48,0.6); }
+  .chat-dice-label.gear { color: rgba(201,169,110,0.5); }
+
+  .die {
+    width: 26px; height: 26px;
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+    position: relative;
+  }
+  /* Base dice */
+  .die.base { background: rgba(220,220,230,0.08); border: 1px solid rgba(220,220,230,0.15); color: #9999a8; }
+  .die.base.six { background: rgba(220,220,230,0.15); border-color: rgba(220,220,230,0.4); color: #ededf4; box-shadow: 0 0 10px -3px rgba(220,220,230,0.3); }
+  .die.base.one { background: rgba(107,157,245,0.08); border-color: rgba(107,157,245,0.2); color: #6b9df5; }
+
+  /* Dread dice */
+  .die.dread { background: rgba(139,32,32,0.15); border: 1px solid rgba(139,32,32,0.3); color: #993333; }
+  .die.dread.six { background: rgba(200,48,48,0.2); border-color: rgba(200,48,48,0.5); color: #e05555; box-shadow: 0 0 12px -3px rgba(200,48,48,0.4); text-shadow: 0 0 8px rgba(200,48,48,0.3); }
+  .die.dread.one { background: rgba(168,139,245,0.1); border-color: rgba(168,139,245,0.25); color: #a88bf5; }
+
+  /* Gear dice */
+  .die.gear { background: rgba(201,169,110,0.06); border: 1px solid rgba(201,169,110,0.15); color: #8a7a55; }
+  .die.gear.six { background: rgba(201,169,110,0.15); border-color: rgba(201,169,110,0.4); color: var(--accent-gold); box-shadow: 0 0 10px -3px rgba(201,169,110,0.3); }
+  .die.gear.one { background: rgba(224,85,85,0.06); border-color: rgba(224,85,85,0.15); color: #e05555; }
+
+  /* Locked indicator for push */
+  .die.locked::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 4px;
+    border: 2px solid rgba(201,169,110,0.4);
+    pointer-events: none;
+  }
+
+  /* Result area */
+  .chat-result {
+    padding: 8px 14px 10px;
+    border-top: 1px solid;
+  }
+  .result-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .result-icon { font-size: 14px; }
+  .result-label { font-size: 12px; font-weight: 700; letter-spacing: 0.04em; }
+  .result-count { font-size: 11px; margin-left: auto; }
+  .result-detail {
+    font-size: 9px;
+    margin-top: 4px;
+    padding: 4px 8px;
+    border-radius: 3px;
+  }
+
+  /* Push button */
+  .push-bar {
+    padding: 8px 14px 12px;
+    border-top: 1px solid rgba(201,169,110,0.06);
+  }
+  .push-btn {
+    width: 100%;
+    padding: 8px;
+    background: rgba(201,169,110,0.06);
+    border: 1px solid rgba(201,169,110,0.15);
+    border-radius: 4px;
+    color: var(--accent-gold);
+    font-family: 'Monaspace Krypton', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .push-btn:hover {
+    background: rgba(201,169,110,0.12);
+    border-color: rgba(201,169,110,0.3);
+    box-shadow: 0 0 16px -6px rgba(201,169,110,0.2);
+  }
+  .push-btn .push-warning {
+    font-size: 8px;
+    color: var(--text-muted);
+    font-weight: 400;
+    letter-spacing: 0.05em;
+  }
+
+  /* Card variants */
+  .chat-card.clean { border-color: rgba(201,169,110,0.2); }
+  .chat-card.clean .chat-accent { background: linear-gradient(90deg, transparent, rgba(201,169,110,0.5), transparent); }
+  .chat-card.clean .chat-result { border-top-color: rgba(201,169,110,0.08); }
+  .chat-card.clean .result-label { color: var(--accent-gold); }
+
+  .chat-card.tainted { border-color: rgba(168,139,245,0.2); }
+  .chat-card.tainted .chat-accent { background: linear-gradient(90deg, transparent, rgba(168,139,245,0.5), transparent); }
+  .chat-card.tainted .chat-result { border-top-color: rgba(168,139,245,0.08); }
+  .chat-card.tainted .result-label { color: #a88bf5; }
+
+  .chat-card.failure { border-color: rgba(255,255,255,0.06); }
+  .chat-card.failure .chat-accent { background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent); }
+  .chat-card.failure .chat-result { border-top-color: rgba(255,255,255,0.04); }
+  .chat-card.failure .result-label { color: var(--text-muted); }
+
+  .chat-card.pushed { border-color: rgba(201,169,110,0.15); }
+  .chat-card.pushed .chat-accent { background: linear-gradient(90deg, transparent, rgba(201,169,110,0.3), transparent); }
+  .chat-card.pushed .chat-result { border-top-color: rgba(201,169,110,0.06); }
+
+  /* Consequence callouts */
+  .consequence {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 8px;
+    border-radius: 3px;
+    font-size: 9px;
+    margin-top: 4px;
+  }
+  .consequence.mind-loss { background: rgba(107,157,245,0.06); border: 1px solid rgba(107,157,245,0.12); color: var(--track-mind); }
+  .consequence.soul-loss { background: rgba(168,139,245,0.06); border: 1px solid rgba(168,139,245,0.12); color: var(--track-soul); }
+  .consequence.gear-break { background: rgba(201,169,110,0.06); border: 1px solid rgba(201,169,110,0.12); color: var(--accent-gold); }
+  .consequence.dread-gain { background: rgba(224,85,85,0.06); border: 1px solid rgba(224,85,85,0.12); color: var(--danger); }
+
+  .section-divider {
+    width: 100%;
+    max-width: 600px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,169,110,0.15), transparent);
+  }
+
+  .label-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ ROLL DIALOG ═══════════════ -->
+<div>
+  <h2>Roll Dialog</h2>
+  <p class="subtitle">Appears when clicking an attribute or talent roll button</p>
+</div>
+
+<div class="roll-dialog">
+  <div class="dialog-accent"></div>
+  <div class="dialog-header">
+    <div class="dialog-title">Roll — Logic</div>
+    <div class="dialog-subtitle">Dr. Yuki Tanaka</div>
+  </div>
+  <div class="dialog-body">
+    <!-- Talent selector -->
+    <div class="field-group">
+      <div class="field-label">TALENT</div>
+      <div class="field-select">
+        <span class="selected-value">Investigator</span>
+        <span class="selected-meta">L2 (+2 dice)</span>
+        <span class="chevron">▾</span>
+      </div>
+    </div>
+
+    <!-- Equipment selector -->
+    <div class="field-group">
+      <div class="field-label">EQUIPMENT</div>
+      <div class="field-select">
+        <span class="selected-value">Forensics Kit</span>
+        <span class="selected-meta">+2 gear</span>
+        <span class="chevron">▾</span>
+      </div>
+    </div>
+
+    <!-- Difficulty -->
+    <div class="field-group">
+      <div class="field-label">DIFFICULTY</div>
+      <div class="difficulty-row">
+        <div class="diff-btn"><span>EFF</span><span class="diff-mod">+3</span></div>
+        <div class="diff-btn"><span>RTN</span><span class="diff-mod">+2</span></div>
+        <div class="diff-btn"><span>EAS</span><span class="diff-mod">+1</span></div>
+        <div class="diff-btn active"><span>NRM</span><span class="diff-mod">±0</span></div>
+        <div class="diff-btn"><span>DEM</span><span class="diff-mod">−1</span></div>
+        <div class="diff-btn"><span>HRD</span><span class="diff-mod">−2</span></div>
+        <div class="diff-btn"><span>INS</span><span class="diff-mod">−3</span></div>
+      </div>
+    </div>
+
+    <!-- Pool preview -->
+    <div class="pool-preview">
+      <div class="pool-label">DICE POOL</div>
+      <div class="pool-dice">
+        <div class="pool-group">
+          <span class="pool-group-label" style="color:rgba(220,220,230,0.5);">BASE</span>
+          <div class="die-preview base">d6</div>
+          <div class="die-preview base">d6</div>
+          <div class="die-preview base">d6</div>
+          <div class="die-preview base">d6</div>
+          <div class="die-preview base">d6</div>
+        </div>
+        <div class="pool-sep"></div>
+        <div class="pool-group">
+          <span class="pool-group-label" style="color:rgba(200,48,48,0.5);">DREAD</span>
+          <div class="die-preview dread">d6</div>
+          <div class="die-preview dread">d6</div>
+        </div>
+        <div class="pool-sep"></div>
+        <div class="pool-group">
+          <span class="pool-group-label" style="color:rgba(201,169,110,0.5);">GEAR</span>
+          <div class="die-preview gear">d6</div>
+          <div class="die-preview gear">d6</div>
+        </div>
+        <div class="pool-total"><strong>9</strong> dice</div>
+      </div>
+    </div>
+
+    <!-- Roll button -->
+    <div class="roll-button">ROLL</div>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ═══════════════ CHAT CARDS ═══════════════ -->
+<div>
+  <h2>Chat Cards</h2>
+  <p class="subtitle">How roll results appear in Foundry's chat log</p>
+</div>
+
+<div class="chat-section">
+
+  <!-- ── CLEAN SUCCESS ── -->
+  <div>
+    <div class="label-tag" style="background:rgba(201,169,110,0.1); color:var(--accent-gold);">CLEAN SUCCESS</div>
+    <div class="chat-card clean">
+      <div class="chat-accent"></div>
+      <div class="chat-header">
+        <div class="chat-avatar">IMG</div>
+        <div class="chat-meta">
+          <div class="chat-name">Dr. Yuki Tanaka</div>
+          <div class="chat-action"><span style="color:var(--accent-gold);">Investigator</span> — Logic (Normal)</div>
+        </div>
+      </div>
+      <div class="chat-dice">
+        <div class="chat-dice-group base">
+          <span class="chat-dice-label base">BASE</span>
+          <div class="die base">3</div>
+          <div class="die base six">6</div>
+          <div class="die base">4</div>
+          <div class="die base six">6</div>
+          <div class="die base">2</div>
+        </div>
+        <div class="chat-dice-group dread">
+          <span class="chat-dice-label dread">DREAD</span>
+          <div class="die dread">4</div>
+          <div class="die dread">2</div>
+        </div>
+        <div class="chat-dice-group gear">
+          <span class="chat-dice-label gear">GEAR</span>
+          <div class="die gear">3</div>
+          <div class="die gear six">6</div>
+        </div>
+      </div>
+      <div class="chat-result">
+        <div class="result-row">
+          <span class="result-icon">✦</span>
+          <span class="result-label">CLEAN SUCCESS</span>
+          <span class="result-count" style="color:var(--accent-gold);">3 successes</span>
+        </div>
+      </div>
+      <div class="push-bar">
+        <div class="push-btn">
+          PUSH
+          <span class="push-warning">· lock 6s & 1s, re-roll rest</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TAINTED SUCCESS ── -->
+  <div>
+    <div class="label-tag" style="background:rgba(168,139,245,0.1); color:#a88bf5;">TAINTED SUCCESS</div>
+    <div class="chat-card tainted">
+      <div class="chat-accent"></div>
+      <div class="chat-header">
+        <div class="chat-avatar">IMG</div>
+        <div class="chat-meta">
+          <div class="chat-name">Dr. Yuki Tanaka</div>
+          <div class="chat-action"><span style="color:#a88bf5;">Occult</span> — Logic (Normal)</div>
+        </div>
+      </div>
+      <div class="chat-dice">
+        <div class="chat-dice-group base">
+          <span class="chat-dice-label base">BASE</span>
+          <div class="die base">5</div>
+          <div class="die base">3</div>
+          <div class="die base six">6</div>
+        </div>
+        <div class="chat-dice-group dread">
+          <span class="chat-dice-label dread">DREAD</span>
+          <div class="die dread six">6</div>
+          <div class="die dread">2</div>
+        </div>
+        <div class="chat-dice-group gear">
+          <span class="chat-dice-label gear">GEAR</span>
+          <div class="die gear">4</div>
+          <div class="die gear">1</div>
+        </div>
+      </div>
+      <div class="chat-result">
+        <div class="result-row">
+          <span class="result-icon" style="color:#a88bf5;">⬡</span>
+          <span class="result-label">TAINTED SUCCESS</span>
+          <span class="result-count" style="color:#a88bf5;">2 successes</span>
+        </div>
+        <div class="consequence dread-gain">
+          <span>⬡</span> GM gains <strong>+1 Dread</strong> — Dread Die showed 6
+        </div>
+      </div>
+      <div class="push-bar">
+        <div class="push-btn">
+          PUSH
+          <span class="push-warning">· lock 6s & 1s, re-roll rest</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FAILURE ── -->
+  <div>
+    <div class="label-tag" style="background:rgba(255,255,255,0.04); color:var(--text-muted);">FAILURE</div>
+    <div class="chat-card failure">
+      <div class="chat-accent"></div>
+      <div class="chat-header">
+        <div class="chat-avatar">IMG</div>
+        <div class="chat-meta">
+          <div class="chat-name">Dr. Yuki Tanaka</div>
+          <div class="chat-action"><span style="color:var(--text-secondary);">Marksman</span> — Agility (Demanding)</div>
+        </div>
+      </div>
+      <div class="chat-dice">
+        <div class="chat-dice-group base">
+          <span class="chat-dice-label base">BASE</span>
+          <div class="die base">2</div>
+          <div class="die base">4</div>
+        </div>
+        <div class="chat-dice-group dread">
+          <span class="chat-dice-label dread">DREAD</span>
+          <div class="die dread">3</div>
+          <div class="die dread">5</div>
+        </div>
+        <div class="chat-dice-group gear">
+          <span class="chat-dice-label gear">GEAR</span>
+          <div class="die gear">2</div>
+          <div class="die gear">4</div>
+        </div>
+      </div>
+      <div class="chat-result">
+        <div class="result-row">
+          <span class="result-icon" style="color:var(--text-muted);">✕</span>
+          <span class="result-label">FAILURE</span>
+          <span class="result-count" style="color:var(--text-muted);">0 successes</span>
+        </div>
+        <div class="consequence dread-gain">
+          <span>⬡</span> GM gains <strong>+1 Dread</strong> — failed roll
+        </div>
+      </div>
+      <div class="push-bar">
+        <div class="push-btn">
+          PUSH
+          <span class="push-warning">· lock 6s & 1s, re-roll rest</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── AFTER PUSH (with consequences) ── -->
+  <div>
+    <div class="label-tag" style="background:rgba(201,169,110,0.08); color:var(--accent-gold);">AFTER PUSH — with consequences</div>
+    <div class="chat-card pushed">
+      <div class="chat-accent"></div>
+      <div class="chat-header">
+        <div class="chat-avatar">IMG</div>
+        <div class="chat-meta">
+          <div class="chat-name">Dr. Yuki Tanaka</div>
+          <div class="chat-action"><span style="color:var(--text-secondary);">Marksman</span> — Agility (Demanding) <span style="color:var(--accent-gold); margin-left:4px;">⟳ PUSHED</span></div>
+        </div>
+      </div>
+      <div class="chat-dice">
+        <div class="chat-dice-group base">
+          <span class="chat-dice-label base">BASE</span>
+          <div class="die base six locked">6</div>
+          <div class="die base one">1</div>
+        </div>
+        <div class="chat-dice-group dread">
+          <span class="chat-dice-label dread">DREAD</span>
+          <div class="die dread one">1</div>
+          <div class="die dread">5</div>
+        </div>
+        <div class="chat-dice-group gear">
+          <span class="chat-dice-label gear">GEAR</span>
+          <div class="die gear">2</div>
+          <div class="die gear one">1</div>
+        </div>
+      </div>
+      <div class="chat-result">
+        <div class="result-row">
+          <span class="result-icon" style="color:var(--accent-gold);">✦</span>
+          <span class="result-label" style="color:var(--accent-gold);">SUCCESS</span>
+          <span class="result-count" style="color:var(--accent-gold);">1 success</span>
+        </div>
+        <div class="consequence mind-loss">
+          <span>◈</span> <strong>−1 Mind</strong> — Base Die showed 1
+        </div>
+        <div class="consequence soul-loss">
+          <span>◉</span> <strong>−1 Soul</strong> — Dread Die showed 1
+        </div>
+        <div class="consequence gear-break">
+          <span>⚙</span> <strong>Gear −1</strong> — Gear Die showed 1
+        </div>
+        <div class="consequence dread-gain">
+          <span>⬡</span> GM gains <strong>+1 Dread</strong> — push cost
+        </div>
+      </div>
+      <!-- No push button — already pushed -->
+    </div>
+  </div>
+
+</div>
+
+<!-- Design notes -->
+<div style="max-width:360px; padding:14px 16px; background:rgba(201,169,110,0.03); border:1px solid rgba(201,169,110,0.08); border-radius:6px; font-size:11px; line-height:1.7;">
+  <strong style="color:var(--text-primary);">Key Design Decisions</strong>
+  <ul style="padding-left:16px; margin-top:6px; color:var(--text-secondary);">
+    <li><strong>6s glow</strong> — success dice have box-shadow and brighter color</li>
+    <li><strong>1s are color-coded</strong> — base 1s blue (Mind), dread 1s purple (Soul), gear 1s red (break)</li>
+    <li><strong>Locked dice (push)</strong> get a gold border ring</li>
+    <li><strong>Consequence callouts</strong> — colored boxes clearly showing Mind/Soul/Gear costs</li>
+    <li><strong>Card border color</strong> changes per result type: gold (clean), purple (tainted), muted (fail)</li>
+    <li><strong>Push always available</strong> on initial roll, removed after pushing</li>
+    <li><strong>Pool preview</strong> in dialog shows exact die split before rolling</li>
+  </ul>
+</div>
+
+</body>
+</html>

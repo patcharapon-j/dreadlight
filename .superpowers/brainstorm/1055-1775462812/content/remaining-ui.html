@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dreadlight — Remaining UI Mockups</title>
+<style>
+  @font-face {
+    font-family: 'Monaspace Krypton';
+    src: url('https://cdn.jsdelivr.net/gh/githubnext/monaspace@v1.101/fonts/webfonts/MonaspaceKrypton-Regular.woff') format('woff');
+    font-weight: 400;
+  }
+  @font-face {
+    font-family: 'Monaspace Krypton';
+    src: url('https://cdn.jsdelivr.net/gh/githubnext/monaspace@v1.101/fonts/webfonts/MonaspaceKrypton-Bold.woff') format('woff');
+    font-weight: 700;
+  }
+  @font-face {
+    font-family: 'Monaspace Neon';
+    src: url('https://cdn.jsdelivr.net/gh/githubnext/monaspace@v1.101/fonts/webfonts/MonaspaceNeon-Regular.woff') format('woff');
+    font-weight: 400;
+  }
+
+  :root {
+    --bg: #08080c; --bg2: #0e0e14; --bg3: #111118; --bg4: #16161f;
+    --t1: #ededf4; --t2: #8e8ea3; --t3: #555568;
+    --gold: #c9a96e; --red: #e05555; --green: #55b87a;
+    --blue: #6b9df5; --purple: #a88bf5;
+    --border: rgba(201,169,110,0.1);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: #111;
+    font-family: 'Monaspace Krypton', monospace;
+    color: var(--t2);
+    padding: 32px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 48px;
+  }
+  h2 { color: var(--t1); font-size: 16px; text-align:center; letter-spacing:0.04em; }
+  .sub { color: var(--t3); font-size: 10px; text-align:center; margin-top:3px; }
+  h3 { color: var(--gold); font-size: 12px; letter-spacing:0.12em; text-align:center; margin-bottom:16px; }
+
+  .sep { width:100%; max-width:720px; height:1px; background:linear-gradient(90deg,transparent,rgba(201,169,110,0.12),transparent); }
+
+  /* ─── Shared sheet frame ─── */
+  .sheet-frame {
+    background: var(--bg);
+    border: 1px solid rgba(201,169,110,0.12);
+    border-radius: 5px;
+    overflow: hidden;
+    position: relative;
+  }
+  .sheet-frame .accent-top { height:2px; background:linear-gradient(90deg,transparent,rgba(201,169,110,0.3),transparent); }
+  .sheet-frame .accent-btm { height:1px; background:linear-gradient(90deg,transparent,rgba(201,169,110,0.12),transparent); }
+
+  /* Corner brackets */
+  .corner { position:absolute; z-index:10; pointer-events:none; }
+  .c-tl { top:5px; left:5px; width:12px; height:12px; border-top:1px solid rgba(201,169,110,0.15); border-left:1px solid rgba(201,169,110,0.15); }
+  .c-tr { top:5px; right:5px; width:12px; height:12px; border-top:1px solid rgba(201,169,110,0.15); border-right:1px solid rgba(201,169,110,0.15); }
+  .c-bl { bottom:5px; left:5px; width:12px; height:12px; border-bottom:1px solid rgba(201,169,110,0.15); border-left:1px solid rgba(201,169,110,0.15); }
+  .c-br { bottom:5px; right:5px; width:12px; height:12px; border-bottom:1px solid rgba(201,169,110,0.15); border-right:1px solid rgba(201,169,110,0.15); }
+
+  /* Section header */
+  .sec-h {
+    font-size: 8px; color: var(--gold); letter-spacing: 0.15em;
+    display: flex; align-items: center; gap: 6px; margin-bottom: 8px;
+  }
+  .sec-h .line { flex:1; height:1px; background:rgba(201,169,110,0.08); }
+
+  /* Field */
+  .field { margin-bottom: 10px; }
+  .field-lbl { font-size: 8px; color: var(--gold); letter-spacing: 0.1em; margin-bottom: 4px; }
+  .field-input {
+    width: 100%; padding: 7px 10px;
+    background: var(--bg3); border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 3px; color: var(--t1); font-family: 'Monaspace Neon', monospace;
+    font-size: 11px; transition: border-color 0.15s;
+  }
+  .field-input:hover { border-color: rgba(201,169,110,0.15); }
+  .field-textarea {
+    width: 100%; padding: 7px 10px; min-height: 48px;
+    background: var(--bg3); border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 3px; color: var(--t1); font-family: 'Monaspace Neon', monospace;
+    font-size: 10px; line-height: 1.5; resize: vertical;
+    transition: border-color 0.15s;
+  }
+  .field-textarea:hover { border-color: rgba(201,169,110,0.15); }
+
+  /* Tag pills */
+  .tag {
+    display: inline-block; font-size: 9px; padding: 2px 8px;
+    border-radius: 2px; letter-spacing: 0.04em;
+  }
+  .tag-gold { background: rgba(201,169,110,0.08); border: 1px solid rgba(201,169,110,0.18); color: var(--gold); }
+  .tag-purple { background: rgba(168,139,245,0.08); border: 1px solid rgba(168,139,245,0.15); color: var(--purple); }
+  .tag-blue { background: rgba(107,157,245,0.08); border: 1px solid rgba(107,157,245,0.15); color: var(--blue); }
+  .tag-red { background: rgba(224,85,85,0.08); border: 1px solid rgba(224,85,85,0.15); color: var(--red); }
+  .tag-green { background: rgba(85,184,122,0.08); border: 1px solid rgba(85,184,122,0.15); color: var(--green); }
+
+  /* Pips */
+  .pips { display:flex; gap:2px; }
+  .pip { width:7px; height:7px; border-radius:1.5px; }
+  .pip-f { background: var(--gold); }
+  .pip-e { border: 1px solid rgba(201,169,110,0.2); }
+  .pip-fp { background: var(--purple); }
+
+  /* ─── ITEM ROW ─── */
+  .item-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 10px; background: var(--bg3);
+    border: 1px solid rgba(255,255,255,0.03); border-radius: 3px;
+    margin-bottom: 3px; cursor: pointer; transition: all 0.15s;
+  }
+  .item-row:hover { border-color: rgba(201,169,110,0.15); }
+  .item-icon {
+    width: 24px; height: 24px; border-radius: 3px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; flex-shrink: 0;
+  }
+  .item-info { flex:1; min-width:0; }
+  .item-name { font-size: 10px; color: var(--t1); font-weight: 700; }
+  .item-meta { font-size: 8px; color: var(--t3); margin-top: 1px; }
+  .item-stat {
+    font-size: 9px; font-weight: 700; text-align: center;
+    padding: 2px 6px; border-radius: 2px; flex-shrink: 0;
+  }
+
+  /* Carry bar */
+  .carry-bar {
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px 10px; background: var(--bg2);
+    border: 1px solid rgba(201,169,110,0.06); border-radius: 3px;
+    font-size: 8px; margin-bottom: 10px;
+  }
+  .carry-label { color: var(--gold); letter-spacing: 0.1em; }
+  .carry-track { flex:1; height:4px; background:rgba(255,255,255,0.04); border-radius:2px; overflow:hidden; }
+  .carry-fill { height:100%; border-radius:2px; }
+  .carry-num { color: var(--t1); font-weight: 700; }
+
+  /* Roll btn small */
+  .roll-sm {
+    width: 22px; height: 22px; border-radius: 3px;
+    border: 1px solid rgba(201,169,110,0.12); background: transparent;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; color: var(--gold); cursor: pointer;
+    transition: all 0.15s; flex-shrink: 0;
+  }
+  .roll-sm:hover { border-color: rgba(201,169,110,0.35); box-shadow: 0 0 8px -3px rgba(201,169,110,0.2); }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- 1. EQUIPMENT TAB                                    -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div>
+  <h2>1. Equipment Tab</h2>
+  <p class="sub">Right column of the character sheet — weapons, armor, gear, and carry capacity</p>
+</div>
+
+<div class="sheet-frame" style="width:440px;">
+  <div class="corner c-tl"></div><div class="corner c-tr"></div>
+  <div class="corner c-bl"></div><div class="corner c-br"></div>
+  <div class="accent-top"></div>
+
+  <div style="padding:14px 16px;">
+    <!-- Tab bar -->
+    <div style="display:flex; gap:0; margin-bottom:12px; border-bottom:1px solid rgba(201,169,110,0.08);">
+      <div style="padding:6px 14px; color:var(--t3); font-size:10px; letter-spacing:0.08em; cursor:pointer;">TALENTS</div>
+      <div style="padding:6px 14px; color:var(--gold); font-size:10px; letter-spacing:0.08em; border-bottom:2px solid var(--gold);">EQUIPMENT</div>
+      <div style="padding:6px 14px; color:var(--t3); font-size:10px; letter-spacing:0.08em; cursor:pointer;">DETAILS</div>
+    </div>
+
+    <!-- Carry capacity -->
+    <div class="carry-bar">
+      <span class="carry-label">CARRY</span>
+      <div class="carry-track">
+        <div class="carry-fill" style="width:62%; background:linear-gradient(90deg, var(--gold), rgba(201,169,110,0.6));"></div>
+      </div>
+      <span class="carry-num">5 / 8</span>
+      <span style="color:var(--t3); font-size:7px;">slots</span>
+    </div>
+
+    <!-- Supply -->
+    <div style="display:flex; align-items:center; gap:8px; padding:6px 10px; background:var(--bg3); border:1px solid rgba(201,169,110,0.08); border-radius:3px; margin-bottom:12px;">
+      <div class="item-icon" style="background:rgba(201,169,110,0.08); color:var(--gold);">⬡</div>
+      <span style="font-size:10px; color:var(--gold); font-weight:700;">SUPPLY</span>
+      <div style="display:flex; gap:1px; margin-left:auto;">
+        <!-- Segmented boxes grouped by 5 -->
+        <div style="display:flex; gap:1px; margin-right:4px;">
+          <div style="width:6px; height:10px; border-radius:1px; background:var(--gold);"></div>
+          <div style="width:6px; height:10px; border-radius:1px; background:var(--gold);"></div>
+          <div style="width:6px; height:10px; border-radius:1px; background:var(--gold);"></div>
+          <div style="width:6px; height:10px; border-radius:1px; background:var(--gold);"></div>
+          <div style="width:6px; height:10px; border-radius:1px; background:var(--gold);"></div>
+        </div>
+        <div style="display:flex; gap:1px;">
+          <div style="width:6px; height:10px; border-radius:1px; background:var(--gold);"></div>
+          <div style="width:6px; height:10px; border-radius:1px; background:var(--gold);"></div>
+          <div style="width:6px; height:10px; border-radius:1px; border:1px solid rgba(201,169,110,0.2);"></div>
+          <div style="width:6px; height:10px; border-radius:1px; border:1px solid rgba(201,169,110,0.2);"></div>
+          <div style="width:6px; height:10px; border-radius:1px; border:1px solid rgba(201,169,110,0.2);"></div>
+        </div>
+      </div>
+      <span style="font-size:9px; color:var(--t1); font-weight:700; margin-left:4px;">7</span>
+    </div>
+
+    <!-- WEAPONS -->
+    <div class="sec-h"><span>WEAPONS</span><div class="line"></div></div>
+
+    <div class="item-row">
+      <div class="item-icon" style="background:rgba(224,85,85,0.08); color:var(--red);">⚔</div>
+      <div class="item-info">
+        <div class="item-name">Standard Pistol</div>
+        <div class="item-meta">Ranged · Medium · Crit 4</div>
+      </div>
+      <div class="item-stat" style="background:rgba(224,85,85,0.06); color:var(--red);">DMG 3</div>
+      <div style="display:flex; gap:2px; flex-shrink:0;" title="Gear Bonus +2">
+        <div class="pip pip-f"></div><div class="pip pip-f"></div><div class="pip pip-e"></div>
+      </div>
+      <div class="roll-sm" title="Roll Attack">⬡</div>
+    </div>
+
+    <div class="item-row">
+      <div class="item-icon" style="background:rgba(224,85,85,0.08); color:var(--red);">🗡</div>
+      <div class="item-info">
+        <div class="item-name">Knife</div>
+        <div class="item-meta">Melee · Light · Crit 6</div>
+      </div>
+      <div class="item-stat" style="background:rgba(224,85,85,0.06); color:var(--red);">DMG 2</div>
+      <div style="display:flex; gap:2px; flex-shrink:0;" title="Gear Bonus +1">
+        <div class="pip pip-f"></div><div class="pip pip-e"></div><div class="pip pip-e"></div>
+      </div>
+      <div class="roll-sm" title="Roll Attack">⬡</div>
+    </div>
+
+    <!-- ARMOR -->
+    <div class="sec-h" style="margin-top:12px;"><span>ARMOR</span><div class="line"></div></div>
+
+    <div class="item-row">
+      <div class="item-icon" style="background:rgba(107,157,245,0.08); color:var(--blue);">🛡</div>
+      <div class="item-info">
+        <div class="item-name">Kevlar Vest</div>
+        <div class="item-meta">Medium · −1 Stealth</div>
+      </div>
+      <div class="item-stat" style="background:rgba(107,157,245,0.06); color:var(--blue);">AR 4</div>
+      <div style="display:flex; gap:2px; flex-shrink:0;" title="Armor Rating 4">
+        <div style="width:7px; height:7px; border-radius:1.5px; background:var(--blue);"></div>
+        <div style="width:7px; height:7px; border-radius:1.5px; background:var(--blue);"></div>
+        <div style="width:7px; height:7px; border-radius:1.5px; background:var(--blue);"></div>
+        <div style="width:7px; height:7px; border-radius:1.5px; background:var(--blue);"></div>
+      </div>
+    </div>
+
+    <!-- GEAR -->
+    <div class="sec-h" style="margin-top:12px;"><span>GEAR</span><div class="line"></div></div>
+
+    <div class="item-row">
+      <div class="item-icon" style="background:rgba(201,169,110,0.08); color:var(--gold);">🔬</div>
+      <div class="item-info">
+        <div class="item-name">Forensics Kit</div>
+        <div class="item-meta">Investigator, Science rolls</div>
+      </div>
+      <div style="display:flex; gap:2px; flex-shrink:0;" title="Gear Bonus +2">
+        <div class="pip pip-f"></div><div class="pip pip-f"></div><div class="pip pip-e"></div>
+      </div>
+    </div>
+
+    <div class="item-row">
+      <div class="item-icon" style="background:rgba(201,169,110,0.08); color:var(--gold);">🔦</div>
+      <div class="item-info">
+        <div class="item-name">Flashlight</div>
+        <div class="item-meta">Negates darkness in zone</div>
+      </div>
+      <div style="display:flex; gap:2px; flex-shrink:0;" title="Gear Bonus +1">
+        <div class="pip pip-f"></div><div class="pip pip-e"></div>
+      </div>
+    </div>
+
+    <div class="item-row">
+      <div class="item-icon" style="background:rgba(168,139,245,0.08); color:var(--purple);">📖</div>
+      <div class="item-info">
+        <div class="item-name">Occult Reference</div>
+        <div class="item-meta" style="color:var(--purple);">+1 Occult rolls</div>
+      </div>
+      <div style="display:flex; gap:2px; flex-shrink:0;" title="Gear Bonus +1">
+        <div style="width:7px; height:7px; border-radius:1.5px; background:var(--purple);"></div>
+        <div style="width:7px; height:7px; border-radius:1.5px; border:1px solid rgba(168,139,245,0.2);"></div>
+      </div>
+    </div>
+
+    <!-- Drop zone -->
+    <div style="margin-top:10px; padding:12px; border:1px dashed rgba(201,169,110,0.12); border-radius:4px; text-align:center; font-size:9px; color:var(--t3);">
+      Drop items here from compendium
+    </div>
+  </div>
+
+  <div class="accent-btm"></div>
+</div>
+
+<div class="sep"></div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- 2. DETAILS TAB                                      -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div>
+  <h2>2. Details Tab</h2>
+  <p class="sub">Personal details — roleplay reference for Anchor, Drive, Fear, Connections</p>
+</div>
+
+<div class="sheet-frame" style="width:440px;">
+  <div class="corner c-tl"></div><div class="corner c-tr"></div>
+  <div class="corner c-bl"></div><div class="corner c-br"></div>
+  <div class="accent-top"></div>
+
+  <div style="padding:14px 16px;">
+    <!-- Tab bar -->
+    <div style="display:flex; gap:0; margin-bottom:12px; border-bottom:1px solid rgba(201,169,110,0.08);">
+      <div style="padding:6px 14px; color:var(--t3); font-size:10px; letter-spacing:0.08em; cursor:pointer;">TALENTS</div>
+      <div style="padding:6px 14px; color:var(--t3); font-size:10px; letter-spacing:0.08em; cursor:pointer;">EQUIPMENT</div>
+      <div style="padding:6px 14px; color:var(--gold); font-size:10px; letter-spacing:0.08em; border-bottom:2px solid var(--gold);">DETAILS</div>
+    </div>
+
+    <!-- Backgrounds -->
+    <div class="sec-h"><span>BACKGROUNDS</span><div class="line"></div></div>
+    <div style="display:flex; gap:6px; margin-bottom:14px;">
+      <div style="flex:1; padding:8px 10px; background:var(--bg3); border:1px solid var(--border); border-radius:3px;">
+        <div style="font-size:7px; color:var(--gold); letter-spacing:0.1em; margin-bottom:3px;">BACKGROUND 1</div>
+        <div style="font-size:11px; color:var(--t1); font-weight:700;">Medical</div>
+        <div style="font-size:8px; color:var(--t3); margin-top:2px; font-family:'Monaspace Neon',monospace;">Anatomy, diagnosis, pharmacology, hospital procedures, triage</div>
+      </div>
+      <div style="flex:1; padding:8px 10px; background:var(--bg3); border:1px solid var(--border); border-radius:3px;">
+        <div style="font-size:7px; color:var(--gold); letter-spacing:0.1em; margin-bottom:3px;">BACKGROUND 2</div>
+        <div style="font-size:11px; color:var(--t1); font-weight:700;">Occult Dabbler</div>
+        <div style="font-size:8px; color:var(--t3); margin-top:2px; font-family:'Monaspace Neon',monospace;">Fringe beliefs, occult bookshops, ritual basics, symbols</div>
+      </div>
+    </div>
+
+    <!-- Anchor -->
+    <div class="sec-h"><span>PERSONAL</span><div class="line"></div></div>
+
+    <div class="field">
+      <div class="field-lbl">ANCHOR <span style="color:var(--green); font-size:7px; margin-left:4px;">♥ recovers 1 Mind/session</span></div>
+      <div class="field-textarea" style="min-height:36px; color:var(--t1); font-style:italic; font-family:'Monaspace Neon',monospace;">My daughter's photograph in my wallet. I look at it when the world stops making sense.</div>
+    </div>
+
+    <!-- Drive -->
+    <div class="field">
+      <div class="field-lbl">DRIVE</div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <div class="field-input" style="flex:1;">
+          <span class="tag tag-purple" style="margin-right:6px;">Curiosity</span>
+          <span style="font-size:9px; color:var(--t3); font-family:'Monaspace Neon',monospace;">You need to know. The question itself compels you.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fear -->
+    <div class="field">
+      <div class="field-lbl">FEAR <span style="color:var(--red); font-size:7px; margin-left:4px;">⚠ GM will use this</span></div>
+      <div class="field-textarea" style="min-height:36px; color:var(--red); font-family:'Monaspace Neon',monospace; background:rgba(224,85,85,0.02); border-color:rgba(224,85,85,0.08);">The dark. Not what's in it — the dark itself. The absence of light as a presence.</div>
+    </div>
+
+    <!-- Connections -->
+    <div class="field">
+      <div class="field-lbl">CONNECTIONS</div>
+      <div style="display:flex; flex-direction:column; gap:4px;">
+        <div style="display:flex; align-items:flex-start; gap:8px; padding:6px 8px; background:var(--bg3); border:1px solid rgba(255,255,255,0.03); border-radius:3px;">
+          <div style="width:20px; height:20px; border-radius:3px; background:var(--bg4); border:1px solid var(--border); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:6px; color:var(--t3);">PC</div>
+          <div>
+            <div style="font-size:9px; color:var(--t1); font-weight:700;">Marcus Reed</div>
+            <div style="font-size:8px; color:var(--t3); font-family:'Monaspace Neon',monospace; margin-top:1px;">We survived something together. Neither of us talks about it.</div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:flex-start; gap:8px; padding:6px 8px; background:var(--bg3); border:1px solid rgba(255,255,255,0.03); border-radius:3px;">
+          <div style="width:20px; height:20px; border-radius:3px; background:var(--bg4); border:1px solid var(--border); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:6px; color:var(--t3);">PC</div>
+          <div>
+            <div style="font-size:9px; color:var(--t1); font-weight:700;">Elena Vasquez</div>
+            <div style="font-size:8px; color:var(--t3); font-family:'Monaspace Neon',monospace; margin-top:1px;">She's my student. She doesn't know what I found in her research.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="accent-btm"></div>
+</div>
+
+<div class="sep"></div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- 3. ITEM SHEETS                                      -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div>
+  <h2>3. Item Sheets</h2>
+  <p class="sub">What opens when you click an item to edit — Talent, Weapon, Equipment</p>
+</div>
+
+<div style="display:flex; gap:24px; align-items:flex-start; flex-wrap:wrap; justify-content:center;">
+
+  <!-- TALENT SHEET -->
+  <div class="sheet-frame" style="width:320px;">
+    <div class="corner c-tl"></div><div class="corner c-tr"></div>
+    <div class="corner c-bl"></div><div class="corner c-br"></div>
+    <div class="accent-top"></div>
+
+    <div style="padding:14px 16px;">
+      <!-- Item header -->
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid rgba(201,169,110,0.06);">
+        <div style="width:36px; height:36px; border-radius:4px; background:var(--bg3); border:1px solid var(--border); display:flex; align-items:center; justify-content:center;">
+          <span style="font-size:16px;">🔍</span>
+        </div>
+        <div style="flex:1;">
+          <div style="font-size:7px; color:var(--gold); letter-spacing:0.12em;">TALENT</div>
+          <div style="font-size:14px; color:var(--t1); font-weight:700;">Investigator</div>
+        </div>
+        <div class="tag tag-gold">Investigation</div>
+      </div>
+
+      <!-- Level -->
+      <div class="field">
+        <div class="field-lbl">LEVEL</div>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <div style="display:flex; gap:3px;">
+            <div style="width:28px; height:28px; border-radius:3px; background:rgba(201,169,110,0.12); border:2px solid var(--gold); display:flex; align-items:center; justify-content:center; color:var(--gold); font-size:12px; font-weight:700;">1</div>
+            <div style="width:28px; height:28px; border-radius:3px; background:rgba(201,169,110,0.12); border:2px solid var(--gold); display:flex; align-items:center; justify-content:center; color:var(--gold); font-size:12px; font-weight:700;">2</div>
+            <div style="width:28px; height:28px; border-radius:3px; background:var(--bg3); border:1px solid rgba(255,255,255,0.06); display:flex; align-items:center; justify-content:center; color:var(--t3); font-size:12px;">3</div>
+          </div>
+          <span style="font-size:10px; color:var(--t1); font-weight:700;">Level 2</span>
+          <span style="font-size:9px; color:var(--t3);">+2 dice</span>
+        </div>
+      </div>
+
+      <!-- Primary attribute -->
+      <div class="field">
+        <div class="field-lbl">PRIMARY ATTRIBUTES</div>
+        <div style="display:flex; gap:4px;">
+          <span class="tag tag-gold">LOG</span>
+          <span class="tag tag-gold">PER</span>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="field">
+        <div class="field-lbl">DESCRIPTION</div>
+        <div class="field-textarea" style="font-family:'Monaspace Neon',monospace; color:var(--t2);">Crime scenes, evidence analysis, connecting clues, forensics.</div>
+      </div>
+
+      <!-- Perk (L2) -->
+      <div style="padding:8px 10px; background:rgba(201,169,110,0.04); border:1px solid rgba(201,169,110,0.1); border-radius:3px; margin-bottom:8px;">
+        <div style="font-size:8px; color:var(--gold); letter-spacing:0.1em; margin-bottom:4px;">L2 PERK — SCENE READING</div>
+        <div style="font-size:9px; color:var(--t2); font-family:'Monaspace Neon',monospace; line-height:1.5;">When you investigate a location, ask the GM: "What happened here most recently?" They must answer truthfully.</div>
+      </div>
+
+      <!-- Mastery (L3) — locked -->
+      <div style="padding:8px 10px; background:var(--bg3); border:1px solid rgba(255,255,255,0.03); border-radius:3px; opacity:0.4;">
+        <div style="font-size:8px; color:var(--t3); letter-spacing:0.1em; margin-bottom:4px;">L3 MASTERY — THE THREAD</div>
+        <div style="font-size:9px; color:var(--t3); font-family:'Monaspace Neon',monospace; line-height:1.5;">Once per session, declare that two seemingly unrelated clues are connected. The GM must incorporate this connection.</div>
+      </div>
+    </div>
+    <div class="accent-btm"></div>
+  </div>
+
+  <!-- WEAPON SHEET -->
+  <div class="sheet-frame" style="width:320px;">
+    <div class="corner c-tl"></div><div class="corner c-tr"></div>
+    <div class="corner c-bl"></div><div class="corner c-br"></div>
+    <div class="accent-top" style="background:linear-gradient(90deg,transparent,rgba(224,85,85,0.3),transparent);"></div>
+
+    <div style="padding:14px 16px;">
+      <!-- Item header -->
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid rgba(224,85,85,0.06);">
+        <div style="width:36px; height:36px; border-radius:4px; background:rgba(224,85,85,0.06); border:1px solid rgba(224,85,85,0.15); display:flex; align-items:center; justify-content:center;">
+          <span style="font-size:16px;">🔫</span>
+        </div>
+        <div style="flex:1;">
+          <div style="font-size:7px; color:var(--red); letter-spacing:0.12em;">WEAPON — RANGED</div>
+          <div style="font-size:14px; color:var(--t1); font-weight:700;">Standard Pistol</div>
+        </div>
+      </div>
+
+      <!-- Stats grid -->
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:4px; margin-bottom:12px;">
+        <div style="background:var(--bg3); border:1px solid rgba(224,85,85,0.08); border-radius:3px; padding:8px 4px; text-align:center;">
+          <div style="font-size:7px; color:var(--red); letter-spacing:0.1em;">DAMAGE</div>
+          <div style="font-size:18px; color:var(--t1); font-weight:700;">3</div>
+        </div>
+        <div style="background:var(--bg3); border:1px solid var(--border); border-radius:3px; padding:8px 4px; text-align:center;">
+          <div style="font-size:7px; color:var(--gold); letter-spacing:0.1em;">CRIT</div>
+          <div style="font-size:18px; color:var(--t1); font-weight:700;">4</div>
+        </div>
+        <div style="background:var(--bg3); border:1px solid var(--border); border-radius:3px; padding:8px 4px; text-align:center;">
+          <div style="font-size:7px; color:var(--gold); letter-spacing:0.1em;">RANGE</div>
+          <div style="font-size:12px; color:var(--t1); font-weight:700;">Med</div>
+        </div>
+      </div>
+
+      <!-- Gear bonus -->
+      <div class="field">
+        <div class="field-lbl">GEAR BONUS</div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <div style="display:flex; gap:3px;">
+            <div class="pip pip-f"></div><div class="pip pip-f"></div><div class="pip pip-e"></div>
+          </div>
+          <span style="font-size:10px; color:var(--t1); font-weight:700;">+2</span>
+          <span style="font-size:8px; color:var(--t3);">/ 3 max</span>
+        </div>
+      </div>
+
+      <!-- Weight -->
+      <div class="field">
+        <div class="field-lbl">WEIGHT</div>
+        <div style="display:flex; gap:6px; align-items:center;">
+          <span class="tag tag-gold">1 slot</span>
+        </div>
+      </div>
+
+      <!-- Properties -->
+      <div class="field">
+        <div class="field-lbl">PROPERTIES</div>
+        <div style="display:flex; gap:4px; flex-wrap:wrap;">
+          <span class="tag tag-red">Loud</span>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="field">
+        <div class="field-lbl">NOTES</div>
+        <div class="field-textarea" style="font-family:'Monaspace Neon',monospace; color:var(--t3); min-height:32px;">1911, Glock, revolver — era-appropriate.</div>
+      </div>
+    </div>
+    <div class="accent-btm"></div>
+  </div>
+
+  <!-- EQUIPMENT SHEET -->
+  <div class="sheet-frame" style="width:320px;">
+    <div class="corner c-tl"></div><div class="corner c-tr"></div>
+    <div class="corner c-bl"></div><div class="corner c-br"></div>
+    <div class="accent-top"></div>
+
+    <div style="padding:14px 16px;">
+      <!-- Item header -->
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid rgba(201,169,110,0.06);">
+        <div style="width:36px; height:36px; border-radius:4px; background:rgba(201,169,110,0.06); border:1px solid var(--border); display:flex; align-items:center; justify-content:center;">
+          <span style="font-size:16px;">🔬</span>
+        </div>
+        <div style="flex:1;">
+          <div style="font-size:7px; color:var(--gold); letter-spacing:0.12em;">EQUIPMENT — INVESTIGATION</div>
+          <div style="font-size:14px; color:var(--t1); font-weight:700;">Forensics Kit</div>
+        </div>
+      </div>
+
+      <!-- Gear bonus -->
+      <div class="field">
+        <div class="field-lbl">GEAR BONUS</div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <div style="display:flex; gap:3px;">
+            <div class="pip pip-f"></div><div class="pip pip-f"></div><div class="pip pip-e"></div>
+          </div>
+          <span style="font-size:10px; color:var(--t1); font-weight:700;">+2</span>
+          <span style="font-size:8px; color:var(--t3);">/ 3 max</span>
+        </div>
+      </div>
+
+      <!-- Weight -->
+      <div class="field">
+        <div class="field-lbl">WEIGHT</div>
+        <span class="tag tag-gold">1 slot</span>
+      </div>
+
+      <!-- Applicable talents -->
+      <div class="field">
+        <div class="field-lbl">APPLIES TO</div>
+        <div style="display:flex; gap:4px; flex-wrap:wrap;">
+          <span class="tag tag-gold">Investigator</span>
+          <span class="tag tag-blue">Science</span>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="field">
+        <div class="field-lbl">DESCRIPTION</div>
+        <div class="field-textarea" style="font-family:'Monaspace Neon',monospace; color:var(--t2); min-height:48px;">Magnifying glass → fingerprint kit → digital forensics. Era-appropriate tools for crime scene analysis and evidence processing.</div>
+      </div>
+
+      <!-- Era variants -->
+      <div class="field">
+        <div class="field-lbl">ERA VARIANTS</div>
+        <div style="display:flex; flex-direction:column; gap:3px;">
+          <div style="display:flex; align-items:center; gap:6px; font-size:9px; padding:4px 8px; background:var(--bg3); border-radius:2px;">
+            <span style="color:var(--t3);">1920s</span>
+            <span style="color:var(--t2);">Magnifying glass, field chemicals</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px; font-size:9px; padding:4px 8px; background:var(--bg3); border-radius:2px;">
+            <span style="color:var(--t3);">Modern</span>
+            <span style="color:var(--t2);">Digital forensics kit, luminol</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="accent-btm"></div>
+  </div>
+
+</div>
+
+</body>
+</html>

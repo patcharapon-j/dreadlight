@@ -1,0 +1,49 @@
+<h2>Dread as Independent Track — Design Overview</h2>
+<p class="subtitle">Hunger-style standalone mechanic, decoupled from Soul loss</p>
+
+<div class="section">
+  <h3>Core Concept</h3>
+  <p>Dread becomes a <strong>standalone 0–5 track</strong> with no mechanical derivation from Soul. The GM defines what "Dread" represents per campaign — supernatural corruption, paranoia, moral decay, creeping desperation — and assigns gains/losses based on narrative triggers.</p>
+</div>
+
+<div class="section">
+  <h3>What Changes</h3>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+    <div style="background: rgba(255,80,80,0.08); border: 1px solid rgba(255,80,80,0.2); border-radius: 8px; padding: 16px;">
+      <h4 style="color: #ff6b6b; margin-top: 0;">❌ Removed</h4>
+      <ul style="margin: 0; padding-left: 18px; line-height: 1.8;">
+        <li>Auto-derivation from Soul loss</li>
+        <li>Soul Lost → Dread lookup table</li>
+        <li>Dread Recovery section ("follows Soul")</li>
+        <li><code>dread.override</code> toggle (no longer needed)</li>
+        <li><code>CONFIG.DREADLIGHT.dreadTable</code></li>
+      </ul>
+    </div>
+    <div style="background: rgba(80,200,120,0.08); border: 1px solid rgba(80,200,120,0.2); border-radius: 8px; padding: 16px;">
+      <h4 style="color: #50c878; margin-top: 0;">✅ Added / Changed</h4>
+      <ul style="margin: 0; padding-left: 18px; line-height: 1.8;">
+        <li>Dread is a simple <code>value</code> field (0–5)</li>
+        <li>GM increases Dread via narrative triggers</li>
+        <li>Players decrease Dread via safe scenes & actions</li>
+        <li>Dread track is directly editable on the sheet</li>
+        <li>New rules text: gaining/losing Dread guidance</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>What Stays the Same</h3>
+  <div style="background: rgba(100,149,237,0.08); border: 1px solid rgba(100,149,237,0.2); border-radius: 8px; padding: 16px;">
+    <ul style="margin: 0; padding-left: 18px; line-height: 1.8; columns: 2;">
+      <li>Max Dread: 5</li>
+      <li>Dread dice replace base dice in pools</li>
+      <li>Dread 6s → tainted/dire outcomes</li>
+      <li>Pushing dread 1s → Soul loss</li>
+      <li>Roll outcome categories (clean/tainted/dire/failure)</li>
+      <li>GM Dread Pool (fully separate resource)</li>
+      <li>Conditions system unchanged</li>
+      <li>All other dice mechanics unchanged</li>
+    </ul>
+  </div>
+</div>

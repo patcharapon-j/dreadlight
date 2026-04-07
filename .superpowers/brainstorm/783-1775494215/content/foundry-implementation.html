@@ -1,0 +1,86 @@
+<h2>FoundryVTT Implementation — What Changes</h2>
+<p class="subtitle">Files to modify and how</p>
+
+<div class="section">
+  <h3>Data Model</h3>
+  <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px; font-family: monospace; font-size: 0.9em;">
+    <div style="color: #888; margin-bottom: 8px;">module/data/investigator.mjs</div>
+    <div style="margin-bottom: 12px;">
+      <span style="color: #ff6b6b;">− Remove:</span> <code>dread.override</code> BooleanField<br>
+      <span style="color: #ff6b6b;">− Remove:</span> Auto-derivation logic in <code>prepareDerivedData()</code> (lines 149–164)<br>
+      <span style="color: #50c878;">+ Keep:</span> <code>dread.value</code> NumberField (0–5) — now directly editable, no derivation
+    </div>
+    <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 4px;">
+      <pre style="margin: 0; color: #e0e0e0;">// Before
+dread: new fields.SchemaField({
+  value: new fields.NumberField({ ... }),
+  override: new fields.BooleanField({ ... }),  // ← remove
+})
+
+// After
+dread: new fields.SchemaField({
+  value: new fields.NumberField({ required: true, initial: 0, min: 0, max: 5, integer: true }),
+})</pre>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>Configuration</h3>
+  <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px; font-family: monospace; font-size: 0.9em;">
+    <div style="color: #888; margin-bottom: 8px;">dreadlight.mjs</div>
+    <span style="color: #ff6b6b;">− Remove:</span> <code>CONFIG.DREADLIGHT.dreadTable</code> (unused lookup array)
+  </div>
+</div>
+
+<div class="section">
+  <h3>Character Sheet</h3>
+  <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px; font-family: monospace; font-size: 0.9em;">
+    <div style="color: #888; margin-bottom: 8px;">templates/actors/parts/tracks.hbs</div>
+    <span style="color: #50c878;">+ Change:</span> Dread pips become <strong>clickable</strong> (editable directly on the sheet)<br>
+    <span style="color: #ff6b6b;">− Remove:</span> Any override toggle UI if present
+    <div style="color: #888; margin-top: 12px; margin-bottom: 8px;">module/sheets/investigator-sheet.mjs</div>
+    <span style="color: #50c878;">+ Add:</span> Click handler for Dread pips (click to increment, right-click to decrement, clamped 0–5)
+  </div>
+</div>
+
+<div class="section">
+  <h3>Dice System</h3>
+  <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px; font-family: monospace; font-size: 0.9em;">
+    <div style="color: #888; margin-bottom: 8px;">module/dice/dreadlight-roll.mjs</div>
+    <span style="color: #6495ed;">○ No changes needed</span> — <code>buildPool()</code> already reads <code>system.dread.value</code> directly. It doesn't care how that value got there.
+    <div style="color: #888; margin-top: 12px; margin-bottom: 8px;">module/dice/chat-message.mjs</div>
+    <span style="color: #6495ed;">○ No changes needed</span> — displays dread gain info in chat, doesn't auto-apply.
+    <div style="color: #888; margin-top: 12px; margin-bottom: 8px;">module/dice/roll-dialog.mjs</div>
+    <span style="color: #6495ed;">○ No changes needed</span> — reads dread.value for pool preview.
+  </div>
+</div>
+
+<div class="section">
+  <h3>Rules Documents</h3>
+  <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 16px; font-family: monospace; font-size: 0.9em;">
+    <div style="color: #888; margin-bottom: 8px;">H:\My Drive\Project Crimson Echo\Dreadlight Core Rules\</div>
+    <span style="color: #50c878;">+ Rewrite:</span> <code>04 - Dread and Corruption.md</code> — Dread Rating section, remove Soul derivation table, add gaining/losing guidance<br>
+    <span style="color: #50c878;">+ Update:</span> <code>07 - Recovery and Healing.md</code> — Dread Recovery section, remove "follows Soul", add independent recovery rules<br>
+    <span style="color: #50c878;">+ Update:</span> <code>13 - Reference Tables.md</code> — Remove Soul→Dread lookup table if present
+  </div>
+</div>
+
+<div class="section">
+  <h3>Summary of Impact</h3>
+  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; text-align: center;">
+    <div style="background: rgba(80,200,120,0.08); border: 1px solid rgba(80,200,120,0.2); border-radius: 8px; padding: 16px;">
+      <div style="font-size: 1.8em; font-weight: bold; color: #50c878;">2</div>
+      <div style="opacity: 0.7;">Files modified<br><small>(data model + config)</small></div>
+    </div>
+    <div style="background: rgba(100,149,237,0.08); border: 1px solid rgba(100,149,237,0.2); border-radius: 8px; padding: 16px;">
+      <div style="font-size: 1.8em; font-weight: bold; color: #6495ed;">2</div>
+      <div style="opacity: 0.7;">Files enhanced<br><small>(sheet + template)</small></div>
+    </div>
+    <div style="background: rgba(255,200,50,0.08); border: 1px solid rgba(255,200,50,0.2); border-radius: 8px; padding: 16px;">
+      <div style="font-size: 1.8em; font-weight: bold; color: #ffc832;">3</div>
+      <div style="opacity: 0.7;">Rules docs updated<br><small>(chapters 4, 7, 13)</small></div>
+    </div>
+  </div>
+  <p style="margin-top: 16px; opacity: 0.6; text-align: center;">Zero changes to dice rolling, chat messages, roll dialog, or DSN integration. The decoupling is surgically clean.</p>
+</div>

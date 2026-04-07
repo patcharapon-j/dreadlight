@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dreadlight — Track Display Options</title>
+<style>
+  @font-face {
+    font-family: 'Monaspace Krypton';
+    src: url('https://cdn.jsdelivr.net/gh/githubnext/monaspace@v1.101/fonts/webfonts/MonaspaceKrypton-Regular.woff') format('woff');
+    font-weight: 400;
+  }
+  @font-face {
+    font-family: 'Monaspace Krypton';
+    src: url('https://cdn.jsdelivr.net/gh/githubnext/monaspace@v1.101/fonts/webfonts/MonaspaceKrypton-Bold.woff') format('woff');
+    font-weight: 700;
+  }
+
+  :root {
+    --bg-primary: #08080c;
+    --bg-card: #111118;
+    --text-primary: #ededf4;
+    --text-muted: #555568;
+    --accent-gold: #c9a96e;
+    --track-body: #55b87a;
+    --track-mind: #6b9df5;
+    --track-soul: #a88bf5;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: #111;
+    font-family: 'Monaspace Krypton', monospace;
+    color: #8e8ea3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 16px;
+    gap: 32px;
+  }
+
+  h2 { color: var(--text-primary); font-size: 18px; letter-spacing: 0.04em; }
+  .subtitle { color: var(--text-muted); font-size: 12px; margin-top: 4px; text-align: center; }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    max-width: 760px;
+    width: 100%;
+  }
+
+  .option-card {
+    background: var(--bg-primary);
+    border: 2px solid rgba(201,169,110,0.1);
+    border-radius: 8px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.22,1,0.36,1);
+  }
+  .option-card:hover {
+    border-color: rgba(201,169,110,0.3);
+    box-shadow: 0 0 24px -8px rgba(201,169,110,0.15);
+    transform: translateY(-2px);
+  }
+  .option-card.selected {
+    border-color: rgba(201,169,110,0.5);
+    box-shadow: 0 0 32px -8px rgba(201,169,110,0.25);
+  }
+
+  .option-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .option-letter {
+    width: 28px; height: 28px;
+    border-radius: 4px;
+    background: rgba(201,169,110,0.1);
+    border: 1px solid rgba(201,169,110,0.25);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--accent-gold);
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .option-title { color: var(--text-primary); font-size: 14px; font-weight: 700; }
+  .option-desc { font-size: 11px; color: var(--text-muted); margin-bottom: 16px; }
+
+  /* ─── DEMO TRACK AREAS ─── */
+  .demo-track {
+    background: rgba(17,17,24,0.6);
+    border: 1px solid rgba(201,169,110,0.06);
+    border-radius: 4px;
+    padding: 12px;
+  }
+
+  .track-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .track-icon { font-size: 14px; }
+  .track-name { font-size: 8px; letter-spacing: 0.15em; font-weight: 700; }
+  .track-count { font-size: 9px; margin-left: auto; }
+
+  /* ─── STYLE A: Dots (circles) ─── */
+  .dots-row { display: flex; gap: 3px; flex-wrap: wrap; }
+  .dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    transition: all 0.2s;
+  }
+  .dot.filled { }
+  .dot.empty { border: 1px solid; opacity: 0.25; }
+  .dot.body.filled { background: var(--track-body); box-shadow: 0 0 6px -2px var(--track-body); }
+  .dot.body.empty { border-color: var(--track-body); }
+  .dot.mind.filled { background: var(--track-mind); box-shadow: 0 0 6px -2px var(--track-mind); }
+  .dot.mind.empty { border-color: var(--track-mind); }
+  .dot.soul.filled { background: var(--track-soul); box-shadow: 0 0 6px -2px var(--track-soul); }
+  .dot.soul.empty { border-color: var(--track-soul); }
+
+  /* ─── STYLE B: Boxes (squares) ─── */
+  .boxes-row { display: flex; gap: 2px; flex-wrap: wrap; }
+  .box {
+    width: 11px; height: 11px;
+    border-radius: 2px;
+    transition: all 0.2s;
+  }
+  .box.filled { }
+  .box.empty { border: 1px solid; opacity: 0.2; }
+  .box.body.filled { background: var(--track-body); }
+  .box.body.empty { border-color: var(--track-body); }
+  .box.mind.filled { background: var(--track-mind); }
+  .box.mind.empty { border-color: var(--track-mind); }
+  .box.soul.filled { background: var(--track-soul); }
+  .box.soul.empty { border-color: var(--track-soul); }
+
+  /* ─── STYLE C: Diamonds ─── */
+  .diamonds-row { display: flex; gap: 4px; flex-wrap: wrap; padding: 4px 0; }
+  .diamond {
+    width: 10px; height: 10px;
+    transform: rotate(45deg);
+    transition: all 0.2s;
+  }
+  .diamond.filled { }
+  .diamond.empty { border: 1px solid; opacity: 0.2; }
+  .diamond.body.filled { background: var(--track-body); box-shadow: 0 0 6px -2px var(--track-body); }
+  .diamond.body.empty { border-color: var(--track-body); }
+  .diamond.mind.filled { background: var(--track-mind); box-shadow: 0 0 6px -2px var(--track-mind); }
+  .diamond.mind.empty { border-color: var(--track-mind); }
+  .diamond.soul.filled { background: var(--track-soul); box-shadow: 0 0 6px -2px var(--track-soul); }
+  .diamond.soul.empty { border-color: var(--track-soul); }
+
+  /* ─── STYLE D: Segmented (grouped blocks) ─── */
+  .segments-row { display: flex; gap: 6px; flex-wrap: wrap; }
+  .segment-group { display: flex; gap: 1px; }
+  .segment {
+    width: 8px; height: 14px;
+    border-radius: 1px;
+    transition: all 0.2s;
+  }
+  .segment.filled { }
+  .segment.empty { border: 1px solid; opacity: 0.15; }
+  .segment.body.filled { background: var(--track-body); }
+  .segment.body.empty { border-color: var(--track-body); }
+  .segment.mind.filled { background: var(--track-mind); }
+  .segment.mind.empty { border-color: var(--track-mind); }
+  .segment.soul.filled { background: var(--track-soul); }
+  .segment.soul.empty { border-color: var(--track-soul); }
+
+  .tracks-spacer { height: 6px; }
+
+  .note-box {
+    max-width: 760px;
+    width: 100%;
+    padding: 12px 16px;
+    background: rgba(201,169,110,0.03);
+    border: 1px solid rgba(201,169,110,0.08);
+    border-radius: 6px;
+    font-size: 12px;
+    color: #8e8ea3;
+    line-height: 1.6;
+  }
+  .note-box strong { color: var(--text-primary); }
+</style>
+<script>
+  function toggleSelect(el) {
+    document.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    // Post selection event
+    const choice = el.dataset.choice;
+    const title = el.querySelector('.option-title')?.textContent || '';
+    if (window.__brainstormSelect) window.__brainstormSelect(choice, title);
+  }
+</script>
+</head>
+<body>
+
+<div style="text-align:center;">
+  <h2>Track Display Style</h2>
+  <p class="subtitle">How should Body / Mind / Soul current values be shown? Click to select.</p>
+</div>
+
+<div class="options-grid">
+
+  <!-- A: DOTS -->
+  <div class="option-card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="option-header">
+      <div class="option-letter">A</div>
+      <div class="option-title">Dots (Circles)</div>
+    </div>
+    <div class="option-desc">Classic World of Darkness / YZE style. Each point is a filled or empty circle.</div>
+    <div class="demo-track">
+      <!-- Body 7/10 -->
+      <div class="track-header">
+        <span class="track-icon" style="color:var(--track-body);">♥</span>
+        <span class="track-name" style="color:var(--track-body);">BODY</span>
+        <span class="track-count" style="color:var(--track-body);">7 / 10</span>
+      </div>
+      <div class="dots-row">
+        <div class="dot body filled"></div><div class="dot body filled"></div><div class="dot body filled"></div><div class="dot body filled"></div><div class="dot body filled"></div><div class="dot body filled"></div><div class="dot body filled"></div><div class="dot body empty"></div><div class="dot body empty"></div><div class="dot body empty"></div>
+      </div>
+      <div class="tracks-spacer"></div>
+      <!-- Mind 9/11 -->
+      <div class="track-header">
+        <span class="track-icon" style="color:var(--track-mind);">◈</span>
+        <span class="track-name" style="color:var(--track-mind);">MIND</span>
+        <span class="track-count" style="color:var(--track-mind);">9 / 11</span>
+      </div>
+      <div class="dots-row">
+        <div class="dot mind filled"></div><div class="dot mind filled"></div><div class="dot mind filled"></div><div class="dot mind filled"></div><div class="dot mind filled"></div><div class="dot mind filled"></div><div class="dot mind filled"></div><div class="dot mind filled"></div><div class="dot mind filled"></div><div class="dot mind empty"></div><div class="dot mind empty"></div>
+      </div>
+      <div class="tracks-spacer"></div>
+      <!-- Soul 5/8 -->
+      <div class="track-header">
+        <span class="track-icon" style="color:var(--track-soul);">◉</span>
+        <span class="track-name" style="color:var(--track-soul);">SOUL</span>
+        <span class="track-count" style="color:var(--track-soul);">5 / 8</span>
+      </div>
+      <div class="dots-row">
+        <div class="dot soul filled"></div><div class="dot soul filled"></div><div class="dot soul filled"></div><div class="dot soul filled"></div><div class="dot soul filled"></div><div class="dot soul empty"></div><div class="dot soul empty"></div><div class="dot soul empty"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- B: BOXES -->
+  <div class="option-card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="option-header">
+      <div class="option-letter">B</div>
+      <div class="option-title">Boxes (Squares)</div>
+    </div>
+    <div class="option-desc">Compact and dense. Squares pack tighter, feel more digital/terminal.</div>
+    <div class="demo-track">
+      <!-- Body 7/10 -->
+      <div class="track-header">
+        <span class="track-icon" style="color:var(--track-body);">♥</span>
+        <span class="track-name" style="color:var(--track-body);">BODY</span>
+        <span class="track-count" style="color:var(--track-body);">7 / 10</span>
+      </div>
+      <div class="boxes-row">
+        <div class="box body filled"></div><div class="box body filled"></div><div class="box body filled"></div><div class="box body filled"></div><div class="box body filled"></div><div class="box body filled"></div><div class="box body filled"></div><div class="box body empty"></div><div class="box body empty"></div><div class="box body empty"></div>
+      </div>
+      <div class="tracks-spacer"></div>
+      <!-- Mind 9/11 -->
+      <div class="track-header">
+        <span class="track-icon" style="color:var(--track-mind);">◈</span>
+        <span class="track-name" style="color:var(--track-mind);">MIND</span>
+        <span class="track-count" style="color:var(--track-mind);">9 / 11</span>
+      </div>
+      <div class="boxes-row">
+        <div class="box mind filled"></div><div class="box mind filled"></div><div class="box mind filled"></div><div class="box mind filled"></div><div class="box mind filled"></div><div class="box mind filled"></div><div class="box mind filled"></div><div class="box mind filled"></div><div class="box mind filled"></div><div class="box mind empty"></div><div class="box mind empty"></div>
+      </div>
+      <div class="tracks-spacer"></div>
+      <!-- Soul 5/8 -->
+      <div class="track-header">
+        <span class="track-icon" style="color:var(--track-soul);">◉</span>
+        <span class="track-name" style="color:var(--track-soul);">SOUL</span>
+        <span class="track-count" style="color:var(--track-soul);">5 / 8</span>
+      </div>
+      <div class="boxes-row">
+        <div class="box soul filled"></div><div class="box soul filled"></div><div class="box soul filled"></div><div class="box soul filled"></div><div class="box soul filled"></div><div class="box soul empty"></div><div class="box soul empty"></div><div class="box soul empty"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- C: DIAMONDS -->
+  <div class="option-card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="option-header">
+      <div class="option-letter">C</div>
+      <div class="option-title">Diamonds</div>
+    </div>
+    <div class="option-desc">Rotated squares. Feels arcane and distinctive — matches the ironroll diamond motif.</div>
+    <div class="demo-track">
+      <!-- Body 7/10 -->
+      <div class="track-header">
+        <span class="track-icon" style="color:var(--track-body);">♥</span>
+        <span class="track-name" style="color:var(--track-body);">BODY</span>
+        <span class="track-count" style="color:var(--track-body);">7 / 10</span>
+      </div>
+      <div class="diamonds-row">
+        <div class="diamond body filled"></div><div class="diamond body filled"></div><div class="diamond body filled"></div><div class="diamond body filled"></div><div class="diamond body filled"></div><div class="diamond body filled"></div><div class="diamond body filled"></div><div class="diamond body empty"></div><div class="diamond body empty"></div><div class="diamond body empty"></div>
+      </div>
+      <div class="tracks-spacer"></div>
+      <!-- Mind 9/11 -->
+      <div class="track-header">
+        <span class="track-icon" style="color:var(--track-mind);">◈</span>
+        <span class="track-name" style="color:var(--track-mind);">MIND</span>
+        <span class="track-count" style="color:var(--track-mind);">9 / 11</span>
+      </div>
+      <div class="diamonds-row">
+        <div class="diamond mind filled"></div><div class="diamond mind filled"></div><div class="diamond mind filled"></div><div class="diamond mind filled"></div><div class="diamond mind filled"></div><div class="diamond mind filled"></div><div class="diamond mind filled"></div><div class="diamond mind filled"></div><div class="diamond mind filled"></div><div class="diamond mind empty"></div><div class="diamond mind empty"></div>
+      </div>
+      <div class="tracks-spacer"></div>
+      <!-- Soul 5/8 -->
+      <div class="track-header">
+        <span class="track-icon" style="color:var(--track-soul);">◉</span>
+        <span class="track-name" style="color:var(--track-soul);">SOUL</span>
+        <span class="track-count" style="color:var(--track-soul);">5 / 8</span>
+      </div>
+      <div class="diamonds-row">
+        <div class="diamond soul filled"></div><div class="diamond soul filled"></div><div class="diamond soul filled"></div><div class="diamond soul filled"></div><div class="diamond soul filled"></div><div class="diamond soul empty"></div><div class="diamond soul empty"></div><div class="diamond soul empty"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- D: SEGMENTS (grouped) -->
+  <div class="option-card" data-choice="d" onclick="toggleSelect(this)">
+    <div class="option-header">
+      <div class="option-letter">D</div>
+      <div class="option-title">Segmented Blocks</div>
+    </div>
+    <div class="option-desc">Tall thin segments grouped by 5. Like a health meter in a video game. Feels modern/sci-fi.</div>
+    <div class="demo-track">
+      <!-- Body 7/10 -->
+      <div class="track-header">
+        <span class="track-icon" style="color:var(--track-body);">♥</span>
+        <span class="track-name" style="color:var(--track-body);">BODY</span>
+        <span class="track-count" style="color:var(--track-body);">7 / 10</span>
+      </div>
+      <div class="segments-row">
+        <div class="segment-group">
+          <div class="segment body filled"></div><div class="segment body filled"></div><div class="segment body filled"></div><div class="segment body filled"></div><div class="segment body filled"></div>
+        </div>
+        <div class="segment-group">
+          <div class="segment body filled"></div><div class="segment body filled"></div><div class="segment body empty"></div><div class="segment body empty"></div><div class="segment body empty"></div>
+        </div>
+      </div>
+      <div class="tracks-spacer"></div>
+      <!-- Mind 9/11 -->
+      <div class="track-header">
+        <span class="track-icon" style="color:var(--track-mind);">◈</span>
+        <span class="track-name" style="color:var(--track-mind);">MIND</span>
+        <span class="track-count" style="color:var(--track-mind);">9 / 11</span>
+      </div>
+      <div class="segments-row">
+        <div class="segment-group">
+          <div class="segment mind filled"></div><div class="segment mind filled"></div><div class="segment mind filled"></div><div class="segment mind filled"></div><div class="segment mind filled"></div>
+        </div>
+        <div class="segment-group">
+          <div class="segment mind filled"></div><div class="segment mind filled"></div><div class="segment mind filled"></div><div class="segment mind filled"></div><div class="segment mind empty"></div>
+        </div>
+        <div class="segment-group">
+          <div class="segment mind empty"></div>
+        </div>
+      </div>
+      <div class="tracks-spacer"></div>
+      <!-- Soul 5/8 -->
+      <div class="track-header">
+        <span class="track-icon" style="color:var(--track-soul);">◉</span>
+        <span class="track-name" style="color:var(--track-soul);">SOUL</span>
+        <span class="track-count" style="color:var(--track-soul);">5 / 8</span>
+      </div>
+      <div class="segments-row">
+        <div class="segment-group">
+          <div class="segment soul filled"></div><div class="segment soul filled"></div><div class="segment soul filled"></div><div class="segment soul filled"></div><div class="segment soul filled"></div>
+        </div>
+        <div class="segment-group">
+          <div class="segment soul empty"></div><div class="segment soul empty"></div><div class="segment soul empty"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="note-box">
+  <strong>All styles are clickable in the real sheet</strong> — players click individual pips/boxes/diamonds to toggle them for tracking damage. The number reference (7/10) stays as a small label. Each style works in the tracks bar from the previous mockup, replacing the progress bars.
+</div>
+
+</body>
+</html>

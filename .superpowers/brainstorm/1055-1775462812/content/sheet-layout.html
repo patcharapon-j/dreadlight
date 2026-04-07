@@ -1,0 +1,218 @@
+<h2>Investigator Sheet Layout</h2>
+<p class="subtitle">Which layout structure feels right for the Dreadlight character sheet?</p>
+
+<div class="cards" style="display:grid; grid-template-columns: 1fr 1fr; gap:24px; margin-top:24px;">
+
+  <!-- Option A: Sidebar + Tabs -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)" style="padding:0; overflow:hidden;">
+    <div style="padding:16px 16px 8px;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+        <div class="letter">A</div>
+        <h3 style="margin:0;">Sidebar + Tabs</h3>
+      </div>
+      <p style="font-size:13px; opacity:0.7; margin:0 0 12px;">Classic FVTT layout. Left sidebar for identity & vitals, tabbed main area for details.</p>
+    </div>
+    <!-- Mockup -->
+    <div style="background:#08080c; border:1px solid rgba(201,169,110,0.12); border-radius:4px; margin:0 12px 12px; padding:12px; font-family:monospace; font-size:10px; color:#8e8ea3;">
+      <div style="display:flex; gap:8px; height:280px;">
+        <!-- Left sidebar -->
+        <div style="width:140px; flex-shrink:0; display:flex; flex-direction:column; gap:6px;">
+          <div style="background:#111118; border:1px solid rgba(201,169,110,0.15); border-radius:3px; padding:8px; text-align:center;">
+            <div style="width:48px; height:48px; border-radius:50%; border:1px solid rgba(201,169,110,0.3); margin:0 auto 6px; display:flex; align-items:center; justify-content:center; color:#c9a96e; font-size:8px;">IMG</div>
+            <div style="color:#ededf4; font-size:11px; font-weight:bold;">Name</div>
+            <div style="font-size:8px; color:#555568;">Concept line</div>
+          </div>
+          <!-- Tracks -->
+          <div style="background:#111118; border:1px solid rgba(201,169,110,0.08); border-radius:3px; padding:6px;">
+            <div style="font-size:8px; color:#c9a96e; letter-spacing:0.1em; margin-bottom:4px;">TRACKS</div>
+            <div style="display:flex; flex-direction:column; gap:3px;">
+              <div style="display:flex; justify-content:space-between;"><span>Body</span><div style="width:60px; height:6px; background:#1a1a24; border-radius:2px; overflow:hidden;"><div style="width:70%; height:100%; background:linear-gradient(90deg,#55b87a,#55b87a);border-radius:2px;"></div></div></div>
+              <div style="display:flex; justify-content:space-between;"><span>Mind</span><div style="width:60px; height:6px; background:#1a1a24; border-radius:2px; overflow:hidden;"><div style="width:85%; height:100%; background:linear-gradient(90deg,#6b9df5,#6b9df5);border-radius:2px;"></div></div></div>
+              <div style="display:flex; justify-content:space-between;"><span>Soul</span><div style="width:60px; height:6px; background:#1a1a24; border-radius:2px; overflow:hidden;"><div style="width:50%; height:100%; background:linear-gradient(90deg,#a88bf5,#a88bf5);border-radius:2px;"></div></div></div>
+            </div>
+          </div>
+          <!-- Dread -->
+          <div style="background:#111118; border:1px solid rgba(224,85,85,0.15); border-radius:3px; padding:6px; text-align:center;">
+            <div style="font-size:8px; color:#e05555; letter-spacing:0.1em;">DREAD</div>
+            <div style="color:#e05555; font-size:16px; font-weight:bold;">2</div>
+          </div>
+          <!-- Conditions -->
+          <div style="background:#111118; border:1px solid rgba(201,169,110,0.08); border-radius:3px; padding:6px;">
+            <div style="font-size:8px; color:#c9a96e; letter-spacing:0.1em;">CONDITIONS</div>
+            <div style="display:flex; flex-wrap:wrap; gap:2px; margin-top:3px;">
+              <span style="font-size:7px; padding:1px 4px; background:rgba(224,85,85,0.15); border-radius:2px; color:#e05555;">Shaken</span>
+            </div>
+          </div>
+        </div>
+        <!-- Main tabbed area -->
+        <div style="flex:1; display:flex; flex-direction:column;">
+          <!-- Tabs -->
+          <div style="display:flex; gap:1px; margin-bottom:8px;">
+            <div style="padding:4px 10px; background:rgba(201,169,110,0.1); border-bottom:2px solid #c9a96e; color:#c9a96e; font-size:9px;">Attributes</div>
+            <div style="padding:4px 10px; color:#555568; font-size:9px;">Talents</div>
+            <div style="padding:4px 10px; color:#555568; font-size:9px;">Equipment</div>
+            <div style="padding:4px 10px; color:#555568; font-size:9px;">Details</div>
+          </div>
+          <!-- Attributes grid -->
+          <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:4px; flex:1;">
+            <div style="background:#111118; border:1px solid rgba(201,169,110,0.1); border-radius:3px; padding:6px; text-align:center;">
+              <div style="font-size:7px; color:#c9a96e; letter-spacing:0.15em;">STR</div>
+              <div style="color:#ededf4; font-size:18px; font-weight:bold;">4</div>
+            </div>
+            <div style="background:#111118; border:1px solid rgba(201,169,110,0.1); border-radius:3px; padding:6px; text-align:center;">
+              <div style="font-size:7px; color:#c9a96e; letter-spacing:0.15em;">AGL</div>
+              <div style="color:#ededf4; font-size:18px; font-weight:bold;">3</div>
+            </div>
+            <div style="background:#111118; border:1px solid rgba(201,169,110,0.1); border-radius:3px; padding:6px; text-align:center;">
+              <div style="font-size:7px; color:#c9a96e; letter-spacing:0.15em;">LOG</div>
+              <div style="color:#ededf4; font-size:18px; font-weight:bold;">5</div>
+            </div>
+            <div style="background:#111118; border:1px solid rgba(201,169,110,0.1); border-radius:3px; padding:6px; text-align:center;">
+              <div style="font-size:7px; color:#c9a96e; letter-spacing:0.15em;">PER</div>
+              <div style="color:#ededf4; font-size:18px; font-weight:bold;">4</div>
+            </div>
+            <div style="background:#111118; border:1px solid rgba(201,169,110,0.1); border-radius:3px; padding:6px; text-align:center;">
+              <div style="font-size:7px; color:#c9a96e; letter-spacing:0.15em;">INS</div>
+              <div style="color:#ededf4; font-size:18px; font-weight:bold;">4</div>
+            </div>
+            <div style="background:#111118; border:1px solid rgba(201,169,110,0.1); border-radius:3px; padding:6px; text-align:center;">
+              <div style="font-size:7px; color:#c9a96e; letter-spacing:0.15em;">EMP</div>
+              <div style="color:#ededf4; font-size:18px; font-weight:bold;">5</div>
+            </div>
+          </div>
+          <!-- Backgrounds -->
+          <div style="margin-top:6px; display:flex; gap:4px;">
+            <div style="flex:1; background:#111118; border:1px solid rgba(201,169,110,0.08); border-radius:3px; padding:4px 6px; font-size:8px;">
+              <span style="color:#c9a96e;">BG:</span> <span style="color:#ededf4;">Medical</span>
+            </div>
+            <div style="flex:1; background:#111118; border:1px solid rgba(201,169,110,0.08); border-radius:3px; padding:4px 6px; font-size:8px;">
+              <span style="color:#c9a96e;">BG:</span> <span style="color:#ededf4;">Occult Dabbler</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Option B: Header + Two Columns -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)" style="padding:0; overflow:hidden;">
+    <div style="padding:16px 16px 8px;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+        <div class="letter">B</div>
+        <h3 style="margin:0;">Header Banner + Two Columns</h3>
+      </div>
+      <p style="font-size:13px; opacity:0.7; margin:0 0 12px;">Wide header with identity & tracks, then two-column content below. More spacious.</p>
+    </div>
+    <!-- Mockup -->
+    <div style="background:#08080c; border:1px solid rgba(201,169,110,0.12); border-radius:4px; margin:0 12px 12px; padding:12px; font-family:monospace; font-size:10px; color:#8e8ea3;">
+      <!-- Header banner -->
+      <div style="background:#111118; border:1px solid rgba(201,169,110,0.15); border-radius:3px; padding:10px; margin-bottom:8px;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="width:40px; height:40px; border-radius:50%; border:1px solid rgba(201,169,110,0.3); flex-shrink:0; display:flex; align-items:center; justify-content:center; color:#c9a96e; font-size:7px;">IMG</div>
+          <div style="flex:1;">
+            <div style="color:#ededf4; font-size:12px; font-weight:bold;">Character Name</div>
+            <div style="font-size:8px; color:#555568;">A nurse who started seeing things in the morgue</div>
+            <div style="display:flex; gap:6px; margin-top:4px;">
+              <span style="font-size:7px; padding:1px 5px; background:rgba(201,169,110,0.1); border:1px solid rgba(201,169,110,0.2); border-radius:2px; color:#c9a96e;">Medical</span>
+              <span style="font-size:7px; padding:1px 5px; background:rgba(201,169,110,0.1); border:1px solid rgba(201,169,110,0.2); border-radius:2px; color:#c9a96e;">Occult Dabbler</span>
+            </div>
+          </div>
+          <!-- Tracks inline -->
+          <div style="display:flex; gap:8px; flex-shrink:0;">
+            <div style="text-align:center;"><div style="font-size:7px; color:#55b87a;">BODY</div><div style="color:#55b87a; font-size:14px; font-weight:bold;">7/10</div></div>
+            <div style="text-align:center;"><div style="font-size:7px; color:#6b9df5;">MIND</div><div style="color:#6b9df5; font-size:14px; font-weight:bold;">9/11</div></div>
+            <div style="text-align:center;"><div style="font-size:7px; color:#a88bf5;">SOUL</div><div style="color:#a88bf5; font-size:14px; font-weight:bold;">5/8</div></div>
+            <div style="text-align:center; padding-left:6px; border-left:1px solid rgba(224,85,85,0.2);"><div style="font-size:7px; color:#e05555;">DREAD</div><div style="color:#e05555; font-size:14px; font-weight:bold;">2</div></div>
+          </div>
+        </div>
+      </div>
+      <!-- Two columns -->
+      <div style="display:flex; gap:8px; height:200px;">
+        <!-- Left column -->
+        <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
+          <div style="font-size:8px; color:#c9a96e; letter-spacing:0.1em;">ATTRIBUTES</div>
+          <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:4px;">
+            <div style="background:#111118; border:1px solid rgba(201,169,110,0.1); border-radius:3px; padding:6px; text-align:center;">
+              <div style="font-size:7px; color:#c9a96e;">STR</div>
+              <div style="color:#ededf4; font-size:16px; font-weight:bold;">4</div>
+            </div>
+            <div style="background:#111118; border:1px solid rgba(201,169,110,0.1); border-radius:3px; padding:6px; text-align:center;">
+              <div style="font-size:7px; color:#c9a96e;">AGL</div>
+              <div style="color:#ededf4; font-size:16px; font-weight:bold;">3</div>
+            </div>
+            <div style="background:#111118; border:1px solid rgba(201,169,110,0.1); border-radius:3px; padding:6px; text-align:center;">
+              <div style="font-size:7px; color:#c9a96e;">LOG</div>
+              <div style="color:#ededf4; font-size:16px; font-weight:bold;">5</div>
+            </div>
+            <div style="background:#111118; border:1px solid rgba(201,169,110,0.1); border-radius:3px; padding:6px; text-align:center;">
+              <div style="font-size:7px; color:#c9a96e;">PER</div>
+              <div style="color:#ededf4; font-size:16px; font-weight:bold;">4</div>
+            </div>
+            <div style="background:#111118; border:1px solid rgba(201,169,110,0.1); border-radius:3px; padding:6px; text-align:center;">
+              <div style="font-size:7px; color:#c9a96e;">INS</div>
+              <div style="color:#ededf4; font-size:16px; font-weight:bold;">4</div>
+            </div>
+            <div style="background:#111118; border:1px solid rgba(201,169,110,0.1); border-radius:3px; padding:6px; text-align:center;">
+              <div style="font-size:7px; color:#c9a96e;">EMP</div>
+              <div style="color:#ededf4; font-size:16px; font-weight:bold;">5</div>
+            </div>
+          </div>
+          <!-- Conditions & Marks -->
+          <div style="display:flex; gap:4px; margin-top:auto;">
+            <div style="flex:1; background:#111118; border:1px solid rgba(201,169,110,0.08); border-radius:3px; padding:5px;">
+              <div style="font-size:7px; color:#c9a96e; letter-spacing:0.1em;">CONDITIONS</div>
+              <span style="font-size:7px; padding:1px 4px; background:rgba(224,85,85,0.15); border-radius:2px; color:#e05555;">Shaken</span>
+            </div>
+            <div style="flex:1; background:#111118; border:1px solid rgba(201,169,110,0.08); border-radius:3px; padding:5px;">
+              <div style="font-size:7px; color:#c9a96e; letter-spacing:0.1em;">MARKS</div>
+              <div style="display:flex; gap:2px; margin-top:2px;">
+                <div style="width:8px; height:8px; border-radius:50%; background:#55b87a;"></div>
+                <div style="width:8px; height:8px; border-radius:50%; border:1px solid #555568;"></div>
+                <div style="width:8px; height:8px; border-radius:50%; border:1px solid #555568;"></div>
+                <div style="width:8px; height:8px; border-radius:50%; border:1px solid #555568;"></div>
+                <div style="width:8px; height:8px; border-radius:50%; border:1px solid #555568;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Right column: Tabs -->
+        <div style="flex:1; display:flex; flex-direction:column;">
+          <div style="display:flex; gap:1px; margin-bottom:6px;">
+            <div style="padding:3px 8px; background:rgba(201,169,110,0.1); border-bottom:2px solid #c9a96e; color:#c9a96e; font-size:8px;">Talents</div>
+            <div style="padding:3px 8px; color:#555568; font-size:8px;">Equipment</div>
+            <div style="padding:3px 8px; color:#555568; font-size:8px;">Details</div>
+          </div>
+          <div style="flex:1; background:#111118; border:1px solid rgba(201,169,110,0.08); border-radius:3px; padding:6px; overflow:hidden;">
+            <div style="display:flex; flex-direction:column; gap:3px;">
+              <div style="display:flex; justify-content:space-between; padding:3px 4px; background:rgba(201,169,110,0.04); border-radius:2px;">
+                <span style="color:#ededf4; font-size:9px;">Investigator</span>
+                <span style="color:#c9a96e; font-size:9px;">L2</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; padding:3px 4px;">
+                <span style="color:#ededf4; font-size:9px;">Occult</span>
+                <span style="color:#c9a96e; font-size:9px;">L2</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; padding:3px 4px; background:rgba(201,169,110,0.04); border-radius:2px;">
+                <span style="color:#ededf4; font-size:9px;">Composure</span>
+                <span style="color:#c9a96e; font-size:9px;">L1</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; padding:3px 4px;">
+                <span style="color:#ededf4; font-size:9px;">First Aid</span>
+                <span style="color:#c9a96e; font-size:9px;">L1</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; padding:3px 4px; background:rgba(201,169,110,0.04); border-radius:2px;">
+                <span style="color:#ededf4; font-size:9px;">Marksman</span>
+                <span style="color:#c9a96e; font-size:9px;">L1</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div style="margin-top:20px; padding:12px; background:rgba(201,169,110,0.05); border:1px solid rgba(201,169,110,0.1); border-radius:6px;">
+  <p style="margin:0; font-size:13px; opacity:0.8;"><strong>Note:</strong> Both layouts use the ironroll dark theme (deep blacks, gold accents, geometric frames). The difference is information hierarchy — <strong>A</strong> keeps vitals always visible in a sidebar, <strong>B</strong> gives more horizontal space with a compact header banner.</p>
+</div>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dreadlight — Roll Dialog v4</title>
+<style>
+  @font-face {
+    font-family: 'Monaspace Krypton';
+    src: url('https://cdn.jsdelivr.net/gh/githubnext/monaspace@v1.101/fonts/webfonts/MonaspaceKrypton-Regular.woff') format('woff');
+    font-weight: 400;
+  }
+  @font-face {
+    font-family: 'Monaspace Krypton';
+    src: url('https://cdn.jsdelivr.net/gh/githubnext/monaspace@v1.101/fonts/webfonts/MonaspaceKrypton-Bold.woff') format('woff');
+    font-weight: 700;
+  }
+
+  :root {
+    --bg: #08080c;
+    --bg2: #0e0e14;
+    --bg3: #111118;
+    --t1: #ededf4;
+    --t2: #8e8ea3;
+    --t3: #555568;
+    --gold: #c9a96e;
+    --red: #c93030;
+    --red-bg: rgba(180,40,40,0.15);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: #111;
+    font-family: 'Monaspace Krypton', monospace;
+    color: var(--t2);
+    padding: 32px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+  }
+  h2 { color: var(--t1); font-size: 16px; text-align:center; }
+  .sub { color: var(--t3); font-size: 10px; text-align: center; margin-top: 3px; }
+
+  /* ─── DIALOG SHELL ─── */
+  .dlg {
+    width: 300px;
+    background: var(--bg);
+    border: 1px solid rgba(201,169,110,0.14);
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px -12px rgba(0,0,0,0.8);
+  }
+  .dlg-top { height:2px; background:linear-gradient(90deg,transparent,rgba(201,169,110,0.3),transparent); }
+
+  .dlg-head {
+    padding: 10px 14px 8px;
+    border-bottom: 1px solid rgba(201,169,110,0.06);
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+  .dlg-title { color: var(--t1); font-size: 13px; font-weight: 700; }
+  .dlg-char { color: var(--t3); font-size: 9px; }
+
+  .dlg-body { padding: 10px 14px 14px; display:flex; flex-direction:column; gap:8px; }
+
+  /* ─── COMPACT SOURCE ROWS ─── */
+  .src {
+    display: flex;
+    align-items: center;
+    height: 32px;
+    padding: 0 10px;
+    background: var(--bg3);
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 3px;
+    gap: 8px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .src:hover { border-color: rgba(201,169,110,0.18); }
+  .src-static { cursor: default; }
+  .src-static:hover { border-color: rgba(255,255,255,0.04); }
+
+  .src-name { font-size: 10px; color: var(--t1); font-weight: 700; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .src-detail { font-size: 8px; color: var(--t3); margin-right: 4px; }
+
+  .pips { display: flex; gap: 2px; }
+  .p { width: 6px; height: 6px; border-radius: 1.5px; }
+  .p.w { background: rgba(220,220,230,0.45); }
+  .p.g { background: var(--gold); }
+  .p.r { background: var(--red); }
+  .p.e { border: 1px solid rgba(255,255,255,0.1); }
+
+  .chev { color: var(--t3); font-size: 7px; margin-left: 2px; }
+
+  /* ─── DIFFICULTY — minimal ─── */
+  .diff-row { display: flex; gap: 1px; }
+  .d {
+    flex: 1; height: 24px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--bg3); border: 1px solid transparent; border-radius: 2px;
+    font-size: 8px; color: var(--t3); cursor: pointer; transition: all 0.12s;
+    flex-direction: column; gap: 0;
+    line-height: 1;
+  }
+  .d:hover { color: var(--t2); border-color: rgba(201,169,110,0.12); }
+  .d.on { background: rgba(201,169,110,0.08); border-color: rgba(201,169,110,0.25); color: var(--gold); font-weight: 700; }
+  .d span { font-size: 7px; }
+
+  /* ─── POOL VISUAL ─── */
+  .pool {
+    background: var(--bg2);
+    border: 1px solid rgba(201,169,110,0.06);
+    border-radius: 4px;
+    padding: 10px;
+  }
+
+  .pool-bar { display: flex; align-items: center; gap: 0; }
+  .sq {
+    width: 20px; height: 20px;
+    border-radius: 2px;
+    margin-right: 2px;
+  }
+  .sq.base { background: rgba(220,220,230,0.1); border: 1px solid rgba(220,220,230,0.18); }
+  .sq.dread {
+    background: linear-gradient(135deg, rgba(180,40,40,0.2), rgba(139,32,32,0.12));
+    border: 1px solid rgba(200,48,48,0.35);
+  }
+  .sq.gear { background: rgba(201,169,110,0.08); border: 1px solid rgba(201,169,110,0.22); }
+  .pool-gap { width: 8px; }
+
+  /* Range brackets */
+  .pool-ranges {
+    display: flex;
+    margin-top: 4px;
+    height: 14px;
+    align-items: flex-start;
+  }
+  .rng {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .rng-bar { width: 100%; height: 1px; position: relative; }
+  .rng-bar::before, .rng-bar::after {
+    content: '';
+    position: absolute;
+    top: -1px;
+    width: 1px;
+    height: 3px;
+  }
+  .rng-bar::before { left: 0; }
+  .rng-bar::after { right: 0; }
+  .rng-bar.base { background: rgba(220,220,230,0.12); }
+  .rng-bar.base::before, .rng-bar.base::after { background: rgba(220,220,230,0.12); }
+  .rng-bar.dread { background: rgba(200,48,48,0.25); }
+  .rng-bar.dread::before, .rng-bar.dread::after { background: rgba(200,48,48,0.25); }
+  .rng-bar.gear { background: rgba(201,169,110,0.15); }
+  .rng-bar.gear::before, .rng-bar.gear::after { background: rgba(201,169,110,0.15); }
+  .rng-lbl { font-size: 7px; letter-spacing: 0.08em; margin-top: 1px; }
+
+  /* Summary line */
+  .pool-sum {
+    display: flex;
+    align-items: center;
+    margin-top: 8px;
+    padding-top: 7px;
+    border-top: 1px solid rgba(255,255,255,0.03);
+    gap: 10px;
+    font-size: 8px;
+  }
+  .ps { display: flex; align-items: center; gap: 3px; }
+  .ps-d { width: 5px; height: 5px; border-radius: 1px; }
+  .ps-n { color: var(--t1); font-weight: 700; }
+  .ps-total { margin-left: auto; font-size: 9px; color: var(--t3); }
+  .ps-total strong { color: var(--t1); font-size: 14px; margin-right: 2px; }
+
+  /* ─── ROLL BTN ─── */
+  .roll-btn {
+    height: 36px;
+    background: linear-gradient(180deg, rgba(201,169,110,0.1), rgba(201,169,110,0.04));
+    border: 1px solid rgba(201,169,110,0.2);
+    border-radius: 3px;
+    color: var(--gold);
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .roll-btn:hover {
+    background: linear-gradient(180deg, rgba(201,169,110,0.18), rgba(201,169,110,0.08));
+    border-color: rgba(201,169,110,0.4);
+    box-shadow: 0 0 18px -6px rgba(201,169,110,0.2);
+  }
+
+  .sep { width:100%; max-width:300px; height:1px; background:linear-gradient(90deg,transparent,rgba(201,169,110,0.1),transparent); }
+</style>
+</head>
+<body>
+
+<h2>Roll Dialog — v4</h2>
+<p class="sub">Tighter, more polished, same information</p>
+
+<!-- ─── NORMAL EXAMPLE ─── -->
+<div class="dlg">
+  <div class="dlg-top"></div>
+  <div class="dlg-head">
+    <span class="dlg-title">Logic</span>
+    <span class="dlg-char">Dr. Yuki Tanaka</span>
+  </div>
+  <div class="dlg-body">
+
+    <div class="src src-static">
+      <span class="src-name">Logic</span>
+      <div class="pips"><div class="p w"></div><div class="p w"></div><div class="p w"></div><div class="p w"></div><div class="p w"></div></div>
+    </div>
+
+    <div class="src">
+      <span class="src-name">Investigator</span>
+      <span class="src-detail">L2</span>
+      <div class="pips"><div class="p w"></div><div class="p w"></div></div>
+      <span class="chev">▾</span>
+    </div>
+
+    <div class="src">
+      <span class="src-name">Forensics Kit</span>
+      <span class="src-detail">gear</span>
+      <div class="pips"><div class="p g"></div><div class="p g"></div></div>
+      <span class="chev">▾</span>
+    </div>
+
+    <div class="diff-row">
+      <div class="d">+3</div>
+      <div class="d">+2</div>
+      <div class="d">+1</div>
+      <div class="d on">±0</div>
+      <div class="d">−1</div>
+      <div class="d">−2</div>
+      <div class="d">−3</div>
+    </div>
+
+    <!-- Pool: 5 base + 2 dread | 2 gear -->
+    <div class="pool">
+      <div class="pool-bar">
+        <div class="sq base"></div><div class="sq base"></div><div class="sq base"></div><div class="sq base"></div><div class="sq base"></div>
+        <div class="sq dread"></div><div class="sq dread"></div>
+        <div class="pool-gap"></div>
+        <div class="sq gear"></div><div class="sq gear"></div>
+      </div>
+      <div class="pool-ranges">
+        <div class="rng" style="width:calc(5 * 22px);">
+          <div class="rng-bar base"></div>
+          <span class="rng-lbl" style="color:rgba(220,220,230,0.35);">BASE <span style="color:var(--t1);font-weight:700;">5</span></span>
+        </div>
+        <div class="rng" style="width:calc(2 * 22px);">
+          <div class="rng-bar dread"></div>
+          <span class="rng-lbl" style="color:rgba(200,48,48,0.5);">DREAD <span style="color:var(--red);font-weight:700;">2</span></span>
+        </div>
+        <div style="width:8px;"></div>
+        <div class="rng" style="width:calc(2 * 22px);">
+          <div class="rng-bar gear"></div>
+          <span class="rng-lbl" style="color:rgba(201,169,110,0.4);">GEAR <span style="color:var(--gold);font-weight:700;">2</span></span>
+        </div>
+      </div>
+      <div class="pool-sum">
+        <div class="ps"><div class="ps-d" style="background:rgba(220,220,230,0.45);"></div><span class="ps-n">5</span></div>
+        <div class="ps"><div class="ps-d" style="background:var(--red);"></div><span class="ps-n" style="color:var(--red);">2</span></div>
+        <div class="ps"><div class="ps-d" style="background:var(--gold);"></div><span class="ps-n" style="color:var(--gold);">2</span></div>
+        <div class="ps-total"><strong>9</strong>dice</div>
+      </div>
+    </div>
+
+    <button class="roll-btn">ROLL</button>
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- ─── HIGH DREAD ─── -->
+<p class="sub" style="color:var(--red);">High Dread — corruption dominant</p>
+
+<div class="dlg">
+  <div class="dlg-top" style="background:linear-gradient(90deg,transparent,rgba(200,48,48,0.25),transparent);"></div>
+  <div class="dlg-head">
+    <span class="dlg-title">Insight</span>
+    <span class="dlg-char">Dr. Yuki Tanaka · <span style="color:var(--red);">Dread 4</span></span>
+  </div>
+  <div class="dlg-body">
+
+    <div class="src src-static">
+      <span class="src-name">Insight</span>
+      <div class="pips"><div class="p w"></div><div class="p w"></div><div class="p w"></div><div class="p w"></div></div>
+    </div>
+
+    <div class="src">
+      <span class="src-name">Occult</span>
+      <span class="src-detail" style="color:#a88bf5;">L2</span>
+      <div class="pips"><div class="p w"></div><div class="p w"></div></div>
+      <span class="chev">▾</span>
+    </div>
+
+    <div class="src">
+      <span class="src-name" style="color:var(--t3);">No equipment</span>
+      <span class="chev">▾</span>
+    </div>
+
+    <div class="diff-row">
+      <div class="d">+3</div>
+      <div class="d">+2</div>
+      <div class="d">+1</div>
+      <div class="d on">±0</div>
+      <div class="d">−1</div>
+      <div class="d">−2</div>
+      <div class="d">−3</div>
+    </div>
+
+    <!-- Pool: 2 base + 4 dread -->
+    <div class="pool" style="border-color:rgba(200,48,48,0.1);">
+      <div class="pool-bar">
+        <div class="sq base"></div><div class="sq base"></div>
+        <div class="sq dread"></div><div class="sq dread"></div><div class="sq dread"></div><div class="sq dread"></div>
+      </div>
+      <div class="pool-ranges">
+        <div class="rng" style="width:calc(2 * 22px);">
+          <div class="rng-bar base"></div>
+          <span class="rng-lbl" style="color:rgba(220,220,230,0.35);">BASE <span style="color:var(--t1);font-weight:700;">2</span></span>
+        </div>
+        <div class="rng" style="width:calc(4 * 22px);">
+          <div class="rng-bar dread"></div>
+          <span class="rng-lbl" style="color:rgba(200,48,48,0.5);">DREAD <span style="color:var(--red);font-weight:700;">4</span></span>
+        </div>
+      </div>
+      <div class="pool-sum">
+        <div class="ps"><div class="ps-d" style="background:rgba(220,220,230,0.45);"></div><span class="ps-n">2</span></div>
+        <div class="ps"><div class="ps-d" style="background:var(--red);"></div><span class="ps-n" style="color:var(--red);">4</span></div>
+        <div class="ps-total"><strong>6</strong>dice</div>
+      </div>
+    </div>
+
+    <button class="roll-btn">ROLL</button>
+  </div>
+</div>
+
+</body>
+</html>

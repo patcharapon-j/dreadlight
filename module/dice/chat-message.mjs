@@ -180,9 +180,25 @@ export function registerChatListeners() {
         const d66 = message.flags?.dreadlight?.d66;
         if (!d66 || d66.applied) return;
 
-        const actorId = applyBtn.dataset.actorId;
-        const actor = game.actors.get(actorId);
-        if (!actor || !actor.isOwner) return;
+        // Determine target actor
+        let actor;
+        const defaultActor = game.actors.get(applyBtn.dataset.actorId);
+
+        if (game.user.isGM) {
+          // GM picks from all investigators
+          const investigators = game.actors.filter(a => a.type === "investigator");
+          if (investigators.length === 0) return;
+          if (investigators.length === 1) {
+            actor = investigators[0];
+          } else {
+            actor = await _pickInvestigator(investigators, defaultActor?.id);
+            if (!actor) return; // cancelled
+          }
+        } else {
+          // Player applies to the roll's actor
+          actor = defaultActor;
+          if (!actor || !actor.isOwner) return;
+        }
 
         const injuries = actor.system.injuries ?? [];
         await actor.update({
@@ -200,5 +216,47 @@ export function registerChatListeners() {
         await message.update({ "flags.dreadlight.d66.applied": true });
       });
     }
+  });
+}
+
+/**
+ * Show a dialog for the GM to pick which investigator to apply an injury to.
+ * @param {Actor[]} investigators — list of investigator actors
+ * @param {string} [defaultId] — pre-selected actor ID
+ * @returns {Promise<Actor|null>} — selected actor or null if cancelled
+ */
+function _pickInvestigator(investigators, defaultId) {
+  return new Promise((resolve) => {
+    const options = investigators
+      .map(a => `<option value="${a.id}" ${a.id === defaultId ? "selected" : ""}>${a.name}</option>`)
+      .join("");
+
+    new Dialog({
+      title: game.i18n.localize("DREADLIGHT.D66ApplyTo"),
+      content: `
+        <form class="dreadlight">
+          <div style="margin: 8px 0;">
+            <select id="d66-target" style="width: 100%; font-family: var(--dl-font-primary); padding: 4px;">
+              ${options}
+            </select>
+          </div>
+        </form>
+      `,
+      buttons: {
+        apply: {
+          label: game.i18n.localize("DREADLIGHT.D66Apply"),
+          callback: (html) => {
+            const actorId = html.find("#d66-target").val();
+            resolve(game.actors.get(actorId) ?? null);
+          },
+        },
+        cancel: {
+          label: "Cancel",
+          callback: () => resolve(null),
+        },
+      },
+      default: "apply",
+      close: () => resolve(null),
+    }).render(true);
   });
 }

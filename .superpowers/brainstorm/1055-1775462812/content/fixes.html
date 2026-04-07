@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dreadlight — Fixes</title>
+<style>
+  @font-face {
+    font-family: 'Monaspace Krypton';
+    src: url('https://cdn.jsdelivr.net/gh/githubnext/monaspace@v1.101/fonts/webfonts/MonaspaceKrypton-Regular.woff') format('woff');
+    font-weight: 400;
+  }
+  @font-face {
+    font-family: 'Monaspace Krypton';
+    src: url('https://cdn.jsdelivr.net/gh/githubnext/monaspace@v1.101/fonts/webfonts/MonaspaceKrypton-Bold.woff') format('woff');
+    font-weight: 700;
+  }
+
+  :root {
+    --bg: #08080c; --bg2: #0e0e14; --bg3: #111118;
+    --t1: #ededf4; --t2: #8e8ea3; --t3: #555568;
+    --gold: #c9a96e; --red: #e05555; --blue: #6b9df5; --purple: #a88bf5;
+    --border: rgba(201,169,110,0.1);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: #111;
+    font-family: 'Monaspace Krypton', monospace;
+    color: var(--t2);
+    padding: 32px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+  }
+  h2 { color: var(--t1); font-size: 16px; text-align:center; }
+  .sub { color: var(--t3); font-size: 10px; text-align:center; margin-top:3px; }
+  .sep { width:100%; max-width:500px; height:1px; background:linear-gradient(90deg,transparent,rgba(201,169,110,0.12),transparent); }
+
+  .sec-h {
+    font-size: 8px; color: var(--gold); letter-spacing: 0.15em;
+    display: flex; align-items: center; gap: 6px; margin-bottom: 8px;
+  }
+  .sec-h .line { flex:1; height:1px; background:rgba(201,169,110,0.08); }
+
+  .pip { width:7px; height:7px; border-radius:1.5px; }
+  .pip-f { background: var(--gold); }
+  .pip-e { border: 1px solid rgba(201,169,110,0.2); }
+
+  .frame {
+    background: var(--bg);
+    border: 1px solid rgba(201,169,110,0.12);
+    border-radius: 5px;
+    overflow: hidden;
+    position: relative;
+  }
+  .accent-top { height:2px; background:linear-gradient(90deg,transparent,rgba(201,169,110,0.3),transparent); }
+
+  /* Corner brackets */
+  .corner { position:absolute; z-index:10; pointer-events:none; }
+  .c-tl { top:5px; left:5px; width:12px; height:12px; border-top:1px solid rgba(201,169,110,0.15); border-left:1px solid rgba(201,169,110,0.15); }
+  .c-tr { top:5px; right:5px; width:12px; height:12px; border-top:1px solid rgba(201,169,110,0.15); border-right:1px solid rgba(201,169,110,0.15); }
+  .c-bl { bottom:5px; left:5px; width:12px; height:12px; border-bottom:1px solid rgba(201,169,110,0.15); border-left:1px solid rgba(201,169,110,0.15); }
+  .c-br { bottom:5px; right:5px; width:12px; height:12px; border-bottom:1px solid rgba(201,169,110,0.15); border-right:1px solid rgba(201,169,110,0.15); }
+
+  .tag { display: inline-block; font-size: 9px; padding: 2px 8px; border-radius: 2px; letter-spacing: 0.04em; }
+  .tag-gold { background: rgba(201,169,110,0.08); border: 1px solid rgba(201,169,110,0.18); color: var(--gold); }
+  .tag-red { background: rgba(224,85,85,0.08); border: 1px solid rgba(224,85,85,0.15); color: var(--red); }
+
+  .item-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 10px; background: var(--bg3);
+    border: 1px solid rgba(255,255,255,0.03); border-radius: 3px;
+    margin-bottom: 3px; cursor: pointer; transition: all 0.15s;
+  }
+  .item-row:hover { border-color: rgba(201,169,110,0.15); }
+  .item-icon {
+    width: 24px; height: 24px; border-radius: 3px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; flex-shrink: 0;
+  }
+  .item-info { flex:1; min-width:0; }
+  .item-name { font-size: 10px; color: var(--t1); font-weight: 700; }
+  .item-meta { font-size: 8px; color: var(--t3); margin-top: 1px; }
+  .item-stat {
+    font-size: 9px; font-weight: 700; text-align: center;
+    padding: 2px 6px; border-radius: 2px; flex-shrink: 0;
+  }
+  .roll-sm {
+    width: 22px; height: 22px; border-radius: 3px;
+    border: 1px solid rgba(201,169,110,0.12); background: transparent;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; color: var(--gold); cursor: pointer;
+    transition: all 0.15s; flex-shrink: 0;
+  }
+  .roll-sm:hover { border-color: rgba(201,169,110,0.35); box-shadow: 0 0 8px -3px rgba(201,169,110,0.2); }
+
+  .field-lbl { font-size: 8px; color: var(--gold); letter-spacing: 0.1em; margin-bottom: 4px; }
+  .field-textarea {
+    width: 100%; padding: 7px 10px; min-height: 32px;
+    background: var(--bg3); border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 3px; color: var(--t3); font-family: 'Monaspace Krypton', monospace;
+    font-size: 10px; line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════ -->
+<!-- FIX 1: CARRY AS SLOTS             -->
+<!-- ═══════════════════════════════════ -->
+<div>
+  <h2>Fix 1 — Carry as Slots</h2>
+  <p class="sub">Segmented squares grouped by 4 (matching STR+4 formula), not a bar</p>
+</div>
+
+<div class="frame" style="width:440px;">
+  <div class="corner c-tl"></div><div class="corner c-tr"></div>
+  <div class="corner c-bl"></div><div class="corner c-br"></div>
+  <div class="accent-top"></div>
+  <div style="padding:14px 16px;">
+
+    <!-- Carry slots -->
+    <div style="display:flex; align-items:center; gap:8px; padding:8px 10px; background:var(--bg2); border:1px solid rgba(201,169,110,0.06); border-radius:3px; margin-bottom:12px;">
+      <span style="font-size:8px; color:var(--gold); letter-spacing:0.12em;">CARRY</span>
+      <div style="display:flex; gap:1px; margin-right:3px;">
+        <!-- Group of 4 (STR) -->
+        <div style="width:8px; height:12px; border-radius:1.5px; background:var(--gold);"></div>
+        <div style="width:8px; height:12px; border-radius:1.5px; background:var(--gold);"></div>
+        <div style="width:8px; height:12px; border-radius:1.5px; background:var(--gold);"></div>
+        <div style="width:8px; height:12px; border-radius:1.5px; background:var(--gold);"></div>
+      </div>
+      <div style="width:1px; height:10px; background:rgba(201,169,110,0.1);"></div>
+      <div style="display:flex; gap:1px;">
+        <!-- Group of 4 (+4 base) -->
+        <div style="width:8px; height:12px; border-radius:1.5px; background:var(--gold);"></div>
+        <div style="width:8px; height:12px; border-radius:1.5px; border:1px solid rgba(201,169,110,0.2);"></div>
+        <div style="width:8px; height:12px; border-radius:1.5px; border:1px solid rgba(201,169,110,0.2);"></div>
+        <div style="width:8px; height:12px; border-radius:1.5px; border:1px solid rgba(201,169,110,0.2);"></div>
+      </div>
+      <span style="font-size:9px; color:var(--t1); font-weight:700; margin-left:auto;">5 <span style="color:var(--t3); font-weight:400;">/ 8</span></span>
+    </div>
+
+    <!-- Supply -->
+    <div style="display:flex; align-items:center; gap:8px; padding:8px 10px; background:var(--bg3); border:1px solid rgba(201,169,110,0.08); border-radius:3px; margin-bottom:12px;">
+      <div style="width:24px; height:24px; border-radius:3px; background:rgba(201,169,110,0.08); display:flex; align-items:center; justify-content:center; color:var(--gold); font-size:12px;">⬡</div>
+      <span style="font-size:10px; color:var(--gold); font-weight:700;">SUPPLY</span>
+      <div style="display:flex; gap:1px; margin-left:auto; margin-right:3px;">
+        <div style="display:flex; gap:1px; margin-right:4px;">
+          <div style="width:6px; height:10px; border-radius:1px; background:var(--gold);"></div>
+          <div style="width:6px; height:10px; border-radius:1px; background:var(--gold);"></div>
+          <div style="width:6px; height:10px; border-radius:1px; background:var(--gold);"></div>
+          <div style="width:6px; height:10px; border-radius:1px; background:var(--gold);"></div>
+          <div style="width:6px; height:10px; border-radius:1px; background:var(--gold);"></div>
+        </div>
+        <div style="display:flex; gap:1px;">
+          <div style="width:6px; height:10px; border-radius:1px; background:var(--gold);"></div>
+          <div style="width:6px; height:10px; border-radius:1px; background:var(--gold);"></div>
+          <div style="width:6px; height:10px; border-radius:1px; border:1px solid rgba(201,169,110,0.2);"></div>
+          <div style="width:6px; height:10px; border-radius:1px; border:1px solid rgba(201,169,110,0.2);"></div>
+          <div style="width:6px; height:10px; border-radius:1px; border:1px solid rgba(201,169,110,0.2);"></div>
+        </div>
+      </div>
+      <span style="font-size:9px; color:var(--t1); font-weight:700;">7</span>
+    </div>
+
+    <!-- Weapons -->
+    <div class="sec-h"><span>WEAPONS</span><div class="line"></div></div>
+
+    <div class="item-row">
+      <div class="item-icon" style="background:rgba(224,85,85,0.08); color:var(--red);">⚔</div>
+      <div class="item-info">
+        <div class="item-name">Standard Pistol</div>
+        <div class="item-meta">Ranged · Medium · <span class="tag-red" style="font-size:7px; padding:0 4px;">Loud</span></div>
+      </div>
+      <div class="item-stat" style="background:rgba(224,85,85,0.06); color:var(--red);">DMG 3</div>
+      <div class="item-stat" style="background:rgba(224,85,85,0.06); color:var(--red);">CRIT 4</div>
+      <div style="display:flex; gap:2px; flex-shrink:0;" title="Gear Bonus +2">
+        <div class="pip pip-f"></div><div class="pip pip-f"></div><div class="pip pip-e"></div>
+      </div>
+      <div class="roll-sm" title="Roll Attack">⬡</div>
+    </div>
+
+    <div class="item-row">
+      <div class="item-icon" style="background:rgba(224,85,85,0.08); color:var(--red);">🗡</div>
+      <div class="item-info">
+        <div class="item-name">Knife</div>
+        <div class="item-meta">Melee · Light</div>
+      </div>
+      <div class="item-stat" style="background:rgba(224,85,85,0.06); color:var(--red);">DMG 2</div>
+      <div class="item-stat" style="background:rgba(224,85,85,0.06); color:var(--red);">CRIT 6</div>
+      <div style="display:flex; gap:2px; flex-shrink:0;" title="Gear Bonus +1">
+        <div class="pip pip-f"></div><div class="pip pip-e"></div><div class="pip pip-e"></div>
+      </div>
+      <div class="roll-sm" title="Roll Attack">⬡</div>
+    </div>
+
+  </div>
+</div>
+
+<div class="sep"></div>
+
+<!-- ═══════════════════════════════════ -->
+<!-- FIX 2: WEAPON SHEET — CRIT = DMG  -->
+<!-- ═══════════════════════════════════ -->
+<div>
+  <h2>Fix 2 — Weapon Sheet Crit Prominence</h2>
+  <p class="sub">Damage and Crit at equal size and visual weight, both red</p>
+</div>
+
+<div class="frame" style="width:320px;">
+  <div class="corner c-tl"></div><div class="corner c-tr"></div>
+  <div class="corner c-bl"></div><div class="corner c-br"></div>
+  <div style="height:2px; background:linear-gradient(90deg,transparent,rgba(224,85,85,0.3),transparent);"></div>
+
+  <div style="padding:14px 16px;">
+    <!-- Item header -->
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid rgba(224,85,85,0.06);">
+      <div style="width:36px; height:36px; border-radius:4px; background:rgba(224,85,85,0.06); border:1px solid rgba(224,85,85,0.15); display:flex; align-items:center; justify-content:center;">
+        <span style="font-size:16px;">🔫</span>
+      </div>
+      <div style="flex:1;">
+        <div style="font-size:7px; color:var(--red); letter-spacing:0.12em;">WEAPON — RANGED</div>
+        <div style="font-size:14px; color:var(--t1); font-weight:700;">Standard Pistol</div>
+      </div>
+    </div>
+
+    <!-- Stats — DMG and CRIT equal prominence -->
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:4px; margin-bottom:12px;">
+      <div style="background:var(--bg3); border:1px solid rgba(224,85,85,0.12); border-radius:3px; padding:8px 4px; text-align:center;">
+        <div style="font-size:7px; color:var(--red); letter-spacing:0.1em;">DAMAGE</div>
+        <div style="font-size:22px; color:var(--red); font-weight:700; line-height:1.1;">3</div>
+      </div>
+      <div style="background:var(--bg3); border:1px solid rgba(224,85,85,0.12); border-radius:3px; padding:8px 4px; text-align:center;">
+        <div style="font-size:7px; color:var(--red); letter-spacing:0.1em;">CRIT</div>
+        <div style="font-size:22px; color:var(--red); font-weight:700; line-height:1.1;">4</div>
+      </div>
+      <div style="background:var(--bg3); border:1px solid var(--border); border-radius:3px; padding:8px 4px; text-align:center;">
+        <div style="font-size:7px; color:var(--gold); letter-spacing:0.1em;">RANGE</div>
+        <div style="font-size:14px; color:var(--t1); font-weight:700; line-height:1.6;">Medium</div>
+      </div>
+    </div>
+
+    <!-- Gear bonus -->
+    <div style="margin-bottom:10px;">
+      <div class="field-lbl">GEAR BONUS</div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <div style="display:flex; gap:3px;">
+          <div class="pip pip-f"></div><div class="pip pip-f"></div><div class="pip pip-e"></div>
+        </div>
+        <span style="font-size:10px; color:var(--t1); font-weight:700;">+2</span>
+        <span style="font-size:8px; color:var(--t3);">/ 3 max</span>
+      </div>
+    </div>
+
+    <!-- Weight & Properties -->
+    <div style="display:flex; gap:8px; margin-bottom:10px;">
+      <div>
+        <div class="field-lbl">WEIGHT</div>
+        <span class="tag tag-gold">1 slot</span>
+      </div>
+      <div>
+        <div class="field-lbl">PROPERTIES</div>
+        <span class="tag tag-red">Loud</span>
+      </div>
+    </div>
+
+    <!-- Notes -->
+    <div>
+      <div class="field-lbl">NOTES</div>
+      <div class="field-textarea">1911, Glock, revolver — era-appropriate.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Summary -->
+<div style="max-width:440px; padding:12px 16px; background:rgba(201,169,110,0.03); border:1px solid rgba(201,169,110,0.08); border-radius:6px; font-size:11px; line-height:1.7; color:var(--t2);">
+  <strong style="color:var(--t1);">Changes</strong>
+  <ul style="padding-left:16px; margin-top:6px;">
+    <li><strong>Carry</strong> — segmented slot squares grouped by 4 (STR | +4 base), filled/empty. Same visual language as Body/Mind/Soul tracks.</li>
+    <li><strong>Weapon row</strong> — DMG and CRIT now both shown as equal red stat badges side by side.</li>
+    <li><strong>Weapon sheet</strong> — DAMAGE and CRIT are identical size (22px), both red, same border color. Equal visual weight.</li>
+  </ul>
+</div>
+
+</body>
+</html>
