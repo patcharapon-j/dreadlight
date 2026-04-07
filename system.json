@@ -42,9 +42,9 @@
   "primaryTokenAttribute": "tracks.body",
   "secondaryTokenAttribute": "tracks.mind",
   "socket": false,
-  "url": "",
-  "manifest": "",
-  "download": "",
+  "url": "https://github.com/patcharapon-j/dreadlight",
+  "manifest": "https://github.com/patcharapon-j/dreadlight/releases/latest/download/system.json",
+  "download": "https://github.com/patcharapon-j/dreadlight/releases/download/v0.1.0/dreadlight-v0.1.0.zip",
   "packs": [
     {
       "name": "talents",
