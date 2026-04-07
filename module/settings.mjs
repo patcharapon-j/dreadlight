@@ -24,16 +24,6 @@ export function registerSettings() {
     range: { min: 1, max: 10, step: 1 },
   });
 
-  game.settings.register("dreadlight", "pushDreadGain", {
-    name: "DREADLIGHT.SettingPushDreadGain",
-    hint: "DREADLIGHT.SettingPushDreadGainHint",
-    scope: "world",
-    config: true,
-    type: Number,
-    default: 1,
-    range: { min: 0, max: 5, step: 1 },
-  });
-
   game.settings.register("dreadlight", "failureDreadGain", {
     name: "DREADLIGHT.SettingFailureDreadGain",
     hint: "DREADLIGHT.SettingFailureDreadGainHint",
