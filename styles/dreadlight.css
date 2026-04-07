@@ -3914,6 +3914,7 @@
   border-radius: 4px;
   padding: 6px 16px 6px 12px;
   user-select: none;
+  pointer-events: auto;
   backdrop-filter: blur(8px);
   transition: border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1),
               box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1),
@@ -3983,16 +3984,30 @@
 }
 
 .dreadlight.omen-tracker[data-omen="0"] .omen-icon {
-  color: var(--dl-text-muted);
+  color: #6e6e82;
   filter: none;
 }
 
 .dreadlight.omen-tracker[data-omen="0"] .omen-value {
-  color: var(--dl-text-muted);
+  color: #6e6e82;
   text-shadow: none;
 }
 
+.dreadlight.omen-tracker[data-omen="0"] .omen-label {
+  color: #6e6e82;
+}
+
+/* --- Escalation: Active (omen 1–4) --- */
+
+.dreadlight.omen-tracker[data-omen="active"] .omen-label {
+  color: #8e8ea3;
+}
+
 /* --- Escalation: High (omen >= 5) --- */
+
+.dreadlight.omen-tracker[data-omen="high"] .omen-label {
+  color: #8e8ea3;
+}
 
 .dreadlight.omen-tracker[data-omen="high"] {
   border-color: rgba(224, 85, 85, 0.5);

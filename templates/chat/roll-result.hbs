@@ -1,8 +1,9 @@
-<div class="dreadlight-chat chat-{{outcome}} {{#if pushed}}pushed{{/if}}">
+<div class="dreadlight-chat {{#if direFailure}}chat-dire{{else}}chat-{{outcome}}{{/if}} {{#if pushed}}pushed{{/if}}" data-sixes="{{totalSixes}}">
   <div class="chat-accent"></div>
 
   <div class="chat-header {{#unless showPortrait}}no-portrait{{/unless}}">
     {{#if showPortrait}}
+    <div class="chat-portrait-bg"></div>
     <div class="chat-portrait" style="background-image: url('{{actorImg}}'); transform: translate({{portraitChat.offsetX}}px, {{portraitChat.offsetY}}px) scale({{portraitChat.zoom}});"></div>
     <div class="chat-portrait-fade"></div>
     {{/if}}
@@ -55,7 +56,7 @@
       <span class="result-label">
         {{#if (eq outcome "success")}}{{localize "DREADLIGHT.ResultSuccess"}}{{/if}}
         {{#if (eq outcome "tainted")}}{{localize "DREADLIGHT.ResultTaintedSuccess"}}{{/if}}
-        {{#if (eq outcome "failure")}}{{#if direFailure}}{{localize "DREADLIGHT.ResultDireFailure"}}{{else}}{{localize "DREADLIGHT.ResultFailure"}}{{/if}}{{/if}}
+        {{#if direFailure}}{{localize "DREADLIGHT.ResultDireFailure"}}{{else if (eq outcome "failure")}}{{localize "DREADLIGHT.ResultFailure"}}{{/if}}
       </span>
 
       <span class="result-count">
