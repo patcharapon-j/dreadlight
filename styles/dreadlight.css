@@ -1053,7 +1053,7 @@
   display: inline-block !important;
 }
 
-.dreadlight .tab {
+.dreadlight .tab-bar > .tab {
   padding: 6px 14px;
   font-size: 10px;
   font-family: var(--dl-font-primary);
@@ -1068,16 +1068,16 @@
   border-right: none;
 }
 
-.dreadlight .tab.active {
+.dreadlight .tab-bar > .tab.active {
   color: var(--dl-accent-gold);
   border-bottom-color: var(--dl-accent-gold);
 }
 
-.dreadlight .tab:not(.active) {
+.dreadlight .tab-bar > .tab:not(.active) {
   color: var(--dl-text-muted);
 }
 
-.dreadlight .tab:not(.active):hover {
+.dreadlight .tab-bar > .tab:not(.active):hover {
   color: var(--dl-text-secondary);
 }
 
@@ -1151,6 +1151,7 @@
 .dreadlight .talent-sub {
   font-size: 8px;
   color: var(--dl-text-muted);
+  text-transform: uppercase;
 }
 
 .dreadlight .talent-sub.occult {
@@ -1796,6 +1797,48 @@
   gap: 4px;
 }
 
+.dreadlight .attr-checkbox-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.dreadlight .attr-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 2px;
+  background: var(--dl-bg-card);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.dreadlight .attr-checkbox:hover {
+  border-color: rgba(201, 169, 110, 0.25);
+}
+
+.dreadlight .attr-checkbox.checked {
+  background: rgba(201, 169, 110, 0.08);
+  border-color: rgba(201, 169, 110, 0.18);
+}
+
+.dreadlight .attr-checkbox input[type="checkbox"] {
+  display: none;
+}
+
+.dreadlight .attr-checkbox-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--dl-text-muted);
+}
+
+.dreadlight .attr-checkbox.checked .attr-checkbox-label {
+  color: var(--dl-accent-gold);
+}
+
 .dreadlight .field-textarea {
   width: 100%;
   padding: 7px 10px;
@@ -1821,6 +1864,7 @@
   padding: 2px 8px;
   border-radius: 2px;
   letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .dreadlight .tag-gold {
@@ -2073,6 +2117,106 @@
   border-color: rgba(201, 169, 110, 0.3);
   color: var(--dl-accent-gold);
   font-weight: 700;
+}
+
+/* ── Injury Penalties ── */
+.dreadlight-roll-form .injury-penalty-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dreadlight-roll-form .injury-penalty-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px;
+  border-radius: 2px;
+  background: var(--dl-bg-card);
+  border: 1px solid rgba(224, 85, 85, 0.06);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--dl-font-primary);
+}
+
+.dreadlight-roll-form .injury-penalty-row:hover {
+  border-color: rgba(224, 85, 85, 0.2);
+  background: rgba(224, 85, 85, 0.04);
+}
+
+.dreadlight-roll-form .injury-penalty-row:has(:checked) {
+  background: rgba(224, 85, 85, 0.1);
+  border-color: rgba(224, 85, 85, 0.3);
+}
+
+.dreadlight-roll-form .injury-toggle,
+.dreadlight-roll-form .injury-toggle::before,
+.dreadlight-roll-form .injury-toggle::after {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  pointer-events: none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.dreadlight-roll-form .injury-penalty-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  border: 1px solid rgba(224, 85, 85, 0.25);
+  background: transparent;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  position: relative;
+}
+
+.dreadlight-roll-form .injury-penalty-row:has(:checked) .injury-penalty-indicator {
+  background: var(--dl-accent-red);
+  border-color: var(--dl-accent-red);
+}
+
+.dreadlight-roll-form .injury-penalty-row:has(:checked) .injury-penalty-indicator::after {
+  content: '✓';
+  position: absolute;
+  top: -1px;
+  left: 1px;
+  font-size: 8px;
+  color: #fff;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.dreadlight-roll-form .injury-penalty-name {
+  font-size: 10px;
+  color: var(--dl-text-muted);
+  flex: 1;
+  transition: color 0.15s;
+}
+
+.dreadlight-roll-form .injury-penalty-row:has(:checked) .injury-penalty-name {
+  color: var(--dl-accent-red);
+  font-weight: 700;
+}
+
+.dreadlight-roll-form .injury-penalty-value {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--dl-text-muted);
+  background: rgba(224, 85, 85, 0.08);
+  border-radius: 2px;
+  padding: 1px 5px;
+  letter-spacing: 0.02em;
+  transition: all 0.15s;
+}
+
+.dreadlight-roll-form .injury-penalty-row:has(:checked) .injury-penalty-value {
+  color: var(--dl-accent-red);
+  background: rgba(224, 85, 85, 0.15);
 }
 
 /* ── Pool Preview ── */
@@ -3262,6 +3406,128 @@
   color: var(--dl-accent-red);
 }
 
+.dreadlight .injury-penalty-badge {
+  font-size: 8px;
+  font-weight: 700;
+  color: var(--dl-accent-red);
+  background: rgba(224, 85, 85, 0.1);
+  border: 1px solid rgba(224, 85, 85, 0.2);
+  border-radius: 3px;
+  padding: 0 4px;
+  line-height: 1.6;
+  flex-shrink: 0;
+}
+
+.dreadlight .injury-input {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--dl-border-subtle);
+  border-radius: 2px;
+  color: var(--dl-text-primary);
+  font-family: var(--dl-font-primary);
+  padding: 2px 4px;
+}
+
+.dreadlight .injury-input:focus {
+  border-color: var(--dl-accent-gold);
+  outline: none;
+}
+
+.dreadlight .injury-input-name {
+  font-size: 10px;
+  font-weight: 700;
+  flex: 1;
+  min-width: 0;
+}
+
+.dreadlight .injury-input-effect {
+  font-size: 9px;
+  color: var(--dl-text-secondary);
+  line-height: 1.4;
+  margin-top: 2px;
+  width: 100%;
+  resize: vertical;
+  field-sizing: content;
+}
+
+.dreadlight .injury-edit-row {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+  align-items: center;
+}
+
+.dreadlight .injury-edit-field {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.dreadlight .injury-edit-label {
+  font-size: 7px;
+  color: var(--dl-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.dreadlight .injury-input-heal {
+  font-size: 9px;
+  width: 100px;
+  flex: 1;
+}
+
+.dreadlight .injury-input-penalty {
+  font-size: 9px;
+  width: 36px;
+  text-align: center;
+}
+
+.dreadlight .injury-edit-lethal {
+  margin-left: auto;
+  cursor: pointer;
+}
+
+.dreadlight .injury-edit-lethal input[type="checkbox"] {
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  overflow: hidden;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  white-space: nowrap;
+}
+
+.dreadlight .injury-edit-lethal .injury-lethal-check {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  border: 1px solid rgba(224, 85, 85, 0.25);
+  background: transparent;
+  display: inline-block;
+  vertical-align: middle;
+  transition: all 0.15s;
+  position: relative;
+}
+
+.dreadlight .injury-edit-lethal input[type="checkbox"]:checked + .injury-lethal-check {
+  background: var(--dl-accent-red);
+  border-color: var(--dl-accent-red);
+}
+
+.dreadlight .injury-edit-lethal input[type="checkbox"]:checked + .injury-lethal-check::after {
+  content: '✓';
+  position: absolute;
+  top: -1px;
+  left: 1px;
+  font-size: 8px;
+  color: #fff;
+  font-weight: 700;
+  line-height: 1;
+}
+
 .dreadlight .injuries-empty {
   font-size: 9px;
   color: var(--dl-text-muted);
@@ -4020,4 +4286,646 @@
 
 .dreadlight.omen-tracker[data-omen="high"] .omen-icon {
   filter: drop-shadow(0 0 6px rgba(224, 85, 85, 0.7));
+}
+
+/* ============================================================
+   NPC SHEET
+   ============================================================ */
+
+.dreadlight.npc {
+  background: #08080c;
+  color: #ccc;
+  font-family: "Monaspace Krypton", "Courier New", monospace;
+}
+
+.dreadlight.npc .sheet-header.npc-header {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  background: #0e0e14;
+  border-bottom: 1px solid #1a1a24;
+}
+
+.dreadlight.npc .portrait-figure {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  border: 1px solid #c9a96e;
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.dreadlight.npc .portrait-figure img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dreadlight.npc .portrait-edit-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.dreadlight.npc .portrait-figure:hover .portrait-edit-overlay {
+  opacity: 1;
+}
+
+.dreadlight.npc .header-identity {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dreadlight.npc .name-input {
+  background: transparent;
+  border: none;
+  color: #c9a96e;
+  font-size: 16px;
+  letter-spacing: 1px;
+  font-family: inherit;
+  padding: 0;
+}
+
+.dreadlight.npc .tier-select {
+  background: #1a1a24;
+  border: 1px solid #333;
+  color: #888;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-family: inherit;
+  letter-spacing: 0.5px;
+  width: auto;
+}
+
+.dreadlight.npc .appearance-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #1a1a24;
+  color: #777;
+  font-size: 12px;
+  font-style: italic;
+  font-family: inherit;
+  padding: 2px 0;
+}
+
+/* NPC Key Stats (Important tier) */
+.dreadlight.npc .npc-key-stats {
+  padding: 12px 16px;
+}
+
+.dreadlight.npc .key-attr-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.dreadlight.npc .key-attr-entry {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.dreadlight.npc .key-attr-roll {
+  background: #1a1a24;
+  border: 1px solid #333;
+  padding: 6px 10px;
+  border-radius: 3px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.dreadlight.npc .key-attr-roll:hover {
+  border-color: #c9a96e;
+}
+
+.dreadlight.npc .key-attr-roll .attr-abbr {
+  color: #555;
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+.dreadlight.npc .key-attr-roll .attr-value {
+  color: #c9a96e;
+  font-size: 18px;
+}
+
+.dreadlight.npc .key-attr-select,
+.dreadlight.npc .key-attr-value-input {
+  background: #111118;
+  border: 1px solid #2a2a35;
+  color: #888;
+  font-size: 11px;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: inherit;
+  width: 50px;
+}
+
+.dreadlight.npc .key-talent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dreadlight.npc .key-talent-entry {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dreadlight.npc .key-talent-name {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #1a1a24;
+  color: #ccc;
+  font-size: 12px;
+  font-family: inherit;
+  flex: 1;
+  padding: 2px 0;
+}
+
+.dreadlight.npc .key-talent-level-input {
+  background: #111118;
+  border: 1px solid #2a2a35;
+  color: #c9a96e;
+  font-size: 12px;
+  width: 36px;
+  text-align: center;
+  border-radius: 3px;
+  font-family: inherit;
+}
+
+/* NPC Tracks */
+.dreadlight.npc .npc-tracks {
+  display: flex;
+  gap: 16px;
+  padding: 12px 16px;
+}
+
+.dreadlight.npc .npc-tracks .track-col {
+  flex: 1;
+}
+
+/* NPC Major Body */
+.dreadlight.npc .npc-major-body {
+  padding: 12px 16px;
+}
+
+/* NPC Items */
+.dreadlight.npc .npc-items {
+  margin-top: 8px;
+}
+
+/* NPC Gear (Important tier) */
+.dreadlight.npc .npc-gear {
+  padding: 0 16px 12px;
+}
+
+/* NPC Notes */
+.dreadlight.npc .npc-notes {
+  padding: 12px 16px;
+}
+
+.dreadlight.npc .notes-editor {
+  min-height: 60px;
+}
+
+/* Shared buttons */
+.dreadlight.npc .add-btn,
+.dreadlight.creature .add-btn {
+  background: transparent;
+  border: 1px dashed #333;
+  color: #555;
+  font-size: 11px;
+  padding: 4px 12px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-family: inherit;
+  letter-spacing: 0.5px;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.dreadlight.npc .add-btn:hover,
+.dreadlight.creature .add-btn:hover {
+  color: #c9a96e;
+  border-color: #c9a96e;
+}
+
+.dreadlight.npc .remove-btn,
+.dreadlight.creature .remove-btn {
+  background: transparent;
+  border: none;
+  color: #555;
+  cursor: pointer;
+  padding: 2px 6px;
+  transition: color 0.2s;
+}
+
+.dreadlight.npc .remove-btn:hover,
+.dreadlight.creature .remove-btn:hover {
+  color: #e05555;
+}
+
+/* ============================================================
+   CREATURE SHEET
+   ============================================================ */
+
+.dreadlight.creature {
+  background: #08080c;
+  color: #ccc;
+  font-family: "Monaspace Krypton", "Courier New", monospace;
+}
+
+.dreadlight.creature .creature-accent {
+  background: linear-gradient(90deg, transparent, #e05555, transparent) !important;
+}
+
+.dreadlight.creature .sheet-header.creature-header {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  background: #0e0e14;
+  border-bottom: 1px solid #1a1a24;
+}
+
+.dreadlight.creature .creature-portrait {
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+  border: 1px solid #e05555;
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.dreadlight.creature .creature-portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dreadlight.creature .portrait-edit-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.dreadlight.creature .creature-portrait:hover .portrait-edit-overlay {
+  opacity: 1;
+}
+
+.dreadlight.creature .header-identity {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dreadlight.creature .creature-name {
+  background: transparent;
+  border: none;
+  color: #e05555;
+  font-size: 18px;
+  letter-spacing: 2px;
+  font-weight: bold;
+  font-family: inherit;
+  padding: 0;
+}
+
+.dreadlight.creature .threat-select {
+  background: #1a1a24;
+  border: 1px solid #333;
+  color: #888;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-family: inherit;
+  letter-spacing: 0.5px;
+  width: auto;
+}
+
+.dreadlight.creature .appearance-textarea {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #1a1a24;
+  color: #777;
+  font-size: 12px;
+  font-style: italic;
+  font-family: inherit;
+  padding: 4px 0;
+  resize: none;
+  line-height: 1.4;
+}
+
+/* Creature Attributes */
+.dreadlight.creature .creature-attributes {
+  padding: 12px 16px 0;
+}
+
+.dreadlight.creature .creature-attr-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.dreadlight.creature .creature-attr-cell {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #1a1a24;
+  border: 1px solid #333;
+  padding: 6px 10px;
+  border-radius: 3px;
+}
+
+.dreadlight.creature .creature-attr-select {
+  background: transparent;
+  border: none;
+  color: #555;
+  font-size: 9px;
+  letter-spacing: 1px;
+  font-family: inherit;
+  width: 48px;
+}
+
+.dreadlight.creature .creature-attr-value {
+  background: transparent;
+  border: none;
+  color: #c9a96e;
+  font-size: 18px;
+  text-align: center;
+  width: 32px;
+  font-family: inherit;
+}
+
+/* Creature Body + Armor */
+.dreadlight.creature .creature-body-armor {
+  display: flex;
+  gap: 16px;
+  padding: 12px 16px;
+  align-items: flex-start;
+}
+
+.dreadlight.creature .creature-body {
+  flex: 1;
+}
+
+.dreadlight.creature .body-max-edit {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.dreadlight.creature .body-max-edit label {
+  color: #555;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+}
+
+.dreadlight.creature .body-max-input {
+  background: #111118;
+  border: 1px solid #2a2a35;
+  color: #888;
+  font-size: 11px;
+  width: 40px;
+  text-align: center;
+  border-radius: 3px;
+  font-family: inherit;
+}
+
+.dreadlight.creature .creature-armor {
+  text-align: center;
+}
+
+.dreadlight.creature .creature-armor .section-label {
+  color: #555;
+  font-size: 10px;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.dreadlight.creature .armor-value-input {
+  background: #1a1a24;
+  border: 1px solid #333;
+  color: #c9a96e;
+  font-size: 20px;
+  width: 48px;
+  text-align: center;
+  border-radius: 3px;
+  padding: 8px;
+  font-family: inherit;
+}
+
+/* Creature Attacks */
+.dreadlight.creature .creature-attacks {
+  padding: 0 16px;
+}
+
+.dreadlight.creature .creature-section-header span {
+  color: #e05555;
+}
+
+.dreadlight.creature .attack-card {
+  background: #111118;
+  border: 1px solid #2a2a35;
+  border-radius: 4px;
+  padding: 12px;
+  margin-bottom: 8px;
+}
+
+.dreadlight.creature .attack-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.dreadlight.creature .attack-name-input {
+  background: transparent;
+  border: none;
+  color: #ddd;
+  font-size: 14px;
+  font-family: inherit;
+  flex: 1;
+  padding: 0;
+}
+
+.dreadlight.creature .attack-stats {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.dreadlight.creature .attack-stat {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.dreadlight.creature .attack-stat-label {
+  color: #555;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+}
+
+.dreadlight.creature .attack-stat-value {
+  color: #c9a96e;
+  font-size: 14px;
+}
+
+.dreadlight.creature .attack-attr-select {
+  background: #1a1a24;
+  border: 1px solid #333;
+  color: #888;
+  font-size: 11px;
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-family: inherit;
+}
+
+.dreadlight.creature .attack-stat-input {
+  background: #1a1a24;
+  border: 1px solid #333;
+  color: #c9a96e;
+  font-size: 12px;
+  width: 36px;
+  text-align: center;
+  border-radius: 3px;
+  font-family: inherit;
+}
+
+.dreadlight.creature .attack-range-select {
+  background: #1a1a24;
+  border: 1px solid #333;
+  color: #888;
+  font-size: 11px;
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-family: inherit;
+}
+
+.dreadlight.creature .roll-attack-btn {
+  background: #e05555;
+  color: #08080c;
+  border: none;
+  padding: 4px 16px;
+  border-radius: 3px;
+  font-size: 11px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+
+.dreadlight.creature .roll-attack-btn:hover {
+  background: #f06666;
+}
+
+/* Creature Soul Damage */
+.dreadlight.creature .creature-soul-damage {
+  padding: 8px 16px;
+}
+
+.dreadlight.creature .soul-section-header span {
+  color: #a88bf5;
+}
+
+.dreadlight.creature .soul-damage-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.dreadlight.creature .soul-damage-value {
+  background: #1a1a24;
+  border: 1px solid #a88bf5;
+  color: #a88bf5;
+  font-size: 20px;
+  width: 48px;
+  text-align: center;
+  border-radius: 3px;
+  padding: 4px;
+  font-family: inherit;
+}
+
+.dreadlight.creature .soul-damage-desc {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #1a1a24;
+  color: #888;
+  font-size: 12px;
+  font-family: inherit;
+  flex: 1;
+  padding: 2px 0;
+}
+
+/* Creature Abilities, Weakness, Notes */
+.dreadlight.creature .creature-abilities,
+.dreadlight.creature .creature-weakness,
+.dreadlight.creature .creature-notes {
+  padding: 8px 16px;
+}
+
+.dreadlight.creature .abilities-section-header span {
+  color: #c9a96e;
+}
+
+.dreadlight.creature .weakness-section-header span {
+  color: #55b87a;
+}
+
+.dreadlight.creature .abilities-editor,
+.dreadlight.creature .weakness-editor,
+.dreadlight.creature .notes-editor {
+  min-height: 50px;
+  background: #0c0c12;
+  border: 1px solid #1a1a24;
+  border-radius: 3px;
+  padding: 8px;
+}
+
+/* Shared section header styles for NPC + Creature */
+.dreadlight.npc .section-header,
+.dreadlight.creature .section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 6px;
+}
+
+.dreadlight.npc .section-header span,
+.dreadlight.creature .section-header span {
+  color: #555;
+  font-size: 10px;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+.dreadlight.npc .section-line,
+.dreadlight.creature .section-line {
+  flex: 1;
+  height: 1px;
+  background: #1a1a24;
 }
