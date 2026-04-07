@@ -168,6 +168,9 @@
   "DREADLIGHT.InjuriesNone": "No active injuries",
 
   "DREADLIGHT.AdhocRoll": "Ad-Hoc Roll",
+  "DREADLIGHT.Omen": "Omen",
+  "DREADLIGHT.SettingOmenPool": "Omen Pool",
+  "DREADLIGHT.SettingOmenPoolHint": "The GM's current Omen pool value.",
 
   "DREADLIGHT.SettingConditionPenalty": "Condition Dice Penalty",
   "DREADLIGHT.SettingConditionPenaltyHint": "Number of dice subtracted from a pool when the related condition is active.",

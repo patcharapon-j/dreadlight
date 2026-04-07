@@ -73,6 +73,18 @@ export function registerSettings() {
     range: { min: 5, max: 30, step: 1 },
   });
 
+  // --- Omen Pool (hidden, managed via HUD tracker) ---
+
+  game.settings.register("dreadlight", "omenPool", {
+    name: "DREADLIGHT.SettingOmenPool",
+    hint: "DREADLIGHT.SettingOmenPoolHint",
+    scope: "world",
+    config: false,
+    type: Number,
+    default: 0,
+    requiresReload: false,
+  });
+
   // --- Visual & Player-Facing Settings (client-scoped) ---
 
   game.settings.register("dreadlight", "showDreadVeins", {
