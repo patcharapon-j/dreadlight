@@ -15,7 +15,8 @@ export function registerDSN(dice3d) {
     background: "#1a1a1a",
     outline: "#000000",
     edge: "#333333",
-    material: "plastic",
+    material: "metal",
+    texture: "metal",
     font: FONT,
   });
 
@@ -28,7 +29,8 @@ export function registerDSN(dice3d) {
     background: "#8b2020",
     outline: "#4a1010",
     edge: "#c93030",
-    material: "plastic",
+    material: "metal",
+    texture: "metal",
     font: FONT,
   });
 
@@ -42,6 +44,7 @@ export function registerDSN(dice3d) {
     outline: "#8a7a55",
     edge: "#e8c97a",
     material: "metal",
+    texture: "metal",
     font: FONT,
   });
 
