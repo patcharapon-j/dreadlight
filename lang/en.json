@@ -152,5 +152,17 @@
   "DREADLIGHT.PortraitChange": "Change Image",
   "DREADLIGHT.PortraitRepositionSheet": "Reposition (Sheet)",
   "DREADLIGHT.PortraitRepositionChat": "Reposition (Chat Card)",
-  "DREADLIGHT.PortraitChatHint": "Drag to pan, scroll to zoom"
+  "DREADLIGHT.PortraitChatHint": "Drag to pan, scroll to zoom",
+  "DREADLIGHT.D66CriticalInjury": "CRITICAL INJURY",
+  "DREADLIGHT.D66Trauma": "TRAUMA",
+  "DREADLIGHT.D66Manifestation": "SOUL MANIFESTATION",
+  "DREADLIGHT.D66RollCriticalInjury": "Roll Critical Injury",
+  "DREADLIGHT.D66RollTrauma": "Roll Trauma",
+  "DREADLIGHT.D66RollManifestation": "Roll Manifestation",
+  "DREADLIGHT.D66BrokenBody": "{name}'s Body is broken",
+  "DREADLIGHT.D66BrokenMind": "{name}'s Mind is broken",
+  "DREADLIGHT.D66BrokenSoul": "{name}'s Soul is broken",
+  "DREADLIGHT.D66HealTime": "Recovery",
+  "DREADLIGHT.D66Lethal": "LETHAL",
+  "DREADLIGHT.D66Result": "D66"
 }
