@@ -1,9 +1,11 @@
 <div class="dreadlight-chat chat-{{outcome}} {{#if pushed}}pushed{{/if}}">
   <div class="chat-accent"></div>
 
-  <div class="chat-header">
+  <div class="chat-header {{#unless showPortrait}}no-portrait{{/unless}}">
+    {{#if showPortrait}}
     <div class="chat-portrait" style="background-image: url('{{actorImg}}'); transform: translate({{portraitChat.offsetX}}px, {{portraitChat.offsetY}}px) scale({{portraitChat.zoom}});"></div>
     <div class="chat-portrait-fade"></div>
+    {{/if}}
     <div class="chat-name">{{actorName}}</div>
   </div>
 
@@ -67,15 +69,15 @@
       <div class="consequence consequence-dread">⬡ {{localize "DREADLIGHT.DreadGain"}} <strong>+{{dreadGained}}</strong></div>
     {{/if}}
 
-    {{#if (eq outcome "dire")}}
+    {{#if showDireFlavorText}}{{#if (eq outcome "dire")}}
       <div class="dire-flavor">{{localize "DREADLIGHT.DireFlavorText"}}</div>
-    {{/if}}
+    {{/if}}{{/if}}
 
     {{#if consequences}}
       {{#if consequences.mindLoss}}<div class="consequence consequence-mind">◈ <strong>−{{consequences.mindLoss}} {{localize "DREADLIGHT.PushCostMind"}}</strong></div>{{/if}}
       {{#if consequences.soulLoss}}<div class="consequence consequence-soul">◉ <strong>−{{consequences.soulLoss}} {{localize "DREADLIGHT.PushCostSoul"}}</strong></div>{{/if}}
       {{#if consequences.gearDamage}}<div class="consequence consequence-gear">⚙ <strong>{{localize "DREADLIGHT.PushCostGear"}} −{{consequences.gearDamage}}</strong></div>{{/if}}
-      <div class="consequence consequence-dread">⬡ {{localize "DREADLIGHT.DreadGain"}} <strong>+1</strong></div>
+      {{#if consequences.dreadGain}}<div class="consequence consequence-dread">⬡ {{localize "DREADLIGHT.DreadGain"}} <strong>+{{consequences.dreadGain}}</strong></div>{{/if}}
     {{/if}}
   </div>
 

@@ -2392,6 +2392,19 @@
   overflow: hidden;
 }
 
+.dreadlight-chat .chat-header.no-portrait {
+  height: auto;
+  min-height: 32px;
+  background: var(--dl-bg-primary);
+}
+
+.dreadlight-chat .chat-header.no-portrait .chat-name {
+  position: relative;
+  bottom: auto;
+  left: auto;
+  padding: 6px 10px;
+}
+
 .dreadlight-chat .chat-portrait {
   position: absolute;
   top: 0;
