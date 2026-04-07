@@ -14,6 +14,7 @@ import { registerAdhocRoller } from "./module/dice/adhoc-roller.mjs";
 import { registerHandlebarsHelpers } from "./module/helpers/handlebars.mjs";
 import { registerSettings } from "./module/settings.mjs";
 import { d66Tables } from "./module/data/d66-tables.mjs";
+import { OmenTracker } from "./module/apps/omen-tracker.mjs";
 
 Hooks.once("init", () => {
   console.log("Dreadlight | Initializing system");
@@ -120,6 +121,10 @@ Hooks.once("init", () => {
 });
 
 Hooks.once("diceSoNiceReady", (dice3d) => { registerDSN(dice3d); });
+
+Hooks.once("ready", () => {
+  OmenTracker.init();
+});
 
 Hooks.on("updateActor", (actor, changes, options, userId) => {
   // Only run for the user who made the change
