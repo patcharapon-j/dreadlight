@@ -14,10 +14,6 @@
         {{/each}}
       </select>
     </div>
-    {{#if (or (eq system.tier "important") (eq system.tier "major"))}}
-      <input class="appearance-input" type="text" name="system.appearance" value="{{system.appearance}}" placeholder="{{localize 'DREADLIGHT.Appearance'}}..." />
-    {{else}}
-      <input class="appearance-input" type="text" name="system.appearance" value="{{system.appearance}}" placeholder="{{localize 'DREADLIGHT.Appearance'}}..." />
-    {{/if}}
+    <input class="appearance-input" type="text" name="system.appearance" value="{{system.appearance}}" placeholder="{{localize 'DREADLIGHT.Appearance'}}..." />
   </div>
 </div>
