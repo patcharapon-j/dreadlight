@@ -1,5 +1,12 @@
 <div class="sheet-header">
   <div class="header-bg"></div>
+  {{#if anyBroken}}
+    <div class="broken-overlay" aria-hidden="true">
+      <div class="broken-text-track">BROKEN BROKEN BROKEN BROKEN BROKEN BROKEN BROKEN BROKEN BROKEN BROKEN BROKEN BROKEN</div>
+      <div class="broken-text-track reverse">BROKEN BROKEN BROKEN BROKEN BROKEN BROKEN BROKEN BROKEN BROKEN BROKEN BROKEN BROKEN</div>
+      <div class="broken-text-track">BROKEN BROKEN BROKEN BROKEN BROKEN BROKEN BROKEN BROKEN BROKEN BROKEN BROKEN BROKEN</div>
+    </div>
+  {{/if}}
   <figure class="portrait-figure">
     <img src="{{actor.img}}" alt="{{actor.name}}" style="transform: translate({{system.portrait.sheet.offsetX}}px, {{system.portrait.sheet.offsetY}}px) scale({{system.portrait.sheet.zoom}});" />
     {{#if editMode}}

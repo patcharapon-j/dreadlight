@@ -152,6 +152,9 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     context.mindPct = Math.round((system.tracks.mind.value / mindMax) * 100);
     context.soulPct = Math.round((system.tracks.soul.value / soulMax) * 100);
 
+    // Broken state
+    context.anyBroken = system.tracks.body.broken || system.tracks.mind.broken || system.tracks.soul.broken;
+
     // Tab group state
     context.tab = this.tabGroups.primary;
 
@@ -182,7 +185,14 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       btn.addEventListener("contextmenu", (ev) => {
         ev.preventDefault();
         const track = this.actor.system.tracks[trackKey];
-        if (track.value > 0) this.actor.update({ [`system.tracks.${trackKey}.value`]: track.value - 1 });
+        if (track.value > 0) {
+          const newVal = track.value - 1;
+          this.actor.update({ [`system.tracks.${trackKey}.value`]: newVal });
+          if (newVal === 0) InvestigatorSheet.#notifyBroken(this.actor, trackKey);
+        } else if (track.value === 0 && trackKey === "body") {
+          // Already broken body — further damage = automatic critical injury
+          InvestigatorSheet.#notifyCriticalWhileBroken(this.actor);
+        }
       });
     }
 
@@ -199,6 +209,9 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
         if (val > 0) this.actor.update({ "system.dread.value": val - 1 });
       });
     }
+
+    // Inject dread corruption veins SVG into the tracks bar
+    InvestigatorSheet.#injectDreadVeins(this.element);
 
     // Supply button: left-click = +1, right-click = −1
     const supplyBtn = this.element.querySelector(".track-btn.supply");
@@ -700,5 +713,202 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     const marks = foundry.utils.deepClone(this.actor.system.marks[trackKey] ?? []);
     marks.splice(index, 1);
     this.actor.update({ [`system.marks.${trackKey}`]: marks });
+  }
+
+  /* ---------------------------------------- */
+  /*  Broken Track Notifications              */
+  /* ---------------------------------------- */
+
+  static #notifyBroken(actor, trackKey) {
+    const locKey = {
+      body: "DREADLIGHT.BrokenBody",
+      mind: "DREADLIGHT.BrokenMind",
+      soul: "DREADLIGHT.BrokenSoul",
+    }[trackKey];
+    const msg = game.i18n.format(locKey, { name: actor.name });
+    ChatMessage.create({
+      speaker: ChatMessage.getSpeaker({ actor }),
+      content: `<div class="dreadlight-chat broken-alert"><p>${msg}</p></div>`,
+    });
+  }
+
+  static #notifyCriticalWhileBroken(actor) {
+    const msg = game.i18n.format("DREADLIGHT.BrokenBodyCritical", { name: actor.name });
+    ChatMessage.create({
+      speaker: ChatMessage.getSpeaker({ actor }),
+      content: `<div class="dreadlight-chat broken-alert"><p>${msg}</p></div>`,
+    });
+  }
+
+  /* ---------------------------------------- */
+  /*  Dread Corruption Veins                  */
+  /* ---------------------------------------- */
+
+  /**
+   * Inject an SVG overlay into the tracks bar with branching vein/crack paths
+   * that originate from the dread box border and wrap around the soul box.
+   */
+  static #injectDreadVeins(html) {
+    const tracksBar = html.querySelector(".tracks-bar");
+    if (!tracksBar || tracksBar.querySelector(".dread-veins")) return;
+
+    const dreadBox = tracksBar.querySelector(".track-btn.dread");
+    const soulBox = tracksBar.querySelector(".track-btn.soul");
+    if (!dreadBox || !soulBox) return;
+
+    const barRect = tracksBar.getBoundingClientRect();
+    const dreadRect = dreadBox.getBoundingClientRect();
+    const soulRect = soulBox.getBoundingClientRect();
+    const barW = barRect.width;
+    const barH = barRect.height;
+
+    // Dread box: left edge origin points
+    const ox = dreadRect.left - barRect.left;
+    const oy = dreadRect.top - barRect.top + dreadRect.height / 2;
+    const oyTop = dreadRect.top - barRect.top + 3;
+    const oyBot = dreadRect.bottom - barRect.top - 3;
+
+    // Soul box edges (target for wrapping)
+    const soulR = soulRect.right - barRect.left;   // right edge
+    const soulL = soulRect.left - barRect.left;     // left edge
+    const soulT = soulRect.top - barRect.top;       // top edge
+    const soulB = soulRect.bottom - barRect.top;    // bottom edge
+    const soulMidY = soulT + (soulB - soulT) / 2;
+
+    const svgNS = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(svgNS, "svg");
+    svg.classList.add("dread-veins");
+    svg.setAttribute("viewBox", `0 0 ${barW} ${barH}`);
+    svg.setAttribute("preserveAspectRatio", "none");
+
+    // Helper: jagged vein path with quadratic bezier segments
+    const veinPath = (startX, startY, segments, jitter, strokeW, opacity) => {
+      let d = `M ${startX} ${startY}`;
+      let cx = startX;
+      let cy = startY;
+      for (const seg of segments) {
+        const jx = (Math.random() - 0.5) * jitter;
+        const jy = (Math.random() - 0.5) * jitter;
+        const nx = cx + seg[0] + jx;
+        const ny = Math.max(1, Math.min(barH - 1, cy + seg[1] + jy));
+        const cpx = (cx + nx) / 2 + (Math.random() - 0.5) * jitter * 0.6;
+        const cpy = (cy + ny) / 2 + (Math.random() - 0.5) * jitter * 0.8;
+        d += ` Q ${cpx} ${cpy} ${nx} ${ny}`;
+        cx = nx;
+        cy = ny;
+      }
+      const path = document.createElementNS(svgNS, "path");
+      path.setAttribute("d", d);
+      path.setAttribute("stroke", `rgba(224, 85, 85, ${opacity})`);
+      path.setAttribute("stroke-width", strokeW);
+      return path;
+    };
+
+    // Helper: sub-branch
+    const branch = (startX, startY, dx, dy, strokeW, opacity) => {
+      const mx = startX + dx * 0.5 + (Math.random() - 0.5) * 3;
+      const my = startY + dy * 0.5 + (Math.random() - 0.5) * 3;
+      const path = document.createElementNS(svgNS, "path");
+      path.setAttribute("d", `M ${startX} ${startY} Q ${mx} ${my} ${startX + dx} ${startY + dy}`);
+      path.setAttribute("stroke", `rgba(224, 85, 85, ${opacity})`);
+      path.setAttribute("stroke-width", strokeW);
+      return path;
+    };
+
+    // Distance from dread left edge to soul box right edge
+    const gapToSoul = ox - soulR;
+
+    // ── Dread 1: tiny cracks from dread border, just hints ──
+    const g1 = document.createElementNS(svgNS, "g");
+    g1.classList.add("vein-group", "vein-d1");
+    g1.append(
+      veinPath(ox, oy - 2, [[-8, -2], [-6, 3]], 2, "1.2", 0.4),
+      veinPath(ox, oy + 3, [[-7, 2], [-5, -2]], 2, "0.8", 0.3),
+      branch(ox - 8, oy - 4, -4, -5, "0.6", 0.25),
+    );
+
+    // ── Dread 2: cracks reach toward the separator ──
+    const g2 = document.createElementNS(svgNS, "g");
+    g2.classList.add("vein-group", "vein-d2");
+    const sepX = ox - gapToSoul * 0.4;
+    g2.append(
+      veinPath(ox, oyTop, [[-10, -2], [-8, 3], [-7, -2]], 3, "1.3", 0.45),
+      veinPath(ox, oyBot, [[-9, 2], [-7, -3], [-6, 2]], 2, "1", 0.4),
+      branch(ox - 18, oyTop + 1, -5, -4, "0.7", 0.3),
+      branch(ox - 16, oyBot - 1, -5, 4, "0.7", 0.25),
+    );
+
+    // ── Dread 3: veins cross gap and touch soul box right edge ──
+    const g3 = document.createElementNS(svgNS, "g");
+    g3.classList.add("vein-group", "vein-d3");
+    // Main vein snaking from dread to soul right edge
+    const stepSize3 = gapToSoul / 4;
+    g3.append(
+      veinPath(ox, oy, [
+        [-stepSize3, -3], [-stepSize3, 4], [-stepSize3, -2], [-stepSize3, 1]
+      ], 3, "1.5", 0.5),
+      veinPath(ox, oyTop + 2, [
+        [-stepSize3, -2], [-stepSize3, 3], [-stepSize3, -3]
+      ], 3, "1.2", 0.4),
+      // Small branches at the soul box edge
+      branch(soulR + 2, oy + 1, 0, -6, "0.7", 0.3),
+      branch(soulR + 2, oy - 1, 0, 5, "0.7", 0.3),
+    );
+
+    // ── Dread 4: veins wrap around the soul box — top and bottom edges ──
+    const g4 = document.createElementNS(svgNS, "g");
+    g4.classList.add("vein-group", "vein-d4");
+    const soulW = soulR - soulL;
+    g4.append(
+      // Vein running along soul box top edge (right to left)
+      veinPath(soulR, soulT - 1, [
+        [-soulW * 0.25, -2], [-soulW * 0.25, 1], [-soulW * 0.25, -1]
+      ], 2, "1.3", 0.45),
+      // Vein running along soul box bottom edge (right to left)
+      veinPath(soulR, soulB + 1, [
+        [-soulW * 0.25, 2], [-soulW * 0.25, -1], [-soulW * 0.25, 1]
+      ], 2, "1.3", 0.45),
+      // Extra tendril reaching further along top
+      veinPath(soulR - soulW * 0.3, soulT - 2, [
+        [-soulW * 0.2, -1], [-soulW * 0.15, 1]
+      ], 2, "0.9", 0.35),
+      // Branches curling inward from top
+      branch(soulR - soulW * 0.2, soulT - 1, 0, 4, "0.6", 0.25),
+      branch(soulR - soulW * 0.5, soulT - 2, 0, 3, "0.6", 0.2),
+      // Branches curling inward from bottom
+      branch(soulR - soulW * 0.15, soulB + 1, 0, -4, "0.6", 0.25),
+      branch(soulR - soulW * 0.4, soulB + 2, 0, -3, "0.6", 0.2),
+    );
+
+    // ── Dread 5: veins fully envelop the soul box ──
+    const g5 = document.createElementNS(svgNS, "g");
+    g5.classList.add("vein-group", "vein-d5");
+    g5.append(
+      // Top edge extends all the way to left side of soul box
+      veinPath(soulR - soulW * 0.6, soulT - 1, [
+        [-soulW * 0.15, -1], [-soulW * 0.12, 1], [-soulW * 0.1, -1]
+      ], 2, "1.2", 0.5),
+      // Bottom edge extends all the way
+      veinPath(soulR - soulW * 0.5, soulB + 1, [
+        [-soulW * 0.15, 1], [-soulW * 0.12, -1], [-soulW * 0.1, 1]
+      ], 2, "1.2", 0.5),
+      // Left edge — veins curl around the left side of soul box
+      veinPath(soulL + 2, soulT + 2, [
+        [0, (soulB - soulT) * 0.3], [1, (soulB - soulT) * 0.2]
+      ], 2, "1", 0.4),
+      veinPath(soulL + 1, soulB - 2, [
+        [0, -(soulB - soulT) * 0.25], [-1, -(soulB - soulT) * 0.2]
+      ], 2, "1", 0.4),
+      // Fine cracks across the face of soul box
+      branch(soulR - soulW * 0.3, soulT, 0, (soulB - soulT) * 0.3, "0.5", 0.2),
+      branch(soulR - soulW * 0.6, soulT + 2, 0, (soulB - soulT) * 0.25, "0.5", 0.18),
+      branch(soulL + soulW * 0.15, soulB, 0, -(soulB - soulT) * 0.3, "0.5", 0.18),
+      // Extra branch from dread side for density
+      branch(ox - 5, oy - 6, -4, -3, "0.5", 0.2),
+      branch(ox - 5, oy + 6, -4, 3, "0.5", 0.2),
+    );
+
+    svg.append(g1, g2, g3, g4, g5);
+    tracksBar.appendChild(svg);
   }
 }

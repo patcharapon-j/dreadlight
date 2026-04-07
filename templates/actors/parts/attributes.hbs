@@ -10,7 +10,7 @@
         {{#if ../editMode}}
           <input class="attr-value-input" type="number"
                  name="system.attributes.{{this.key}}.value"
-                 value="{{this.value}}" min="1" max="6" data-dtype="Number" />
+                 value="{{this.value}}" min="0" data-dtype="Number" />
         {{else}}
           <div class="attr-value">{{this.value}}</div>
         {{/if}}

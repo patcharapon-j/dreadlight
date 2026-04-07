@@ -58,7 +58,9 @@
         {{#if (eq outcome "failure")}}{{localize "DREADLIGHT.ResultFailure"}}{{/if}}
       </span>
 
-      <span class="result-count">{{totalSixes}} {{#if (eq totalSixes 1)}}{{localize "DREADLIGHT.Success"}}{{else}}{{localize "DREADLIGHT.Successes"}}{{/if}}</span>
+      <span class="result-count">
+        <span class="result-count-num">{{totalSixes}}</span> {{#if (eq totalSixes 1)}}{{localize "DREADLIGHT.Success"}}{{else}}{{localize "DREADLIGHT.Successes"}}{{/if}}
+      </span>
     </div>
 
     {{#if dreadGained}}

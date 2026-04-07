@@ -1,26 +1,44 @@
-<div class="tracks-bar">
-  <div class="track-btn body">
+<div class="tracks-bar" data-dread="{{system.dread.value}}">
+  <div class="track-btn body {{#if system.tracks.body.broken}}is-broken{{/if}}">
     <div class="track-icon body">♥</div>
     <div class="track-info">
-      <div class="track-label body">{{localize "DREADLIGHT.TrackBody"}}</div>
+      <div class="track-label body">
+        {{#if system.tracks.body.broken}}
+          <span class="broken-tag">{{localize "DREADLIGHT.Broken"}}</span>
+        {{else}}
+          {{localize "DREADLIGHT.TrackBody"}}
+        {{/if}}
+      </div>
       <div class="track-pips">{{{trackPips system.tracks.body.value system.tracks.body.max "body"}}}</div>
     </div>
     <span class="track-num">{{system.tracks.body.value}}</span>
   </div>
 
-  <div class="track-btn mind">
+  <div class="track-btn mind {{#if system.tracks.mind.broken}}is-broken{{/if}}">
     <div class="track-icon mind">◈</div>
     <div class="track-info">
-      <div class="track-label mind">{{localize "DREADLIGHT.TrackMind"}}</div>
+      <div class="track-label mind">
+        {{#if system.tracks.mind.broken}}
+          <span class="broken-tag">{{localize "DREADLIGHT.Broken"}}</span>
+        {{else}}
+          {{localize "DREADLIGHT.TrackMind"}}
+        {{/if}}
+      </div>
       <div class="track-pips">{{{trackPips system.tracks.mind.value system.tracks.mind.max "mind"}}}</div>
     </div>
     <span class="track-num">{{system.tracks.mind.value}}</span>
   </div>
 
-  <div class="track-btn soul">
+  <div class="track-btn soul {{#if system.tracks.soul.broken}}is-broken{{/if}}">
     <div class="track-icon soul">◉</div>
     <div class="track-info">
-      <div class="track-label soul">{{localize "DREADLIGHT.TrackSoul"}}</div>
+      <div class="track-label soul">
+        {{#if system.tracks.soul.broken}}
+          <span class="broken-tag">{{localize "DREADLIGHT.Broken"}}</span>
+        {{else}}
+          {{localize "DREADLIGHT.TrackSoul"}}
+        {{/if}}
+      </div>
       <div class="track-pips">{{{trackPips system.tracks.soul.value system.tracks.soul.max "soul"}}}</div>
     </div>
     <span class="track-num">{{system.tracks.soul.value}}</span>

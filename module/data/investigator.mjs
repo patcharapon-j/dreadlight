@@ -145,6 +145,11 @@ export class InvestigatorData extends foundry.abstract.TypeDataModel {
     this.tracks.mind.value = Math.min(this.tracks.mind.value, this.tracks.mind.max);
     this.tracks.soul.value = Math.min(this.tracks.soul.value, this.tracks.soul.max);
 
+    // Broken state — track reaches zero
+    this.tracks.body.broken = this.tracks.body.value === 0;
+    this.tracks.mind.broken = this.tracks.mind.value === 0;
+    this.tracks.soul.broken = this.tracks.soul.value === 0;
+
     // Calculate spiral (total mark count across all three arrays)
     this.spiral = (this.marks.body?.length ?? 0)
       + (this.marks.mind?.length ?? 0)
