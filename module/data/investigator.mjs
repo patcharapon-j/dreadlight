@@ -50,7 +50,7 @@ export class InvestigatorData extends foundry.abstract.TypeDataModel {
       }),
 
       dread: new fields.SchemaField({
-        value: new fields.NumberField({ required: true, initial: 0, min: 0, max: 5, integer: true }),
+        value: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
       }),
 
       details: new fields.SchemaField({
@@ -167,6 +167,6 @@ export class InvestigatorData extends foundry.abstract.TypeDataModel {
       + (this.marks.soul?.length ?? 0);
 
     // Calculate carry limit
-    this.carryLimit = str + 4;
+    this.carryLimit = str + game.settings.get("dreadlight", "carryBonus");
   }
 }

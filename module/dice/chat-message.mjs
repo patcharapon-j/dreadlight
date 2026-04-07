@@ -42,6 +42,7 @@ export async function sendD66ToChat(d66Result) {
     actorImg: actor.img,
     actorName: actor.name,
     portraitChat: actor.system.portrait?.chat ?? { offsetX: 0, offsetY: 0, zoom: 1 },
+    showPortrait: game.settings.get("dreadlight", "showChatPortrait"),
     roll1, roll2, d66Key, entry,
   };
 
@@ -79,6 +80,7 @@ export async function sendD66PromptToChat(actor, trackKey) {
     actorName: actor.name,
     actorId: actor.id,
     portraitChat: actor.system.portrait?.chat ?? { offsetX: 0, offsetY: 0, zoom: 1 },
+    showPortrait: game.settings.get("dreadlight", "showChatPortrait"),
     brokenMessage: game.i18n.localize(brokenLabel[trackKey]),
     rollLabel: game.i18n.localize(tableLabel[trackKey]),
   };

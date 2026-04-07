@@ -37,7 +37,7 @@ export class DreadlightRoll {
 
   get dreadGained() {
     let dread = 0;
-    if (this.outcome === "failure") dread += 1;
+    if (this.outcome === "failure") dread += game.settings.get("dreadlight", "failureDreadGain");
     if (this.outcome === "tainted" || this.outcome === "dire") dread += this.dreadSixes;
     return dread;
   }
@@ -123,7 +123,7 @@ export class DreadlightRoll {
       mindLoss: this.baseOnes,
       soulLoss: this.dreadOnes,
       gearDamage: this.gearOnes,
-      dreadGain: 1,
+      dreadGain: game.settings.get("dreadlight", "pushDreadGain"),
     };
   }
 
@@ -134,6 +134,8 @@ export class DreadlightRoll {
       actorImg: this.actor.img,
       actorName: this.actor.name,
       portraitChat: this.actor.system.portrait?.chat ?? { offsetX: 50, offsetY: 50, zoom: 1 },
+      showPortrait: game.settings.get("dreadlight", "showChatPortrait"),
+      showDireFlavorText: game.settings.get("dreadlight", "showDireFlavorText"),
       attribute: this.attribute,
       talentName: this.talentName,
       gearName: this.gearName,
@@ -164,7 +166,7 @@ export function buildPool({ actor, attribute, talentLevel = 0, gearBonus = 0, di
   const attrValue = system.attributes[attribute].value;
   const dread = system.dread.value;
   const condition = CONFIG.DREADLIGHT.conditionMap[attribute];
-  const conditionPenalty = system.conditions[condition] ? 2 : 0;
+  const conditionPenalty = system.conditions[condition] ? game.settings.get("dreadlight", "conditionPenalty") : 0;
   let rawBase = attrValue + talentLevel - conditionPenalty + difficultyMod - markPenalty;
   let totalPool = Math.max(rawBase, dread);
   let dreadDice = dread;

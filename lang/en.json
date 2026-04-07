@@ -171,5 +171,28 @@
   "DREADLIGHT.Injuries": "Active Injuries",
   "DREADLIGHT.InjuriesNone": "No active injuries",
 
-  "DREADLIGHT.AdhocRoll": "Ad-Hoc Roll"
+  "DREADLIGHT.AdhocRoll": "Ad-Hoc Roll",
+
+  "DREADLIGHT.SettingConditionPenalty": "Condition Dice Penalty",
+  "DREADLIGHT.SettingConditionPenaltyHint": "Number of dice subtracted from a pool when the related condition is active.",
+  "DREADLIGHT.SettingDreadMax": "Maximum Dread",
+  "DREADLIGHT.SettingDreadMaxHint": "The maximum value the dread meter can reach.",
+  "DREADLIGHT.SettingPushDreadGain": "Push Dread Gain",
+  "DREADLIGHT.SettingPushDreadGainHint": "How much dread the GM gains when an investigator pushes a roll.",
+  "DREADLIGHT.SettingFailureDreadGain": "Failure Dread Gain",
+  "DREADLIGHT.SettingFailureDreadGainHint": "How much dread the GM gains when a roll results in failure (zero successes).",
+  "DREADLIGHT.SettingSupplyWeight": "Supply Carry Weight",
+  "DREADLIGHT.SettingSupplyWeightHint": "How much carry capacity each supply point consumes (in slots).",
+  "DREADLIGHT.SettingCarryBonus": "Carry Limit Bonus",
+  "DREADLIGHT.SettingCarryBonusHint": "Flat bonus added to Strength to determine carry limit (default: STR + 4).",
+  "DREADLIGHT.SettingAutoD66Prompt": "Auto-Prompt D66 on Broken",
+  "DREADLIGHT.SettingAutoD66PromptHint": "Automatically post a D66 roll prompt to chat when a track reaches zero.",
+  "DREADLIGHT.SettingAdhocMaxDice": "Ad-Hoc Roller Max Dice",
+  "DREADLIGHT.SettingAdhocMaxDiceHint": "Maximum number of dice per pool in the ad-hoc roller.",
+  "DREADLIGHT.SettingShowDreadVeins": "Show Dread Veins",
+  "DREADLIGHT.SettingShowDreadVeinsHint": "Display the corruption veins overlay on the character sheet as dread increases.",
+  "DREADLIGHT.SettingShowChatPortrait": "Show Chat Portraits",
+  "DREADLIGHT.SettingShowChatPortraitHint": "Display character portraits in chat roll cards.",
+  "DREADLIGHT.SettingShowDireFlavorText": "Show Dire Flavor Text",
+  "DREADLIGHT.SettingShowDireFlavorTextHint": "Display the atmospheric flavor text when a dire success occurs."
 }

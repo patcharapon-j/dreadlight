@@ -1,9 +1,11 @@
 <div class="dreadlight-chat d66-prompt d66-{{tableKey}}">
   <div class="chat-accent"></div>
 
-  <div class="chat-header d66-broken-header">
+  <div class="chat-header d66-broken-header {{#unless showPortrait}}no-portrait{{/unless}}">
+    {{#if showPortrait}}
     <div class="chat-portrait" style="background-image: url('{{actorImg}}'); transform: translate({{portraitChat.offsetX}}px, {{portraitChat.offsetY}}px) scale({{portraitChat.zoom}});"></div>
     <div class="chat-portrait-fade"></div>
+    {{/if}}
     <div class="d66-broken-overlay"><span>BROKEN&ensp;BROKEN&ensp;BROKEN&ensp;BROKEN&ensp;BROKEN&ensp;BROKEN&ensp;BROKEN&ensp;BROKEN</span></div>
     <div class="chat-name">{{actorName}}</div>
   </div>

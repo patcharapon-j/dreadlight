@@ -92,6 +92,7 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     context.config = CONFIG.DREADLIGHT;
     context.editable = this.isEditable;
     context.editMode = this._editMode && this.isEditable;
+    context.dreadMax = game.settings.get("dreadlight", "dreadMax");
 
     // Build attributeList from the 6 attributes
     context.attributeList = CONFIG.DREADLIGHT.attributes.map((key) => {
@@ -130,7 +131,7 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     // Carry weight (items + supply at ¼ slot each)
     const gearItems = [...context.weapons, ...context.armors, ...context.equipment];
     const itemWeight = gearItems.reduce((sum, i) => sum + (i.system.weight ?? 0), 0);
-    const supplyWeight = (system.supply.value ?? 0) * 0.25;
+    const supplyWeight = (system.supply.value ?? 0) * game.settings.get("dreadlight", "supplyWeight");
     context.carryUsed = Math.round((itemWeight + supplyWeight) * 100) / 100;
     context.carryLimit = system.carryLimit;
 
@@ -207,7 +208,8 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     if (dreadBtn) {
       dreadBtn.addEventListener("click", () => {
         const val = this.actor.system.dread.value;
-        if (val < 5) this.actor.update({ "system.dread.value": val + 1 });
+        const dreadMax = game.settings.get("dreadlight", "dreadMax");
+        if (val < dreadMax) this.actor.update({ "system.dread.value": val + 1 });
       });
       dreadBtn.addEventListener("contextmenu", (ev) => {
         ev.preventDefault();
@@ -217,7 +219,9 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     }
 
     // Inject dread corruption veins SVG into the tracks bar
-    InvestigatorSheet.#injectDreadVeins(this.element);
+    if (game.settings.get("dreadlight", "showDreadVeins")) {
+      InvestigatorSheet.#injectDreadVeins(this.element);
+    }
 
     // Supply button: left-click = +1, right-click = −1
     const supplyBtn = this.element.querySelector(".track-btn.supply");
@@ -646,6 +650,7 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       actorImg: this.actor.img,
       actorName: this.actor.name,
       portraitChat: this.actor.system.portrait?.chat ?? { offsetX: 50, offsetY: 50, zoom: 1 },
+      showPortrait: game.settings.get("dreadlight", "showChatPortrait"),
       armorName: armor.name,
       results,
       sixes,

@@ -92,7 +92,7 @@ function injectFloatingRoller() {
   container.querySelectorAll(".adhoc-inc").forEach(btn => {
     btn.addEventListener("click", () => {
       const key = btn.dataset.pool;
-      pool[key] = Math.min(pool[key] + 1, 10);
+      pool[key] = Math.min(pool[key] + 1, game.settings.get("dreadlight", "adhocMaxDice"));
       container.querySelector(`.adhoc-count[data-pool="${key}"]`).textContent = pool[key];
     });
   });
@@ -131,6 +131,7 @@ async function sendAdhocRollToChat(roll, actor) {
     hasActor: !!actor,
     actorImg: actor?.img || null,
     portraitChat: actor?.system?.portrait?.chat ?? { offsetX: 50, offsetY: 50, zoom: 1 },
+    showPortrait: game.settings.get("dreadlight", "showChatPortrait"),
     baseResults: roll.baseResults,
     dreadResults: roll.dreadResults,
     gearResults: roll.gearResults,
