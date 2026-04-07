@@ -23,7 +23,9 @@
   ],
   "documentTypes": {
     "Actor": {
-      "investigator": {}
+      "investigator": {},
+      "npc": {},
+      "creature": {}
     },
     "Item": {
       "talent": {},
