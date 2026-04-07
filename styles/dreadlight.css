@@ -3615,3 +3615,35 @@
   border-color: var(--dl-accent-gold);
   box-shadow: 0 0 8px rgba(201, 169, 110, 0.2);
 }
+
+/* D66 Manual Roll Button (on tracks) */
+.track-btn .d66-manual-btn {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--dl-text-muted);
+  font-size: 14px;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.2s ease;
+  padding: 0;
+  z-index: 2;
+}
+
+.track-btn:hover .d66-manual-btn {
+  opacity: 0.6;
+}
+
+.track-btn .d66-manual-btn:hover {
+  opacity: 1;
+  color: var(--dl-accent-gold);
+  filter: drop-shadow(0 0 4px rgba(201, 169, 110, 0.4));
+}

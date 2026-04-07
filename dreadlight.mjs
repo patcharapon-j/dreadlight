@@ -8,7 +8,7 @@ import { InvestigatorSheet } from "./module/sheets/investigator-sheet.mjs";
 import { TalentSheet } from "./module/sheets/talent-sheet.mjs";
 import { WeaponSheet, ArmorSheet, EquipmentSheet } from "./module/sheets/item-sheet.mjs";
 import { registerDSN } from "./module/dice/dsn-integration.mjs";
-import { registerChatListeners } from "./module/dice/chat-message.mjs";
+import { registerChatListeners, sendD66PromptToChat } from "./module/dice/chat-message.mjs";
 import { registerAdhocRoller } from "./module/dice/adhoc-roller.mjs";
 import { registerHandlebarsHelpers } from "./module/helpers/handlebars.mjs";
 import { d66Tables } from "./module/data/d66-tables.mjs";
@@ -110,3 +110,15 @@ Hooks.once("init", () => {
 });
 
 Hooks.once("diceSoNiceReady", (dice3d) => { registerDSN(dice3d); });
+
+Hooks.on("updateActor", (actor, changes, options, userId) => {
+  // Only run for the user who made the change
+  if (userId !== game.user.id) return;
+  if (actor.type !== "investigator") return;
+
+  for (const trackKey of ["body", "mind", "soul"]) {
+    const newVal = foundry.utils.getProperty(changes, `system.tracks.${trackKey}.value`);
+    if (newVal !== 0) continue;
+    sendD66PromptToChat(actor, trackKey);
+  }
+});

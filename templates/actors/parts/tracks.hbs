@@ -12,6 +12,7 @@
       <div class="track-pips">{{{trackPips system.tracks.body.value system.tracks.body.max "body"}}}</div>
     </div>
     <span class="track-num">{{system.tracks.body.value}}</span>
+    <button type="button" class="d66-manual-btn" data-action="rollD66" data-track="body" title="{{localize "DREADLIGHT.D66RollCriticalInjury"}}">⚅</button>
   </div>
 
   <div class="track-btn mind {{#if system.tracks.mind.broken}}is-broken{{/if}}">
@@ -27,6 +28,7 @@
       <div class="track-pips">{{{trackPips system.tracks.mind.value system.tracks.mind.max "mind"}}}</div>
     </div>
     <span class="track-num">{{system.tracks.mind.value}}</span>
+    <button type="button" class="d66-manual-btn" data-action="rollD66" data-track="mind" title="{{localize "DREADLIGHT.D66RollTrauma"}}">⚅</button>
   </div>
 
   <div class="track-btn soul {{#if system.tracks.soul.broken}}is-broken{{/if}}">
@@ -42,6 +44,7 @@
       <div class="track-pips">{{{trackPips system.tracks.soul.value system.tracks.soul.max "soul"}}}</div>
     </div>
     <span class="track-num">{{system.tracks.soul.value}}</span>
+    <button type="button" class="d66-manual-btn" data-action="rollD66" data-track="soul" title="{{localize "DREADLIGHT.D66RollManifestation"}}">⚅</button>
   </div>
 
   <div class="track-separator"></div>

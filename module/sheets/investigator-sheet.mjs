@@ -1,4 +1,6 @@
 import { DreadlightRollDialog } from "../dice/roll-dialog.mjs";
+import { rollD66 } from "../dice/d66-roll.mjs";
+import { sendD66ToChat, sendD66PromptToChat } from "../dice/chat-message.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -26,6 +28,7 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       deleteConnection: InvestigatorSheet.#deleteConnection,
       addMark: InvestigatorSheet.#addMark,
       deleteMark: InvestigatorSheet.#deleteMark,
+      rollD66: InvestigatorSheet.#rollD66,
     },
     form: {
       submitOnChange: true,
@@ -188,10 +191,9 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
         if (track.value > 0) {
           const newVal = track.value - 1;
           this.actor.update({ [`system.tracks.${trackKey}.value`]: newVal });
-          if (newVal === 0) InvestigatorSheet.#notifyBroken(this.actor, trackKey);
         } else if (track.value === 0 && trackKey === "body") {
           // Already broken body — further damage = automatic critical injury
-          InvestigatorSheet.#notifyCriticalWhileBroken(this.actor);
+          sendD66PromptToChat(this.actor, "body");
         }
       });
     }
@@ -656,6 +658,14 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       speaker: ChatMessage.getSpeaker({ actor: this.actor }),
       content,
     });
+  }
+
+  static async #rollD66(event, target) {
+    event.stopPropagation();
+    const trackKey = target.dataset.track;
+    if (!trackKey) return;
+    const result = await rollD66(trackKey, this.actor);
+    await sendD66ToChat(result);
   }
 
   static #toggleCondition(event, target) {
