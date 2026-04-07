@@ -39,11 +39,18 @@
     <div class="field-group">
       <div class="field-label">{{localize "DREADLIGHT.TalentPrimaryAttributes"}}</div>
       {{#if editable}}
-        <input type="text" name="system.primaryAttributes" value="{{join system.primaryAttributes ", "}}" style="width:100%;" />
+        <div class="attr-checkbox-grid">
+          {{#each attributeChoices}}
+            <label class="attr-checkbox {{#if this.selected}}checked{{/if}}">
+              <input type="checkbox" name="system.primaryAttributes" value="{{this.key}}" {{#if this.selected}}checked{{/if}} />
+              <span class="attr-checkbox-label">{{upper this.key}}</span>
+            </label>
+          {{/each}}
+        </div>
       {{else}}
         <div class="talent-attr-tags">
           {{#each system.primaryAttributes}}
-            <span class="tag tag-gold">{{this}}</span>
+            <span class="tag tag-gold">{{upper this}}</span>
           {{/each}}
         </div>
       {{/if}}

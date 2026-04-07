@@ -81,6 +81,11 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
     context.difficulties = CONFIG.DREADLIGHT.difficulties;
     context.dreadValue = system.dread.value;
 
+    // Injuries with penalty > 0
+    context.injuries = (system.injuries ?? [])
+      .map((inj, i) => ({ ...inj, index: i }))
+      .filter(inj => inj.penalty > 0);
+
     // Build initial pool preview
     const talentLevel = this.#talent?.system.level || 0;
     const gearBonus = this.#gearItem?.system.gearBonus || 0;
@@ -91,6 +96,7 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
       gearBonus,
       difficultyMod: 0,
       helpDice: 0,
+      injuryPenalty: 0,
     });
     context.pool = pool;
 
@@ -128,6 +134,11 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
     // Difficulty radios → update pool
     el.querySelectorAll("[name=difficulty]").forEach(r =>
       r.addEventListener("change", () => this.#updatePoolPreview())
+    );
+
+    // Injury toggles → update pool
+    el.querySelectorAll(".injury-toggle").forEach(cb =>
+      cb.addEventListener("change", () => this.#updatePoolPreview())
     );
 
     // Initial pool render to apply "first" class on dread blocks
@@ -180,6 +191,15 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
     });
   }
 
+  /** Sum penalty from checked injury toggles */
+  #getInjuryPenalty() {
+    let total = 0;
+    this.element.querySelectorAll(".injury-toggle:checked").forEach(cb => {
+      total += parseInt(cb.dataset.penalty) || 0;
+    });
+    return total;
+  }
+
   /** Read current form state and rebuild the pool preview */
   #updatePoolPreview() {
     const form = this.element;
@@ -189,6 +209,7 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
     const gearId = form.querySelector("[name=gear]")?.value || "";
     const diffMod = parseInt(form.querySelector("[name=difficulty]:checked")?.value || "0");
     const helpDice = this.#getHelpDice();
+    const injuryPenalty = this.#getInjuryPenalty();
 
     const selectedTalent = talentId ? this.#actor.items.get(talentId) : null;
     const selectedGear = gearId ? this.#actor.items.get(gearId) : null;
@@ -200,6 +221,7 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
       gearBonus: selectedGear?.system.gearBonus || 0,
       difficultyMod: diffMod,
       helpDice,
+      injuryPenalty,
     });
 
     this.#renderPoolDOM(pool);
@@ -268,6 +290,7 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
     const diffChecked = form.querySelector("[name=difficulty]:checked");
     const diffMod = parseInt(diffChecked?.value || "0");
     const helpDice = this.#getHelpDice();
+    const injuryPenalty = this.#getInjuryPenalty();
 
     const selectedTalent = talentId ? this.#actor.items.get(talentId) : null;
     const selectedGear = gearId ? this.#actor.items.get(gearId) : null;
@@ -279,6 +302,7 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
       gearBonus: selectedGear?.system.gearBonus || 0,
       difficultyMod: diffMod,
       helpDice,
+      injuryPenalty,
     });
 
     const diffName = Object.keys(CONFIG.DREADLIGHT.difficulties)

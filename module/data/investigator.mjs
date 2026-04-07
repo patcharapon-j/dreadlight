@@ -106,6 +106,7 @@ export class InvestigatorData extends foundry.abstract.TypeDataModel {
           effect: new fields.StringField({ required: true, initial: "" }),
           healTime: new fields.StringField({ required: true, initial: "" }),
           lethal: new fields.BooleanField({ required: true, initial: false }),
+          penalty: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
         })
       ),
 

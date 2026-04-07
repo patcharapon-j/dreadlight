@@ -82,6 +82,23 @@
     </div>
   </div>
 
+  {{!-- Injuries --}}
+  {{#if injuries.length}}
+  <div class="dialog-field">
+    <div class="field-label">{{localize "DREADLIGHT.RollInjuries"}}</div>
+    <div class="injury-penalty-list">
+      {{#each injuries}}
+      <label class="injury-penalty-row">
+        <input type="checkbox" class="injury-toggle" data-penalty="{{this.penalty}}">
+        <span class="injury-penalty-indicator"></span>
+        <span class="injury-penalty-name">{{this.name}}</span>
+        <span class="injury-penalty-value">−{{this.penalty}}</span>
+      </label>
+      {{/each}}
+    </div>
+  </div>
+  {{/if}}
+
   {{!-- Difficulty --}}
   <div class="dialog-field">
     <div class="field-label">{{localize "DREADLIGHT.RollDifficulty"}}</div>

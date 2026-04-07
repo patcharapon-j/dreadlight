@@ -165,13 +165,13 @@ export class DreadlightRoll {
   }
 }
 
-export function buildPool({ actor, attribute, talentLevel = 0, gearBonus = 0, difficultyMod = 0, helpDice = 0 }) {
+export function buildPool({ actor, attribute, talentLevel = 0, gearBonus = 0, difficultyMod = 0, helpDice = 0, injuryPenalty = 0 }) {
   const system = actor.system;
   const attrValue = system.attributes[attribute].value;
   const dread = system.dread.value;
   const condition = CONFIG.DREADLIGHT.conditionMap[attribute];
   const conditionPenalty = system.conditions[condition] ? game.settings.get("dreadlight", "conditionPenalty") : 0;
-  let rawBase = attrValue + talentLevel - conditionPenalty + difficultyMod;
+  let rawBase = attrValue + talentLevel - conditionPenalty + difficultyMod - injuryPenalty;
   let totalPool = Math.max(rawBase, dread);
   let dreadDice = dread;
   let baseDice = Math.max(0, totalPool - dreadDice);

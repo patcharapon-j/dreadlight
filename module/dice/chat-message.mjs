@@ -211,6 +211,7 @@ export function registerChatListeners() {
             effect: d66.entry.effect,
             healTime: d66.entry.healTime,
             lethal: d66.entry.lethal,
+            penalty: 0,
           }],
         });
 

@@ -27,11 +27,25 @@ export class TalentSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
   };
 
   /** @override */
+  _prepareSubmitData(event, form, formData) {
+    const data = super._prepareSubmitData(event, form, formData);
+    // Collect checked attribute checkboxes into an array
+    const checked = form.querySelectorAll('input[name="system.primaryAttributes"]:checked');
+    data["system.primaryAttributes"] = Array.from(checked).map(el => el.value);
+    return data;
+  }
+
+  /** @override */
   async _prepareContext(options) {
     const context = await super._prepareContext(options);
     context.item = this.item;
     context.system = this.item.system;
     context.editable = this.isEditable;
+    context.attributeChoices = CONFIG.DREADLIGHT.attributes.map(key => ({
+      key,
+      label: game.i18n.localize(CONFIG.DREADLIGHT.attributeLabels[key]),
+      selected: this.item.system.primaryAttributes.includes(key),
+    }));
     return context;
   }
 }

@@ -229,6 +229,24 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       });
     }
 
+    // Injury field edits (edit mode)
+    this.element.querySelectorAll(".injury-field").forEach((el) => {
+      el.addEventListener("change", () => {
+        const index = parseInt(el.dataset.index, 10);
+        const field = el.dataset.field;
+        const injuries = foundry.utils.deepClone(this.actor.system.injuries ?? []);
+        if (!injuries[index]) return;
+        if (field === "lethal") {
+          injuries[index][field] = el.checked;
+        } else if (field === "penalty") {
+          injuries[index][field] = Math.max(0, parseInt(el.value) || 0);
+        } else {
+          injuries[index][field] = el.value;
+        }
+        this.actor.update({ "system.injuries": injuries });
+      });
+    });
+
     // Item pip clicks: left-click = +1, right-click = −1
     this.element.querySelectorAll(".item-pips").forEach((container) => {
       const itemId = container.dataset.itemId;
@@ -672,6 +690,7 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     injuries.splice(index, 1);
     this.actor.update({ "system.injuries": injuries });
   }
+
 
   static #toggleCondition(event, target) {
     const attr = target.closest("[data-attr]")?.dataset.attr ?? target.dataset.attr;
