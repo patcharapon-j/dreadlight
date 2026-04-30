@@ -8,6 +8,8 @@ export class DreadlightRoll {
     this.gearName = options.gearName || null;
     this.difficulty = options.difficulty || "normal";
     this.actor = options.actor;
+    this.weaponDamage = options.weaponDamage ?? null;
+    this.weaponCritThreshold = options.weaponCritThreshold ?? null;
     this.baseResults = [];
     this.dreadResults = [];
     this.gearResults = [];
@@ -33,6 +35,23 @@ export class DreadlightRoll {
   }
 
   get extraSuccesses() { return Math.max(0, this.totalSixes - 1); }
+
+  get hasWeapon() {
+    return this.weaponDamage !== null && this.weaponDamage !== undefined;
+  }
+
+  get totalDamage() {
+    if (!this.hasWeapon) return 0;
+    if (this.outcome === "failure") return 0;
+    return this.weaponDamage + this.extraSuccesses;
+  }
+
+  get isCritical() {
+    if (!this.hasWeapon) return false;
+    if (this.outcome === "failure") return false;
+    if (this.weaponCritThreshold === null || this.weaponCritThreshold === undefined) return false;
+    return this.totalDamage >= this.weaponCritThreshold;
+  }
 
   get direFailure() {
     return this.outcome === "failure" && this.dreadOnes > 0;
@@ -147,6 +166,11 @@ export class DreadlightRoll {
       direFailure: this.direFailure,
       pushed: this.pushed,
       consequences: this.pushConsequences,
+      hasWeapon: this.hasWeapon,
+      weaponDamage: this.weaponDamage,
+      weaponCritThreshold: this.weaponCritThreshold,
+      totalDamage: this.totalDamage,
+      isCritical: this.isCritical,
       hasOnes: !this.pushed && (
         this.baseResults.some(r => r === 1) ||
         this.dreadResults.some(r => r === 1) ||

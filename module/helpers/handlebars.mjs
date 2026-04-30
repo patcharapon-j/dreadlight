@@ -195,6 +195,8 @@ export function registerHandlebarsHelpers() {
     const total = Math.max(0, Number(max) || 0);
     const val = Math.max(0, Number(used) || 0);
     const wholeFilled = Math.floor(val);
+    const fraction = val - wholeFilled;
+    const partialFill = Math.min(100, Math.max(0, Math.round(fraction * 100)));
     const hasFraction = val - wholeFilled >= 0.125; // anything ≥ ⅛ shows partial
     let html = "";
     for (let i = 0; i < total; i++) {
@@ -202,7 +204,7 @@ export function registerHandlebarsHelpers() {
       if (i < wholeFilled) {
         html += `<div class="pip pip-gold filled"></div>`;
       } else if (i === wholeFilled && hasFraction) {
-        html += `<div class="pip pip-gold partial"></div>`;
+        html += `<div class="pip pip-gold partial" style="--pip-fill: ${partialFill}%;"></div>`;
       } else {
         html += `<div class="pip pip-gold empty"></div>`;
       }

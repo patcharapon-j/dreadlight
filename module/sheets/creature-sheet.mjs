@@ -113,6 +113,8 @@ export class CreatureSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       attribute: attack.attribute,
       talentName: attack.name,
       actor: this.actor,
+      weaponDamage: attack.damage ?? 0,
+      weaponCritThreshold: attack.critThreshold ?? 6,
     });
     await roll.evaluate();
     await roll.showDSN();

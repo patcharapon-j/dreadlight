@@ -76,6 +76,43 @@
       {{#if consequences.soulLoss}}<div class="consequence consequence-soul"><i class="dl-sigil dl-sigil-soul"></i> <strong>−{{consequences.soulLoss}} {{localize "DREADLIGHT.PushCostSoul"}}</strong></div>{{/if}}
       {{#if consequences.gearDamage}}<div class="consequence consequence-gear"><i class="dl-sigil dl-sigil-equipment"></i> <strong>{{localize "DREADLIGHT.PushCostGear"}} −{{consequences.gearDamage}}</strong></div>{{/if}}
     {{/if}}
+
+    {{#if hasWeapon}}{{#unless (eq outcome "failure")}}
+      <div class="damage-card {{#if isCritical}}damage-critical{{/if}}">
+        <span class="damage-corner tl"></span>
+        <span class="damage-corner tr"></span>
+        <span class="damage-corner bl"></span>
+        <span class="damage-corner br"></span>
+
+        <div class="damage-card-body">
+          <div class="damage-card-meta">
+            <span class="damage-card-icon"><i class="dl-sigil dl-sigil-weapon"></i></span>
+            <div class="damage-card-titles">
+              <span class="damage-card-title">{{localize "DREADLIGHT.DamageDealt"}}</span>
+              <span class="damage-card-formula">
+                <span class="damage-formula-base">{{weaponDamage}}</span>
+                <span class="damage-formula-op">{{localize "DREADLIGHT.DamageBase"}}</span>
+                {{#if extraSuccesses}}<span class="damage-formula-sep">·</span><span class="damage-formula-extra">+{{extraSuccesses}}</span><span class="damage-formula-op">{{localize "DREADLIGHT.DamageExtra"}}</span>{{/if}}
+              </span>
+            </div>
+          </div>
+          <div class="damage-card-stamp">
+            <span class="damage-stamp-num">{{totalDamage}}</span>
+            <span class="damage-stamp-label">DMG</span>
+          </div>
+        </div>
+      </div>
+      {{#if isCritical}}
+        <div class="damage-crit-stamp">
+          <span class="crit-stamp-bar left"></span>
+          <span class="crit-stamp-text">
+            <span class="crit-stamp-main"><span class="crit-stamp-icon"><i class="dl-sigil dl-sigil-dire"></i></span>{{localize "DREADLIGHT.DamageCritical"}}<span class="crit-stamp-icon"><i class="dl-sigil dl-sigil-dire"></i></span></span>
+            <span class="crit-stamp-sub">{{totalDamage}} damage ≥ crit threshold {{weaponCritThreshold}}</span>
+          </span>
+          <span class="crit-stamp-bar right"></span>
+        </div>
+      {{/if}}
+    {{/unless}}{{/if}}
   </div>
 
   {{#unless pushed}}

@@ -308,6 +308,7 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
     const diffName = Object.keys(CONFIG.DREADLIGHT.difficulties)
       .find(k => CONFIG.DREADLIGHT.difficulties[k] === diffMod) || "normal";
 
+    const isWeapon = selectedGear?.type === "weapon";
     const roll = new DreadlightRoll({
       ...pool,
       attribute: this.#attribute,
@@ -315,6 +316,8 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
       gearName: selectedGear?.name || null,
       difficulty: diffName,
       actor: this.#actor,
+      weaponDamage: isWeapon ? (selectedGear.system.damage ?? 0) : null,
+      weaponCritThreshold: isWeapon ? (selectedGear.system.critThreshold ?? 6) : null,
     });
 
     await roll.evaluate();

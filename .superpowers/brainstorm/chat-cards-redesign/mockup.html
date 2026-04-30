@@ -1,0 +1,2053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dreadlight — Chat Card Redesign Mockups</title>
+<style>
+/* =========================================================
+   Tokens (mirror styles/dreadlight.css :root)
+   ========================================================= */
+:root {
+  --dl-bg-primary: #08080c;
+  --dl-bg-surface: #0e0e14;
+  --dl-bg-elevated: #16161f;
+  --dl-bg-card: #111118;
+  --dl-bg-input: #0a0a10;
+
+  --dl-text-primary: #ededf4;
+  --dl-text-secondary: #8e8ea3;
+  --dl-text-muted: #6b6b80;
+  --dl-text-faint: #3d3d4f;
+
+  --dl-accent-gold: #c9a96e;
+  --dl-accent-gold-bright: #e8c987;
+  --dl-accent-red: #e05555;
+  --dl-track-body: #55b87a;
+  --dl-track-mind: #6b9df5;
+  --dl-track-soul: #a88bf5;
+  --dl-track-dread: #e05555;
+
+  --rgb-gold: 201, 169, 110;
+  --rgb-red: 224, 85, 85;
+  --rgb-purple: 168, 139, 245;
+
+  --dl-border-gold: rgba(var(--rgb-gold), 0.16);
+  --dl-border-gold-strong: rgba(var(--rgb-gold), 0.32);
+
+  --dl-font-primary: 'Courier New', 'Monaspace Krypton', monospace;
+  --dl-font-italic: 'Courier New', 'Monaspace Neon', monospace;
+}
+
+/* =========================================================
+   Page chrome
+   ========================================================= */
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: #050507;
+  color: var(--dl-text-primary);
+  font-family: var(--dl-font-primary);
+  font-size: 13px;
+  line-height: 1.4;
+  padding: 24px 16px 80px;
+}
+body::before {
+  /* very faint film-grain over whole page */
+  content: "";
+  position: fixed; inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(255,255,255,0.018) 1px, transparent 1px);
+  background-size: 3px 3px;
+  z-index: 1;
+}
+.page {
+  max-width: 1280px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+h1 {
+  font-family: var(--dl-font-primary);
+  font-size: 20px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--dl-accent-gold);
+  margin: 0 0 4px;
+}
+.tagline {
+  color: var(--dl-text-muted);
+  font-size: 12px;
+  margin-bottom: 28px;
+  letter-spacing: 0.08em;
+}
+
+/* Tab nav */
+.tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--dl-border-gold);
+  margin-bottom: 32px;
+  padding-bottom: 8px;
+}
+.tabs button {
+  appearance: none;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--dl-text-secondary);
+  font-family: inherit;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: all 120ms;
+}
+.tabs button:hover { color: var(--dl-text-primary); }
+.tabs button.active {
+  background: var(--dl-bg-elevated);
+  border-color: var(--dl-border-gold-strong);
+  color: var(--dl-accent-gold-bright);
+}
+
+.direction { display: none; }
+.direction.active { display: block; }
+.direction-blurb {
+  background: var(--dl-bg-surface);
+  border-left: 3px solid var(--dl-accent-gold);
+  padding: 14px 18px;
+  margin-bottom: 28px;
+  color: var(--dl-text-secondary);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+  max-width: 760px;
+}
+.direction-blurb strong { color: var(--dl-accent-gold-bright); letter-spacing: 0.12em; }
+
+/* Card grid: 2 columns of mockups */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(360px, 1fr));
+  gap: 36px;
+  align-items: start;
+}
+@media (max-width: 800px) { .card-grid { grid-template-columns: 1fr; } }
+
+.card-slot {
+  display: flex;
+  flex-direction: column;
+}
+.card-label {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--dl-text-muted);
+  border-bottom: 1px dashed var(--dl-text-faint);
+  padding-bottom: 6px;
+  margin-bottom: 16px;
+}
+
+/* The "chat container" wrapper (mimics Foundry chat width) */
+.chat-stub {
+  width: 100%;
+  max-width: 420px;
+  background: var(--dl-bg-primary);
+  padding: 12px;
+  border: 1px solid #1a1a22;
+}
+
+/* =========================================================
+   Sigils (replicate .dl-sigil mask system)
+   ========================================================= */
+.dl-sigil {
+  display: inline-block;
+  width: 14px; height: 14px;
+  background-color: currentColor;
+  -webkit-mask-image: var(--sigil);
+  mask-image: var(--sigil);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  vertical-align: middle;
+}
+.dl-sigil-success { --sigil: url("../../../assets/icons/system/result-success.svg"); }
+.dl-sigil-tainted { --sigil: url("../../../assets/icons/system/result-tainted.svg"); }
+.dl-sigil-failure { --sigil: url("../../../assets/icons/system/result-failure.svg"); }
+.dl-sigil-dire    { --sigil: url("../../../assets/icons/system/result-dire.svg"); }
+.dl-sigil-weapon  { --sigil: url("../../../assets/icons/system/item-weapon.svg"); }
+.dl-sigil-armor   { --sigil: url("../../../assets/icons/system/item-armor.svg"); }
+.dl-sigil-talent  { --sigil: url("../../../assets/icons/system/item-talent.svg"); }
+.dl-sigil-equipment { --sigil: url("../../../assets/icons/system/item-equipment.svg"); }
+.dl-sigil-mind    { --sigil: url("../../../assets/icons/system/track-mind.svg"); }
+.dl-sigil-soul    { --sigil: url("../../../assets/icons/system/track-soul.svg"); }
+.dl-sigil-body    { --sigil: url("../../../assets/icons/system/track-body.svg"); }
+.dl-sigil-dread   { --sigil: url("../../../assets/icons/system/track-dread.svg"); }
+.dl-sigil-mark    { --sigil: url("../../../assets/icons/system/dreadlight-mark.svg"); }
+.dl-sigil-push    { --sigil: url("../../../assets/icons/system/push.svg"); }
+
+/* placeholder portrait */
+.fake-portrait {
+  background:
+    radial-gradient(circle at 30% 30%, #4a3220, #14100a 70%),
+    linear-gradient(135deg, #1a1410 0%, #0a0608 100%);
+}
+.fake-portrait::after {
+  content: "DV";
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(201, 169, 110, 0.5);
+  font-size: 1.6em;
+  letter-spacing: 0.12em;
+  font-family: var(--dl-font-italic);
+}
+
+
+/* =========================================================
+   ============ DIRECTION CURRENT (baseline) ===============
+   Faithful-ish render of the present cards for comparison.
+   ========================================================= */
+
+.cur-card {
+  position: relative;
+  background: var(--dl-bg-card);
+  border: 1px solid var(--dl-border-gold);
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px -3px rgba(0,0,0,0.5);
+}
+.cur-card .accent {
+  position: absolute; left: 0; right: 0; top: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--dl-accent-gold), transparent);
+}
+.cur-card.success .accent { background: linear-gradient(90deg, transparent, var(--dl-accent-gold-bright), transparent); }
+.cur-card.tainted .accent { background: linear-gradient(90deg, transparent, var(--dl-track-soul), transparent); }
+.cur-card.failure .accent { background: linear-gradient(90deg, transparent, var(--dl-text-faint), transparent); }
+.cur-card.dire    .accent { background: linear-gradient(90deg, transparent, var(--dl-accent-red), transparent); }
+
+.cur-card .header {
+  position: relative;
+  height: 64px;
+  display: flex; align-items: flex-end;
+  padding: 8px 12px;
+  overflow: hidden;
+}
+.cur-card .portrait {
+  position: absolute;
+  inset: 0;
+  background-size: cover; background-position: center;
+  filter: grayscale(0.3) brightness(0.8);
+}
+.cur-card .portrait-fade {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 30%, var(--dl-bg-card) 100%);
+}
+.cur-card .name {
+  position: relative; z-index: 2;
+  font-family: var(--dl-font-italic);
+  font-size: 14px;
+  color: var(--dl-text-primary);
+  letter-spacing: 0.06em;
+}
+.cur-card .info {
+  padding: 8px 12px 4px;
+  font-size: 11px;
+  color: var(--dl-text-secondary);
+  letter-spacing: 0.06em;
+}
+.cur-card .info .talent {
+  color: var(--dl-accent-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+.cur-card .dice-block {
+  padding: 8px 12px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.cur-card .dice-row {
+  display: flex; align-items: center; gap: 6px;
+}
+.cur-card .dice-row .label {
+  font-size: 9px;
+  color: var(--dl-text-muted);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  width: 42px;
+}
+.cur-card .die {
+  width: 22px; height: 22px;
+  border-radius: 3px;
+  background: var(--dl-bg-input);
+  border: 1px solid #22222e;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 10px;
+  color: var(--dl-text-muted);
+}
+.cur-card .die.six { background: rgba(var(--rgb-gold), 0.18); border-color: var(--dl-accent-gold); color: var(--dl-accent-gold-bright); font-weight: bold; }
+.cur-card .die.one { background: rgba(var(--rgb-red), 0.18); border-color: var(--dl-accent-red); color: var(--dl-accent-red); font-weight: bold; }
+.cur-card .die.dread.six { background: rgba(var(--rgb-red), 0.18); border-color: var(--dl-accent-red); color: var(--dl-accent-red); }
+
+.cur-card .result {
+  padding: 12px;
+  background: rgba(var(--rgb-gold), 0.04);
+  border-top: 1px solid var(--dl-border-gold);
+  display: flex; align-items: center; gap: 8px;
+}
+.cur-card.tainted .result { background: rgba(var(--rgb-purple), 0.06); }
+.cur-card.failure .result, .cur-card.dire .result { background: rgba(var(--rgb-red), 0.04); }
+
+.cur-card .result-icon { color: var(--dl-accent-gold); }
+.cur-card.tainted .result-icon { color: var(--dl-track-soul); }
+.cur-card.dire .result-icon { color: var(--dl-accent-red); }
+.cur-card .result-icon .dl-sigil { width: 18px; height: 18px; }
+.cur-card .result-label {
+  flex: 1;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.cur-card .result-count {
+  font-size: 10px;
+  color: var(--dl-text-muted);
+  letter-spacing: 0.1em;
+}
+.cur-card .result-count strong { color: var(--dl-accent-gold-bright); font-size: 14px; }
+.cur-card .push-bar {
+  border-top: 1px dashed var(--dl-border-gold);
+  padding: 6px 12px;
+  display: flex; justify-content: center;
+}
+.cur-card .push-btn {
+  background: transparent;
+  border: 1px solid var(--dl-border-gold);
+  color: var(--dl-accent-gold);
+  font-family: inherit;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+}
+
+
+/* =========================================================
+   ============ DIRECTION A — DOSSIER / CASE FILE ==========
+   =========================================================
+   Theme: classified field-report folder. Typewritten ink on
+   near-black, redaction bars, evidence tags, large angled
+   rubber-stamp for the outcome.
+*/
+
+.dos-card {
+  position: relative;
+  background:
+    /* faint paper grain */
+    repeating-linear-gradient(0deg, rgba(201,169,110,0.012) 0 1px, transparent 1px 3px),
+    var(--dl-bg-card);
+  border: 1px solid #1c1c26;
+  color: var(--dl-text-primary);
+  padding: 0;
+  font-family: var(--dl-font-primary);
+}
+.dos-card::before {
+  /* tape strip top-left like a folder seal */
+  content: "";
+  position: absolute;
+  top: -6px; left: 18px;
+  width: 64px; height: 18px;
+  background: rgba(201,169,110,0.12);
+  border: 1px dashed rgba(201,169,110,0.3);
+  transform: rotate(-3deg);
+  z-index: 4;
+}
+
+.dos-strip {
+  display: flex; align-items: center; gap: 10px;
+  background: #050507;
+  padding: 6px 12px 6px 92px;
+  border-bottom: 1px solid var(--dl-border-gold);
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--dl-text-muted);
+  position: relative;
+}
+.dos-strip .case {
+  color: var(--dl-accent-gold-bright);
+}
+.dos-strip .classified {
+  margin-left: auto;
+  color: var(--dl-accent-red);
+  border: 1px solid rgba(var(--rgb-red), 0.5);
+  padding: 2px 6px;
+  letter-spacing: 0.3em;
+}
+
+.dos-head {
+  display: flex; gap: 12px;
+  padding: 12px;
+  border-bottom: 1px dashed rgba(201,169,110,0.18);
+  align-items: stretch;
+}
+.dos-photo {
+  width: 56px; height: 72px;
+  flex-shrink: 0;
+  border: 1px solid var(--dl-border-gold);
+  outline: 1px solid #050507;
+  outline-offset: 2px;
+  background-size: cover; background-position: center;
+  filter: grayscale(0.4) contrast(1.1);
+  position: relative;
+}
+.dos-photo::after {
+  /* corner crop marks */
+  content: "";
+  position: absolute; inset: -2px;
+  pointer-events: none;
+}
+.dos-photo-tag {
+  font-size: 7px;
+  letter-spacing: 0.2em;
+  text-align: center;
+  margin-top: 4px;
+  color: var(--dl-text-muted);
+}
+.dos-meta {
+  flex: 1;
+  display: flex; flex-direction: column; justify-content: space-between;
+  min-width: 0;
+}
+.dos-name {
+  font-family: var(--dl-font-italic);
+  font-size: 16px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dl-accent-gold-bright);
+  border-bottom: 1px solid var(--dl-border-gold);
+  padding-bottom: 4px;
+}
+.dos-fields {
+  display: grid; grid-template-columns: auto 1fr; gap: 2px 8px;
+  font-size: 10px;
+  margin-top: 6px;
+}
+.dos-fields dt { color: var(--dl-text-muted); letter-spacing: 0.16em; text-transform: uppercase; }
+.dos-fields dd { margin: 0; color: var(--dl-text-primary); letter-spacing: 0.06em; }
+.dos-fields .redact {
+  background: var(--dl-text-primary);
+  color: transparent;
+  user-select: none;
+  padding: 0 6px;
+}
+
+.dos-evidence {
+  padding: 10px 12px;
+  border-bottom: 1px dashed rgba(201,169,110,0.18);
+}
+.dos-evidence-label {
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--dl-text-muted);
+  margin-bottom: 6px;
+}
+.dos-die-tray {
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+.dos-tag {
+  display: inline-flex; align-items: center; gap: 4px;
+  border: 1px solid #2a2a36;
+  background: #0a0a10;
+  padding: 4px 6px 4px 4px;
+  font-size: 10px;
+  color: var(--dl-text-muted);
+  position: relative;
+}
+.dos-tag .dot {
+  width: 18px; height: 18px;
+  border: 1px solid #2a2a36;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  font-weight: bold;
+}
+.dos-tag.base .src { color: var(--dl-text-muted); }
+.dos-tag.dread .src { color: var(--dl-accent-red); }
+.dos-tag.gear  .src { color: var(--dl-accent-gold); }
+.dos-tag.six .dot {
+  background: var(--dl-accent-gold);
+  color: #050507;
+  border-color: var(--dl-accent-gold-bright);
+}
+.dos-tag.dread.six .dot { background: var(--dl-accent-red); border-color: #ff6b6b; color: #fff; }
+.dos-tag.one .dot {
+  background: rgba(var(--rgb-red), 0.2);
+  color: var(--dl-accent-red);
+  border-color: var(--dl-accent-red);
+}
+
+.dos-result {
+  position: relative;
+  padding: 18px 12px;
+  min-height: 92px;
+  overflow: hidden;
+}
+.dos-stamp {
+  position: absolute;
+  right: 14px; top: 50%;
+  transform: translateY(-50%) rotate(-7deg);
+  border: 3px double currentColor;
+  padding: 8px 18px;
+  font-family: var(--dl-font-italic);
+  font-size: 22px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: bold;
+  opacity: 0.85;
+  text-shadow: 0 0 12px currentColor;
+}
+.dos-result.success .dos-stamp { color: var(--dl-accent-gold-bright); }
+.dos-result.tainted .dos-stamp { color: var(--dl-track-soul); }
+.dos-result.failure .dos-stamp { color: var(--dl-text-faint); border-style: dashed; }
+.dos-result.dire    .dos-stamp { color: var(--dl-accent-red); }
+.dos-stamp.crit {
+  border-color: var(--dl-accent-red);
+  color: var(--dl-accent-red);
+  font-size: 14px;
+  padding: 4px 12px;
+  top: auto; bottom: 8px; right: 12px;
+  transform: rotate(4deg);
+}
+
+.dos-summary {
+  font-size: 11px;
+  color: var(--dl-text-secondary);
+  letter-spacing: 0.04em;
+  max-width: 60%;
+  line-height: 1.6;
+}
+.dos-summary .num {
+  color: var(--dl-accent-gold-bright);
+  font-size: 28px;
+  font-family: var(--dl-font-italic);
+  display: block;
+  line-height: 1;
+}
+.dos-result.failure .num, .dos-result.dire .num { color: var(--dl-accent-red); }
+
+.dos-damage {
+  margin: 0 12px 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--dl-border-gold);
+  background:
+    linear-gradient(135deg, rgba(var(--rgb-gold),0.04) 0%, transparent 100%),
+    #0c0c12;
+  display: flex; align-items: center; gap: 10px;
+  position: relative;
+}
+.dos-damage .label {
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--dl-text-muted);
+}
+.dos-damage .formula {
+  font-size: 10px;
+  color: var(--dl-text-secondary);
+  letter-spacing: 0.05em;
+}
+.dos-damage .formula .b { color: var(--dl-accent-gold); }
+.dos-damage .total {
+  margin-left: auto;
+  font-size: 22px;
+  font-family: var(--dl-font-italic);
+  color: var(--dl-accent-gold-bright);
+  letter-spacing: 0.12em;
+  border-left: 1px solid var(--dl-border-gold);
+  padding-left: 12px;
+}
+.dos-damage.crit {
+  border-color: var(--dl-accent-red);
+  background: linear-gradient(135deg, rgba(var(--rgb-red),0.08) 0%, transparent 100%), #0c0c12;
+}
+.dos-damage.crit .total { color: var(--dl-accent-red); }
+.dos-damage.crit::after {
+  content: "CRITICAL · TARGET COMPROMISED";
+  position: absolute;
+  bottom: -1px; left: 0;
+  background: var(--dl-accent-red);
+  color: #050507;
+  font-size: 8px;
+  letter-spacing: 0.28em;
+  padding: 2px 8px;
+  font-weight: bold;
+}
+
+.dos-foot {
+  border-top: 1px dashed rgba(201,169,110,0.18);
+  padding: 6px 12px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: var(--dl-text-muted);
+  text-transform: uppercase;
+}
+.dos-foot button {
+  appearance: none;
+  background: transparent;
+  border: 1px solid var(--dl-border-gold);
+  color: var(--dl-accent-gold);
+  font-family: inherit;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  padding: 4px 10px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+/* Armor variant - reuse layout but with armor accent */
+.dos-card.armor .dos-stamp { color: var(--dl-track-mind); border-style: solid; }
+
+/* d66 broken card */
+.dos-card.broken .dos-strip { border-bottom-color: rgba(var(--rgb-red), 0.35); }
+.dos-card.broken .dos-strip .classified::after { content: " · BROKEN"; }
+.dos-card.broken .dos-name { color: var(--dl-accent-red); border-bottom-color: rgba(var(--rgb-red), 0.4); }
+.dos-injury {
+  padding: 14px 12px;
+  border-bottom: 1px dashed rgba(var(--rgb-red), 0.25);
+}
+.dos-injury .d66-roll {
+  display: inline-flex; gap: 6px;
+  margin-bottom: 8px;
+}
+.dos-injury .d66-roll .die {
+  width: 28px; height: 28px;
+  background: #050507;
+  border: 1px solid var(--dl-accent-red);
+  font-family: var(--dl-font-italic);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  color: var(--dl-accent-red);
+}
+.dos-injury h3 {
+  font-family: var(--dl-font-italic);
+  margin: 4px 0;
+  font-size: 16px;
+  letter-spacing: 0.06em;
+  color: var(--dl-text-primary);
+  text-transform: uppercase;
+}
+.dos-injury p {
+  margin: 4px 0 8px;
+  font-size: 11px;
+  color: var(--dl-text-secondary);
+  line-height: 1.55;
+}
+.dos-injury .badges { display: flex; gap: 6px; flex-wrap: wrap; }
+.dos-injury .badge {
+  font-size: 8px; letter-spacing: 0.22em;
+  padding: 2px 8px;
+  border: 1px solid var(--dl-border-gold);
+  text-transform: uppercase;
+  color: var(--dl-text-muted);
+}
+.dos-injury .badge.lethal {
+  border-color: var(--dl-accent-red);
+  color: var(--dl-accent-red);
+}
+
+
+/* =========================================================
+   ============ DIRECTION B — ARCANE PLAQUE ================
+   =========================================================
+   Theme: a vertical, ornate item-card. Centered portrait in a
+   corner-bracketed frame, sigil as focal element, wide-spaced
+   typography, double-rule dividers with diamond glyph between.
+*/
+
+.plq-card {
+  position: relative;
+  background: linear-gradient(180deg, var(--dl-bg-card) 0%, var(--dl-bg-primary) 100%);
+  border: 1px solid var(--dl-border-gold);
+  padding: 4px;
+}
+.plq-card .frame {
+  border: 1px solid var(--dl-border-gold);
+  padding: 18px 14px 14px;
+  position: relative;
+}
+.plq-card .frame::before, .plq-card .frame::after,
+.plq-card .frame > .corner-tl, .plq-card .frame > .corner-tr,
+.plq-card .frame > .corner-bl, .plq-card .frame > .corner-br {
+  position: absolute;
+  width: 12px; height: 12px;
+  border: 0 solid var(--dl-accent-gold);
+  pointer-events: none;
+}
+.plq-card .frame > .corner-tl { top: -2px; left: -2px; border-top-width: 2px; border-left-width: 2px; }
+.plq-card .frame > .corner-tr { top: -2px; right: -2px; border-top-width: 2px; border-right-width: 2px; }
+.plq-card .frame > .corner-bl { bottom: -2px; left: -2px; border-bottom-width: 2px; border-left-width: 2px; }
+.plq-card .frame > .corner-br { bottom: -2px; right: -2px; border-bottom-width: 2px; border-right-width: 2px; }
+
+.plq-portrait {
+  width: 72px; height: 72px;
+  margin: 0 auto 10px;
+  position: relative;
+  /* hex clip */
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  background: #050507;
+}
+.plq-portrait .img {
+  position: absolute; inset: 2px;
+  background-size: cover; background-position: center;
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  filter: grayscale(0.2);
+}
+.plq-portrait::before, .plq-portrait::after {
+  content: "";
+  position: absolute;
+  width: 1px; background: var(--dl-accent-gold);
+  top: 0; bottom: 0;
+}
+.plq-portrait::before { left: -8px; }
+.plq-portrait::after  { right: -8px; }
+
+.plq-name {
+  text-align: center;
+  font-family: var(--dl-font-italic);
+  font-size: 16px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--dl-accent-gold-bright);
+  margin-bottom: 2px;
+}
+.plq-action {
+  text-align: center;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  color: var(--dl-text-muted);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.plq-action b { color: var(--dl-text-secondary); font-weight: normal; }
+
+.plq-divider {
+  display: flex; align-items: center; gap: 8px;
+  margin: 12px 0;
+}
+.plq-divider .line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--dl-border-gold-strong), transparent);
+}
+.plq-divider .glyph {
+  color: var(--dl-accent-gold);
+  font-size: 10px;
+  transform: rotate(45deg);
+  display: inline-block;
+}
+
+.plq-dice {
+  display: flex; flex-direction: column; gap: 8px;
+  margin-bottom: 4px;
+}
+.plq-dice-row {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.plq-dice-row .label {
+  width: 50px;
+  font-size: 8px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--dl-text-muted);
+  text-align: right;
+  border-right: 1px solid var(--dl-border-gold);
+  padding-right: 8px;
+}
+.plq-dice-row.dread .label { color: var(--dl-accent-red); border-color: rgba(var(--rgb-red), 0.4); }
+.plq-dice-row.gear  .label { color: var(--dl-accent-gold); }
+.plq-die {
+  width: 24px; height: 24px;
+  border: 1px solid #22222e;
+  background: #050507;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  color: var(--dl-text-muted);
+  font-family: var(--dl-font-italic);
+  transform: rotate(45deg);
+}
+.plq-die > * { transform: rotate(-45deg); }
+.plq-die.six { background: var(--dl-accent-gold); color: #050507; border-color: var(--dl-accent-gold-bright); box-shadow: 0 0 8px rgba(var(--rgb-gold), 0.6); }
+.plq-die.one { background: rgba(var(--rgb-red),0.18); color: var(--dl-accent-red); border-color: var(--dl-accent-red); }
+.plq-die.dread.six { background: var(--dl-accent-red); color: #fff; box-shadow: 0 0 8px rgba(var(--rgb-red), 0.6); }
+
+.plq-result {
+  text-align: center;
+  margin-top: 6px;
+}
+.plq-sigil-large {
+  display: inline-block;
+  width: 44px; height: 44px;
+  background-color: var(--dl-accent-gold-bright);
+  -webkit-mask-size: contain; mask-size: contain;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  -webkit-mask-position: center; mask-position: center;
+  margin-bottom: 6px;
+  filter: drop-shadow(0 0 12px rgba(var(--rgb-gold), 0.5));
+}
+.plq-result.tainted .plq-sigil-large { background-color: var(--dl-track-soul); filter: drop-shadow(0 0 12px rgba(var(--rgb-purple),0.5)); }
+.plq-result.failure .plq-sigil-large { background-color: var(--dl-text-faint); filter: none; }
+.plq-result.dire    .plq-sigil-large { background-color: var(--dl-accent-red); filter: drop-shadow(0 0 12px rgba(var(--rgb-red),0.7)); }
+
+.plq-verdict {
+  font-family: var(--dl-font-italic);
+  font-size: 18px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--dl-accent-gold-bright);
+  margin-bottom: 4px;
+}
+.plq-result.tainted .plq-verdict { color: var(--dl-track-soul); }
+.plq-result.failure .plq-verdict { color: var(--dl-text-secondary); letter-spacing: 0.4em; }
+.plq-result.dire    .plq-verdict { color: var(--dl-accent-red); text-shadow: 0 0 12px rgba(var(--rgb-red), 0.5); }
+
+.plq-count {
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--dl-text-muted);
+}
+.plq-count strong { color: var(--dl-accent-gold-bright); font-size: 14px; }
+
+.plq-damage {
+  margin-top: 14px;
+  padding: 10px;
+  border: 1px solid var(--dl-border-gold);
+  display: flex; align-items: center; justify-content: space-between;
+  position: relative;
+  background: rgba(var(--rgb-gold), 0.02);
+}
+.plq-damage::before {
+  content: ""; position: absolute; inset: 2px;
+  border: 1px solid rgba(var(--rgb-gold), 0.08);
+  pointer-events: none;
+}
+.plq-damage .left {
+  display: flex; flex-direction: column;
+}
+.plq-damage .label {
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  color: var(--dl-text-muted);
+  text-transform: uppercase;
+}
+.plq-damage .formula { font-size: 10px; color: var(--dl-text-secondary); }
+.plq-damage .num {
+  font-family: var(--dl-font-italic);
+  font-size: 28px;
+  color: var(--dl-accent-gold-bright);
+  letter-spacing: 0.06em;
+}
+.plq-damage.crit { border-color: var(--dl-accent-red); }
+.plq-damage.crit .num { color: var(--dl-accent-red); text-shadow: 0 0 12px rgba(var(--rgb-red), 0.6); }
+.plq-damage.crit .crit-mark {
+  position: absolute;
+  top: -8px; left: 50%; transform: translateX(-50%);
+  background: var(--dl-bg-primary);
+  padding: 0 8px;
+  font-size: 8px;
+  letter-spacing: 0.32em;
+  color: var(--dl-accent-red);
+  font-weight: bold;
+}
+
+.plq-push {
+  margin-top: 12px;
+  text-align: center;
+  border-top: 1px solid var(--dl-border-gold);
+  padding-top: 10px;
+}
+.plq-push button {
+  appearance: none;
+  background: transparent;
+  border: 1px solid var(--dl-border-gold-strong);
+  color: var(--dl-accent-gold);
+  font-family: inherit;
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  padding: 6px 16px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 120ms;
+}
+.plq-push button:hover {
+  background: rgba(var(--rgb-gold), 0.08);
+  border-color: var(--dl-accent-gold);
+  color: var(--dl-accent-gold-bright);
+}
+
+/* d66 - plaque variant */
+.plq-injury {
+  text-align: center;
+  padding: 6px 0 0;
+}
+.plq-injury .d66 {
+  display: flex; gap: 10px; justify-content: center;
+  margin-bottom: 10px;
+}
+.plq-injury .d66 .die {
+  width: 36px; height: 36px;
+  border: 1px solid var(--dl-accent-red);
+  background: #050507;
+  font-family: var(--dl-font-italic);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  color: var(--dl-accent-red);
+  transform: rotate(45deg);
+}
+.plq-injury .d66 .die > span { transform: rotate(-45deg); display: inline-block; }
+.plq-injury h3 {
+  font-family: var(--dl-font-italic);
+  font-size: 16px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--dl-text-primary);
+  margin: 4px 0 6px;
+}
+.plq-injury p {
+  font-size: 11px;
+  color: var(--dl-text-secondary);
+  margin: 6px 18px;
+  line-height: 1.6;
+}
+.plq-injury .badges { justify-content: center; }
+
+
+/* =========================================================
+   ============ DIRECTION C — FIELD TRANSMISSION ===========
+   =========================================================
+   Theme: CRT terminal. Compressed information density, scan
+   lines, monospace pip rows, signal-bar outcome, glitch text
+   for criticals.
+*/
+
+.tx-card {
+  position: relative;
+  background: #04060a;
+  border: 1px solid #0e1a14;
+  border-left: 2px solid var(--dl-track-body);
+  font-family: var(--dl-font-primary);
+  color: #d0e8d4;
+  padding: 0;
+  overflow: hidden;
+}
+.tx-card.tainted { border-left-color: var(--dl-track-soul); }
+.tx-card.failure { border-left-color: var(--dl-text-faint); color: #888; }
+.tx-card.dire    { border-left-color: var(--dl-accent-red); }
+.tx-card::after {
+  /* CRT scanlines */
+  content: "";
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(0deg, rgba(0,0,0,0.16) 0 1px, transparent 1px 3px);
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+
+.tx-strip {
+  display: flex; align-items: center; gap: 12px;
+  padding: 4px 8px;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  background: #060a0a;
+  border-bottom: 1px solid #0e1a14;
+  color: #5e7565;
+}
+.tx-strip .signal {
+  display: inline-flex; gap: 2px;
+}
+.tx-strip .signal i {
+  width: 2px;
+  background: var(--dl-track-body);
+  display: inline-block;
+}
+.tx-strip .signal i:nth-child(1){height:4px}
+.tx-strip .signal i:nth-child(2){height:7px}
+.tx-strip .signal i:nth-child(3){height:10px}
+.tx-card.failure .tx-strip .signal i { background: #2a3a30; }
+.tx-strip .ts { color: #9bc7a8; }
+.tx-strip .src { color: var(--dl-accent-gold); margin-left: auto; }
+
+.tx-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px;
+  border-bottom: 1px dashed rgba(155, 199, 168, 0.15);
+}
+.tx-thumb {
+  width: 36px; height: 36px;
+  background-size: cover; background-position: center;
+  filter: grayscale(0.5) sepia(0.2) hue-rotate(60deg) brightness(0.7);
+  border: 1px solid rgba(155, 199, 168, 0.3);
+  position: relative;
+}
+.tx-thumb::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(155,199,168,0.1), transparent);
+}
+.tx-id {
+  flex: 1;
+  display: flex; flex-direction: column;
+  font-size: 10px;
+}
+.tx-id .name {
+  font-family: var(--dl-font-italic);
+  color: #d0e8d4;
+  letter-spacing: 0.06em;
+  font-size: 13px;
+  text-transform: uppercase;
+}
+.tx-id .codes {
+  color: #5e7565;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+}
+.tx-id .codes .a { color: var(--dl-accent-gold); }
+
+.tx-prompt {
+  padding: 6px 10px;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  font-family: 'Courier New', monospace;
+  color: #9bc7a8;
+}
+.tx-prompt::before {
+  content: "> ";
+  color: var(--dl-accent-gold);
+}
+
+.tx-pips {
+  padding: 4px 10px 8px;
+  font-size: 11px;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.04em;
+  color: #5e7565;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.tx-pips .row { white-space: nowrap; }
+.tx-pips .row .lbl { color: #9bc7a8; display: inline-block; width: 38px; }
+.tx-pips .row.dread .lbl { color: var(--dl-accent-red); }
+.tx-pips .row.gear  .lbl { color: var(--dl-accent-gold); }
+.tx-pips .pip { display: inline-block; padding: 0 2px; }
+.tx-pips .pip.six { color: var(--dl-accent-gold-bright); font-weight: bold; }
+.tx-pips .pip.one { color: var(--dl-accent-red); font-weight: bold; }
+.tx-pips .row.dread .pip.six { color: var(--dl-accent-red); }
+
+.tx-status {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px;
+  border-top: 1px solid #0e1a14;
+  background: #050807;
+}
+.tx-status .bars {
+  display: inline-flex; gap: 2px;
+}
+.tx-status .bars i {
+  display: inline-block;
+  width: 4px;
+  background: var(--dl-track-body);
+}
+.tx-status .bars i:nth-child(1){height:5px}
+.tx-status .bars i:nth-child(2){height:9px}
+.tx-status .bars i:nth-child(3){height:13px}
+.tx-status .bars i:nth-child(4){height:17px}
+.tx-card.tainted .tx-status .bars i { background: var(--dl-track-soul); }
+.tx-card.failure .tx-status .bars i { background: #2a3a30; }
+.tx-card.dire    .tx-status .bars i { background: var(--dl-accent-red); }
+
+.tx-status .verdict {
+  font-family: var(--dl-font-italic);
+  font-size: 14px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--dl-track-body);
+  flex: 1;
+}
+.tx-card.tainted .tx-status .verdict { color: var(--dl-track-soul); }
+.tx-card.failure .tx-status .verdict { color: #5e7565; }
+.tx-card.dire    .tx-status .verdict {
+  color: var(--dl-accent-red);
+  animation: tx-glitch 1.6s infinite steps(2);
+}
+@keyframes tx-glitch {
+  0%, 90% { transform: translate(0); }
+  92% { transform: translate(-1px, 1px); }
+  94% { transform: translate(1px, -1px); }
+  96% { transform: translate(-1px, 0); }
+  100% { transform: translate(0); }
+}
+
+.tx-status .count {
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  color: #5e7565;
+  letter-spacing: 0.12em;
+}
+.tx-status .count b {
+  color: var(--dl-accent-gold-bright);
+  font-size: 18px;
+  font-family: var(--dl-font-italic);
+  margin-right: 4px;
+}
+.tx-card.failure .tx-status .count b, .tx-card.dire .tx-status .count b { color: var(--dl-accent-red); }
+
+.tx-damage {
+  margin: 0 10px 10px;
+  padding: 6px 8px;
+  border: 1px dashed rgba(var(--rgb-gold), 0.3);
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  display: flex; justify-content: space-between; align-items: center;
+  color: #c0d8c4;
+}
+.tx-damage .l { color: var(--dl-accent-gold); letter-spacing: 0.12em; font-size: 9px; text-transform: uppercase; }
+.tx-damage .v { color: var(--dl-accent-gold-bright); font-size: 16px; font-family: var(--dl-font-italic); }
+.tx-damage.crit { border-color: var(--dl-accent-red); border-style: solid; background: rgba(var(--rgb-red),0.06); }
+.tx-damage.crit .v { color: var(--dl-accent-red); }
+.tx-damage.crit .crit {
+  display: block;
+  font-size: 9px;
+  color: var(--dl-accent-red);
+  letter-spacing: 0.18em;
+  animation: tx-glitch 1.6s infinite steps(2);
+}
+
+.tx-push {
+  border-top: 1px dashed rgba(155, 199, 168, 0.15);
+  padding: 4px 8px;
+}
+.tx-push button {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  color: var(--dl-accent-gold);
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  padding: 0;
+}
+.tx-push button:hover { color: var(--dl-accent-gold-bright); }
+.tx-push button::before { content: "[ "; color: #5e7565; }
+.tx-push button::after  { content: " ]"; color: #5e7565; }
+
+/* d66 transmission */
+.tx-card.broken { border-left-color: var(--dl-accent-red); }
+.tx-injury {
+  padding: 8px 10px;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+}
+.tx-injury .roll-line { color: #9bc7a8; margin-bottom: 4px; }
+.tx-injury .roll-line .v { color: var(--dl-accent-red); font-size: 14px; }
+.tx-injury .name {
+  font-family: var(--dl-font-italic);
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dl-accent-red);
+  margin-bottom: 4px;
+}
+.tx-injury .effect { color: #c0d8c4; line-height: 1.55; margin-bottom: 6px; }
+.tx-injury .meta { color: #5e7565; font-size: 10px; letter-spacing: 0.18em; }
+.tx-injury .meta .lethal { color: var(--dl-accent-red); }
+
+
+/* =========================================================
+   Footer hint
+   ========================================================= */
+.foot-hint {
+  margin-top: 50px;
+  padding-top: 24px;
+  border-top: 1px dashed var(--dl-text-faint);
+  color: var(--dl-text-muted);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  line-height: 1.7;
+}
+.foot-hint code {
+  background: var(--dl-bg-elevated);
+  padding: 1px 5px;
+  color: var(--dl-accent-gold);
+  font-size: 10px;
+}
+
+</style>
+</head>
+<body>
+<div class="page">
+
+<h1>Dreadlight · Chat Card Redesign</h1>
+<div class="tagline">three design directions to compare against the current cards · click a tab</div>
+
+<div class="tabs">
+  <button data-target="dir-current" class="active">Current (baseline)</button>
+  <button data-target="dir-a">A · Dossier / Case File</button>
+  <button data-target="dir-b">B · Arcane Plaque</button>
+  <button data-target="dir-c">C · Field Transmission</button>
+</div>
+
+<!-- ============================================================
+     CURRENT (baseline)
+     ============================================================ -->
+<section id="dir-current" class="direction active">
+  <div class="direction-blurb">
+    <strong>Baseline.</strong> A simplified rendering of what's shipping today —
+    portrait band header, dice rows, single result row, optional damage card.
+    Use this as a reference when judging the alternatives.
+  </div>
+
+  <div class="card-grid">
+
+    <!-- success roll -->
+    <div class="card-slot">
+      <div class="card-label">Roll · Success (with damage)</div>
+      <div class="chat-stub"><div class="cur-card success">
+        <div class="accent"></div>
+        <div class="header">
+          <div class="portrait fake-portrait"></div>
+          <div class="portrait-fade"></div>
+          <div class="name">Dr. Vale Halvor</div>
+        </div>
+        <div class="info"><span class="talent">Quickdraw</span> — Strength (Hard)</div>
+        <div class="dice-block">
+          <div class="dice-row"><span class="label">Base</span>
+            <span class="die">3</span><span class="die six">6</span><span class="die">2</span><span class="die six">6</span>
+          </div>
+          <div class="dice-row"><span class="label">Dread</span>
+            <span class="die dread">4</span>
+          </div>
+        </div>
+        <div class="result">
+          <span class="result-icon"><i class="dl-sigil dl-sigil-success"></i></span>
+          <span class="result-label">Success</span>
+          <span class="result-count"><strong>2</strong> Successes</span>
+        </div>
+        <div class="push-bar"><button class="push-btn">⟳ Push</button></div>
+      </div></div>
+    </div>
+
+    <!-- tainted -->
+    <div class="card-slot">
+      <div class="card-label">Roll · Tainted Success</div>
+      <div class="chat-stub"><div class="cur-card tainted">
+        <div class="accent"></div>
+        <div class="header">
+          <div class="portrait fake-portrait"></div>
+          <div class="portrait-fade"></div>
+          <div class="name">Dr. Vale Halvor</div>
+        </div>
+        <div class="info">Empathy (Standard)</div>
+        <div class="dice-block">
+          <div class="dice-row"><span class="label">Base</span>
+            <span class="die">3</span><span class="die">2</span><span class="die">4</span>
+          </div>
+          <div class="dice-row"><span class="label">Dread</span>
+            <span class="die dread six">6</span><span class="die dread">2</span>
+          </div>
+        </div>
+        <div class="result">
+          <span class="result-icon"><i class="dl-sigil dl-sigil-tainted"></i></span>
+          <span class="result-label">Tainted Success</span>
+          <span class="result-count"><strong>1</strong> Success</span>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- dire failure -->
+    <div class="card-slot">
+      <div class="card-label">Roll · Dire Failure</div>
+      <div class="chat-stub"><div class="cur-card dire">
+        <div class="accent"></div>
+        <div class="header">
+          <div class="portrait fake-portrait"></div>
+          <div class="portrait-fade"></div>
+          <div class="name">Dr. Vale Halvor</div>
+        </div>
+        <div class="info">Insight (Demanding)</div>
+        <div class="dice-block">
+          <div class="dice-row"><span class="label">Base</span>
+            <span class="die">2</span><span class="die">3</span>
+          </div>
+          <div class="dice-row"><span class="label">Dread</span>
+            <span class="die dread one">1</span><span class="die dread one">1</span><span class="die dread">5</span>
+          </div>
+        </div>
+        <div class="result">
+          <span class="result-icon"><i class="dl-sigil dl-sigil-dire"></i></span>
+          <span class="result-label">Dire Failure</span>
+          <span class="result-count"><strong>0</strong> Successes</span>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- armor -->
+    <div class="card-slot">
+      <div class="card-label">Armor Roll</div>
+      <div class="chat-stub"><div class="cur-card success">
+        <div class="accent"></div>
+        <div class="header">
+          <div class="portrait fake-portrait"></div>
+          <div class="portrait-fade"></div>
+          <div class="name">Dr. Vale Halvor</div>
+        </div>
+        <div class="info"><span class="talent">Reinforced Coat</span> — Armor Roll</div>
+        <div class="dice-block">
+          <div class="dice-row"><span class="label">Armor</span>
+            <span class="die">3</span><span class="die six">6</span>
+          </div>
+        </div>
+        <div class="result">
+          <span class="result-icon" style="color:var(--dl-track-mind)"><i class="dl-sigil dl-sigil-armor"></i></span>
+          <span class="result-label">Blocked</span>
+          <span class="result-count"><strong>1</strong> Reduction</span>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- d66 result -->
+    <div class="card-slot">
+      <div class="card-label">D66 · Critical Injury (Lethal)</div>
+      <div class="chat-stub"><div class="cur-card dire">
+        <div class="accent"></div>
+        <div class="header" style="background:linear-gradient(180deg,#1a0a0a,#0a0408);">
+          <div class="name" style="color:var(--dl-accent-red)">Dr. Vale Halvor — BROKEN</div>
+        </div>
+        <div class="info"><span class="talent" style="color:var(--dl-accent-red)">Body</span> — Critical Injury</div>
+        <div style="padding: 10px 12px; display:flex; gap:8px;">
+          <span class="die" style="width:36px;height:36px;font-size:16px;color:var(--dl-accent-red);border-color:var(--dl-accent-red)">5</span>
+          <span class="die" style="width:36px;height:36px;font-size:16px;color:var(--dl-accent-red);border-color:var(--dl-accent-red)">3</span>
+        </div>
+        <div style="padding:0 12px 12px;">
+          <div style="font-family:var(--dl-font-italic); font-size:14px; letter-spacing:0.04em; color:var(--dl-text-primary)">53 — Crushed Throat</div>
+          <div style="font-size:11px; color:var(--dl-text-secondary); margin:4px 0 8px; line-height:1.5;">Cannot speak above a whisper. −1 LOG to social rolls until healed.</div>
+          <div style="display:flex;gap:6px">
+            <span style="font-size:9px;letter-spacing:0.18em;color:var(--dl-text-muted);border:1px solid var(--dl-border-gold);padding:2px 6px">HEAL: 2D WK</span>
+            <span style="font-size:9px;letter-spacing:0.18em;color:var(--dl-accent-red);border:1px solid var(--dl-accent-red);padding:2px 6px">☠ LETHAL</span>
+          </div>
+        </div>
+        <div class="push-bar"><button class="push-btn">Apply to Sheet</button></div>
+      </div></div>
+    </div>
+
+    <!-- d66 prompt -->
+    <div class="card-slot">
+      <div class="card-label">D66 · Broken Prompt</div>
+      <div class="chat-stub"><div class="cur-card dire">
+        <div class="accent"></div>
+        <div class="header" style="background:linear-gradient(180deg,#1a0a0a,#0a0408);">
+          <div class="name" style="color:var(--dl-accent-red)">Dr. Vale Halvor — BROKEN</div>
+        </div>
+        <div style="padding:14px 12px; text-align:center; font-size:12px; color:var(--dl-text-secondary); line-height:1.5;">
+          Your body has given out.<br>The flesh remembers nothing kindly.
+        </div>
+        <div class="push-bar"><button class="push-btn">⚀ Roll Critical Injury</button></div>
+      </div></div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================================================
+     A — DOSSIER
+     ============================================================ -->
+<section id="dir-a" class="direction">
+  <div class="direction-blurb">
+    <strong>A · Dossier / Case File.</strong> Each card reads like a sheet pulled
+    from a classified field-report folder. Typewriter labels, redaction bars,
+    evidence-tag dice, and a large angled rubber-stamp seals the verdict. Critical
+    hits earn a small bottom-corner stamp ("CRITICAL · TARGET COMPROMISED"). Push
+    becomes a footer action so the stamp can dominate.
+  </div>
+
+  <div class="card-grid">
+
+    <!-- success -->
+    <div class="card-slot">
+      <div class="card-label">Roll · Success (with damage)</div>
+      <div class="chat-stub"><div class="dos-card">
+        <div class="dos-strip">
+          <span>Case</span><span class="case">04A · 22:14</span>
+          <span class="classified">Classified</span>
+        </div>
+        <div class="dos-head">
+          <div>
+            <div class="dos-photo fake-portrait"></div>
+            <div class="dos-photo-tag">SUBJECT</div>
+          </div>
+          <div class="dos-meta">
+            <div class="dos-name">Halvor, V.</div>
+            <dl class="dos-fields">
+              <dt>Action</dt><dd>Quickdraw · STR</dd>
+              <dt>Diff.</dt><dd>Hard</dd>
+              <dt>Tool</dt><dd><i class="dl-sigil dl-sigil-weapon" style="color:var(--dl-accent-gold)"></i> Service Revolver</dd>
+            </dl>
+          </div>
+        </div>
+        <div class="dos-evidence">
+          <div class="dos-evidence-label">Evidence · Pool</div>
+          <div class="dos-die-tray">
+            <span class="dos-tag base"><span class="dot">3</span><span class="src">B</span></span>
+            <span class="dos-tag base six"><span class="dot">6</span><span class="src">B</span></span>
+            <span class="dos-tag base"><span class="dot">2</span><span class="src">B</span></span>
+            <span class="dos-tag base six"><span class="dot">6</span><span class="src">B</span></span>
+            <span class="dos-tag dread"><span class="dot">4</span><span class="src">D</span></span>
+          </div>
+        </div>
+        <div class="dos-result success">
+          <div class="dos-summary">
+            <span class="num">2</span>
+            successes registered. extra hit converted to additional damage.
+          </div>
+          <div class="dos-stamp">Success</div>
+        </div>
+        <div class="dos-damage crit">
+          <span class="label"><i class="dl-sigil dl-sigil-weapon" style="color:var(--dl-accent-gold)"></i> Damage</span>
+          <span class="formula"><span class="b">3</span> base · +1 extra</span>
+          <span class="total">4</span>
+        </div>
+        <div class="dos-foot">
+          <span>FILED · 22:14</span>
+          <button>⟳ Push the Roll</button>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- tainted -->
+    <div class="card-slot">
+      <div class="card-label">Roll · Tainted Success</div>
+      <div class="chat-stub"><div class="dos-card">
+        <div class="dos-strip">
+          <span>Case</span><span class="case">04B · 22:31</span>
+          <span class="classified">Classified</span>
+        </div>
+        <div class="dos-head">
+          <div><div class="dos-photo fake-portrait"></div><div class="dos-photo-tag">SUBJECT</div></div>
+          <div class="dos-meta">
+            <div class="dos-name">Halvor, V.</div>
+            <dl class="dos-fields">
+              <dt>Action</dt><dd>Read the Room · EMP</dd>
+              <dt>Diff.</dt><dd>Standard</dd>
+              <dt>Note</dt><dd class="redact">[REDACTED — INSIGHT NOT SAFE]</dd>
+            </dl>
+          </div>
+        </div>
+        <div class="dos-evidence">
+          <div class="dos-evidence-label">Evidence · Pool</div>
+          <div class="dos-die-tray">
+            <span class="dos-tag base"><span class="dot">3</span><span class="src">B</span></span>
+            <span class="dos-tag base"><span class="dot">2</span><span class="src">B</span></span>
+            <span class="dos-tag base"><span class="dot">4</span><span class="src">B</span></span>
+            <span class="dos-tag dread six"><span class="dot">6</span><span class="src">D</span></span>
+            <span class="dos-tag dread"><span class="dot">2</span><span class="src">D</span></span>
+          </div>
+        </div>
+        <div class="dos-result tainted">
+          <div class="dos-summary">
+            <span class="num">1</span>
+            success — but the truth came from the wrong place.
+          </div>
+          <div class="dos-stamp">Tainted</div>
+        </div>
+        <div class="dos-foot">
+          <span>FILED · 22:31</span>
+          <button>⟳ Push the Roll</button>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- dire failure -->
+    <div class="card-slot">
+      <div class="card-label">Roll · Dire Failure</div>
+      <div class="chat-stub"><div class="dos-card">
+        <div class="dos-strip">
+          <span>Case</span><span class="case">04C · 22:48</span>
+          <span class="classified">Classified</span>
+        </div>
+        <div class="dos-head">
+          <div><div class="dos-photo fake-portrait"></div><div class="dos-photo-tag">SUBJECT</div></div>
+          <div class="dos-meta">
+            <div class="dos-name">Halvor, V.</div>
+            <dl class="dos-fields">
+              <dt>Action</dt><dd>Read the Sigil · INS</dd>
+              <dt>Diff.</dt><dd>Demanding</dd>
+            </dl>
+          </div>
+        </div>
+        <div class="dos-evidence">
+          <div class="dos-evidence-label">Evidence · Pool</div>
+          <div class="dos-die-tray">
+            <span class="dos-tag base"><span class="dot">2</span><span class="src">B</span></span>
+            <span class="dos-tag base"><span class="dot">3</span><span class="src">B</span></span>
+            <span class="dos-tag dread one"><span class="dot">1</span><span class="src">D</span></span>
+            <span class="dos-tag dread one"><span class="dot">1</span><span class="src">D</span></span>
+            <span class="dos-tag dread"><span class="dot">5</span><span class="src">D</span></span>
+          </div>
+        </div>
+        <div class="dos-result dire">
+          <div class="dos-summary">
+            <span class="num">0</span>
+            successes. dread crowned itself in this roll.
+          </div>
+          <div class="dos-stamp">Dire</div>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- armor -->
+    <div class="card-slot">
+      <div class="card-label">Armor Roll</div>
+      <div class="chat-stub"><div class="dos-card armor">
+        <div class="dos-strip">
+          <span>Inv</span><span class="case">Reinforced Coat</span>
+          <span class="classified" style="border-color:rgba(107,157,245,0.5);color:var(--dl-track-mind)">ARMOR</span>
+        </div>
+        <div class="dos-head">
+          <div><div class="dos-photo fake-portrait"></div><div class="dos-photo-tag">WEARER</div></div>
+          <div class="dos-meta">
+            <div class="dos-name">Halvor, V.</div>
+            <dl class="dos-fields">
+              <dt>Item</dt><dd><i class="dl-sigil dl-sigil-armor" style="color:var(--dl-track-mind)"></i> Reinforced Coat</dd>
+              <dt>Rating</dt><dd>2 dice</dd>
+            </dl>
+          </div>
+        </div>
+        <div class="dos-evidence">
+          <div class="dos-evidence-label">Evidence · Plates</div>
+          <div class="dos-die-tray">
+            <span class="dos-tag base"><span class="dot">3</span><span class="src">A</span></span>
+            <span class="dos-tag base six"><span class="dot">6</span><span class="src">A</span></span>
+          </div>
+        </div>
+        <div class="dos-result success">
+          <div class="dos-summary">
+            <span class="num" style="color:var(--dl-track-mind)">1</span>
+            damage absorbed. plates held this time.
+          </div>
+          <div class="dos-stamp" style="color:var(--dl-track-mind)">Blocked</div>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- d66 result -->
+    <div class="card-slot">
+      <div class="card-label">D66 · Critical Injury (Lethal)</div>
+      <div class="chat-stub"><div class="dos-card broken">
+        <div class="dos-strip">
+          <span>Case</span><span class="case">04C · TERMINAL</span>
+          <span class="classified">Classified</span>
+        </div>
+        <div class="dos-head">
+          <div><div class="dos-photo fake-portrait" style="filter:grayscale(0.8) contrast(0.8) brightness(0.7)"></div><div class="dos-photo-tag" style="color:var(--dl-accent-red)">CASUALTY</div></div>
+          <div class="dos-meta">
+            <div class="dos-name">Halvor, V.</div>
+            <dl class="dos-fields">
+              <dt>Track</dt><dd><i class="dl-sigil dl-sigil-body" style="color:var(--dl-track-body)"></i> Body — broken</dd>
+              <dt>Diag.</dt><dd>53 · Crushed Throat</dd>
+            </dl>
+          </div>
+        </div>
+        <div class="dos-injury">
+          <div class="d66-roll">
+            <span class="die">5</span><span class="die">3</span>
+          </div>
+          <h3>Crushed Throat</h3>
+          <p>Cannot speak above a whisper. −1 LOG to social rolls until healed. If unhealed by next sundown, suffocation begins.</p>
+          <div class="badges">
+            <span class="badge">HEAL · 2d Weeks</span>
+            <span class="badge lethal">☠ Lethal</span>
+          </div>
+        </div>
+        <div class="dos-foot">
+          <span>FILED · 23:02</span>
+          <button>Apply to Sheet</button>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- d66 prompt -->
+    <div class="card-slot">
+      <div class="card-label">D66 · Broken Prompt</div>
+      <div class="chat-stub"><div class="dos-card broken">
+        <div class="dos-strip">
+          <span>Status</span><span class="case">SUBJECT BROKEN</span>
+          <span class="classified">Critical</span>
+        </div>
+        <div class="dos-head">
+          <div><div class="dos-photo fake-portrait" style="filter:grayscale(0.6) brightness(0.6)"></div><div class="dos-photo-tag" style="color:var(--dl-accent-red)">CASUALTY</div></div>
+          <div class="dos-meta">
+            <div class="dos-name">Halvor, V.</div>
+            <dl class="dos-fields">
+              <dt>Track</dt><dd><i class="dl-sigil dl-sigil-body" style="color:var(--dl-track-body)"></i> Body</dd>
+              <dt>State</dt><dd style="color:var(--dl-accent-red)">Broken — awaiting diagnosis</dd>
+            </dl>
+          </div>
+        </div>
+        <div style="padding:14px 12px; font-size:11px; color:var(--dl-text-secondary); line-height:1.6; font-family:var(--dl-font-italic); border-bottom: 1px dashed rgba(var(--rgb-red),0.25);">
+          Your body has given out. The flesh remembers nothing kindly. Roll the table and let the file fill itself in.
+        </div>
+        <div class="dos-foot">
+          <span>FILE · INCOMPLETE</span>
+          <button style="border-color:var(--dl-accent-red);color:var(--dl-accent-red)">⚀ Roll Critical Injury</button>
+        </div>
+      </div></div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================================================
+     B — ARCANE PLAQUE
+     ============================================================ -->
+<section id="dir-b" class="direction">
+  <div class="direction-blurb">
+    <strong>B · Arcane Plaque.</strong> Vertical and ceremonial. Hex-cropped portrait
+    above the name, double-rule dividers with a diamond glyph, dice arranged
+    centered as gemstone diamonds, and the outcome rendered as a giant glowing
+    sigil + verdict word. Feels like an item card from a high-production
+    horror TTRPG (Mörk Borg / Mothership lineage).
+  </div>
+
+  <div class="card-grid">
+
+    <!-- success -->
+    <div class="card-slot">
+      <div class="card-label">Roll · Success (with damage)</div>
+      <div class="chat-stub"><div class="plq-card">
+        <div class="frame">
+          <span class="corner-tl"></span><span class="corner-tr"></span><span class="corner-bl"></span><span class="corner-br"></span>
+          <div class="plq-portrait"><div class="img fake-portrait"></div></div>
+          <div class="plq-name">Dr. Vale Halvor</div>
+          <div class="plq-action"><b>Quickdraw</b> · Strength · Hard</div>
+
+          <div class="plq-divider"><span class="line"></span><span class="glyph">◆</span><span class="line"></span></div>
+
+          <div class="plq-dice">
+            <div class="plq-dice-row">
+              <span class="label">Base</span>
+              <span class="plq-die"><span>3</span></span>
+              <span class="plq-die six"><span>6</span></span>
+              <span class="plq-die"><span>2</span></span>
+              <span class="plq-die six"><span>6</span></span>
+            </div>
+            <div class="plq-dice-row dread">
+              <span class="label">Dread</span>
+              <span class="plq-die"><span>4</span></span>
+            </div>
+          </div>
+
+          <div class="plq-divider"><span class="line"></span><span class="glyph">◆</span><span class="line"></span></div>
+
+          <div class="plq-result success">
+            <div class="plq-sigil-large" style="-webkit-mask-image:url('../../../assets/icons/system/result-success.svg');mask-image:url('../../../assets/icons/system/result-success.svg')"></div>
+            <div class="plq-verdict">Success</div>
+            <div class="plq-count"><strong>2</strong> Successes</div>
+          </div>
+
+          <div class="plq-damage crit">
+            <span class="crit-mark">◆ Critical Hit ◆</span>
+            <div class="left">
+              <span class="label">Damage</span>
+              <span class="formula">3 base · +1 extra</span>
+            </div>
+            <div class="num">4</div>
+          </div>
+
+          <div class="plq-push"><button>⟳ Push</button></div>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- tainted -->
+    <div class="card-slot">
+      <div class="card-label">Roll · Tainted Success</div>
+      <div class="chat-stub"><div class="plq-card">
+        <div class="frame">
+          <span class="corner-tl"></span><span class="corner-tr"></span><span class="corner-bl"></span><span class="corner-br"></span>
+          <div class="plq-portrait"><div class="img fake-portrait"></div></div>
+          <div class="plq-name">Dr. Vale Halvor</div>
+          <div class="plq-action">Empathy · Standard</div>
+
+          <div class="plq-divider"><span class="line"></span><span class="glyph">◆</span><span class="line"></span></div>
+
+          <div class="plq-dice">
+            <div class="plq-dice-row">
+              <span class="label">Base</span>
+              <span class="plq-die"><span>3</span></span>
+              <span class="plq-die"><span>2</span></span>
+              <span class="plq-die"><span>4</span></span>
+            </div>
+            <div class="plq-dice-row dread">
+              <span class="label">Dread</span>
+              <span class="plq-die dread six"><span>6</span></span>
+              <span class="plq-die"><span>2</span></span>
+            </div>
+          </div>
+
+          <div class="plq-divider"><span class="line"></span><span class="glyph">◆</span><span class="line"></span></div>
+
+          <div class="plq-result tainted">
+            <div class="plq-sigil-large" style="-webkit-mask-image:url('../../../assets/icons/system/result-tainted.svg');mask-image:url('../../../assets/icons/system/result-tainted.svg')"></div>
+            <div class="plq-verdict">Tainted</div>
+            <div class="plq-count"><strong>1</strong> Success · from dread</div>
+          </div>
+
+          <div class="plq-push"><button>⟳ Push</button></div>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- dire failure -->
+    <div class="card-slot">
+      <div class="card-label">Roll · Dire Failure</div>
+      <div class="chat-stub"><div class="plq-card">
+        <div class="frame">
+          <span class="corner-tl"></span><span class="corner-tr"></span><span class="corner-bl"></span><span class="corner-br"></span>
+          <div class="plq-portrait"><div class="img fake-portrait"></div></div>
+          <div class="plq-name">Dr. Vale Halvor</div>
+          <div class="plq-action">Insight · Demanding</div>
+
+          <div class="plq-divider"><span class="line"></span><span class="glyph">◆</span><span class="line"></span></div>
+
+          <div class="plq-dice">
+            <div class="plq-dice-row">
+              <span class="label">Base</span>
+              <span class="plq-die"><span>2</span></span>
+              <span class="plq-die"><span>3</span></span>
+            </div>
+            <div class="plq-dice-row dread">
+              <span class="label">Dread</span>
+              <span class="plq-die one"><span>1</span></span>
+              <span class="plq-die one"><span>1</span></span>
+              <span class="plq-die"><span>5</span></span>
+            </div>
+          </div>
+
+          <div class="plq-divider"><span class="line"></span><span class="glyph">◆</span><span class="line"></span></div>
+
+          <div class="plq-result dire">
+            <div class="plq-sigil-large" style="-webkit-mask-image:url('../../../assets/icons/system/result-dire.svg');mask-image:url('../../../assets/icons/system/result-dire.svg')"></div>
+            <div class="plq-verdict">Dire Failure</div>
+            <div class="plq-count">No successes · two ones in dread</div>
+          </div>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- armor -->
+    <div class="card-slot">
+      <div class="card-label">Armor Roll</div>
+      <div class="chat-stub"><div class="plq-card">
+        <div class="frame">
+          <span class="corner-tl"></span><span class="corner-tr"></span><span class="corner-bl"></span><span class="corner-br"></span>
+          <div class="plq-portrait"><div class="img fake-portrait"></div></div>
+          <div class="plq-name">Dr. Vale Halvor</div>
+          <div class="plq-action"><b>Reinforced Coat</b> · Armor Roll</div>
+
+          <div class="plq-divider"><span class="line"></span><span class="glyph">◆</span><span class="line"></span></div>
+
+          <div class="plq-dice">
+            <div class="plq-dice-row">
+              <span class="label" style="color:var(--dl-track-mind);border-color:rgba(107,157,245,0.4)">Armor</span>
+              <span class="plq-die"><span>3</span></span>
+              <span class="plq-die six" style="background:var(--dl-track-mind);border-color:#a0c2ff;box-shadow:0 0 8px rgba(107,157,245,0.6)"><span>6</span></span>
+            </div>
+          </div>
+
+          <div class="plq-divider"><span class="line"></span><span class="glyph">◆</span><span class="line"></span></div>
+
+          <div class="plq-result success">
+            <div class="plq-sigil-large" style="-webkit-mask-image:url('../../../assets/icons/system/item-armor.svg');mask-image:url('../../../assets/icons/system/item-armor.svg');background-color:var(--dl-track-mind);filter:drop-shadow(0 0 12px rgba(107,157,245,0.5))"></div>
+            <div class="plq-verdict" style="color:var(--dl-track-mind)">Blocked</div>
+            <div class="plq-count"><strong>1</strong> Reduction</div>
+          </div>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- d66 result -->
+    <div class="card-slot">
+      <div class="card-label">D66 · Critical Injury (Lethal)</div>
+      <div class="chat-stub"><div class="plq-card" style="border-color:rgba(var(--rgb-red),0.32)">
+        <div class="frame" style="border-color:rgba(var(--rgb-red),0.32)">
+          <span class="corner-tl" style="border-color:var(--dl-accent-red)"></span>
+          <span class="corner-tr" style="border-color:var(--dl-accent-red)"></span>
+          <span class="corner-bl" style="border-color:var(--dl-accent-red)"></span>
+          <span class="corner-br" style="border-color:var(--dl-accent-red)"></span>
+          <div class="plq-portrait"><div class="img fake-portrait" style="filter:grayscale(0.7) brightness(0.7)"></div></div>
+          <div class="plq-name" style="color:var(--dl-accent-red)">Dr. Vale Halvor</div>
+          <div class="plq-action" style="color:var(--dl-accent-red)">Body · Broken</div>
+
+          <div class="plq-divider"><span class="line" style="background:linear-gradient(90deg,transparent,rgba(var(--rgb-red),0.4),transparent)"></span><span class="glyph" style="color:var(--dl-accent-red)">◆</span><span class="line" style="background:linear-gradient(90deg,transparent,rgba(var(--rgb-red),0.4),transparent)"></span></div>
+
+          <div class="plq-injury">
+            <div class="d66"><span class="die"><span>5</span></span><span class="die"><span>3</span></span></div>
+            <h3>Crushed Throat</h3>
+            <p>Cannot speak above a whisper. −1 LOG to social rolls until healed. If unhealed by sundown, suffocation begins.</p>
+            <div class="plq-divider"><span class="line"></span><span class="glyph" style="color:var(--dl-accent-red)">◆</span><span class="line"></span></div>
+            <div class="badges" style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center">
+              <span style="font-size:8px;letter-spacing:0.22em;padding:2px 8px;border:1px solid var(--dl-border-gold);text-transform:uppercase;color:var(--dl-text-muted)">Heal · 2d Weeks</span>
+              <span style="font-size:8px;letter-spacing:0.22em;padding:2px 8px;border:1px solid var(--dl-accent-red);color:var(--dl-accent-red);text-transform:uppercase">☠ Lethal</span>
+            </div>
+          </div>
+
+          <div class="plq-push"><button style="border-color:rgba(var(--rgb-red),0.4);color:var(--dl-accent-red)">Apply to Sheet</button></div>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- d66 prompt -->
+    <div class="card-slot">
+      <div class="card-label">D66 · Broken Prompt</div>
+      <div class="chat-stub"><div class="plq-card" style="border-color:rgba(var(--rgb-red),0.32)">
+        <div class="frame" style="border-color:rgba(var(--rgb-red),0.32)">
+          <span class="corner-tl" style="border-color:var(--dl-accent-red)"></span>
+          <span class="corner-tr" style="border-color:var(--dl-accent-red)"></span>
+          <span class="corner-bl" style="border-color:var(--dl-accent-red)"></span>
+          <span class="corner-br" style="border-color:var(--dl-accent-red)"></span>
+          <div class="plq-portrait"><div class="img fake-portrait" style="filter:grayscale(0.7) brightness(0.7)"></div></div>
+          <div class="plq-name" style="color:var(--dl-accent-red)">Dr. Vale Halvor</div>
+          <div class="plq-action" style="color:var(--dl-accent-red)">Body · Broken</div>
+          <div class="plq-divider"><span class="line"></span><span class="glyph" style="color:var(--dl-accent-red)">◆</span><span class="line"></span></div>
+          <p style="text-align:center;font-family:var(--dl-font-italic);font-size:13px;color:var(--dl-text-secondary);line-height:1.7;margin:8px 18px;">"Your body has given out.<br>The flesh remembers nothing kindly."</p>
+          <div class="plq-push"><button style="border-color:var(--dl-accent-red);color:var(--dl-accent-red)">⚀ Roll Critical Injury</button></div>
+        </div>
+      </div></div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================================================
+     C — FIELD TRANSMISSION / CRT
+     ============================================================ -->
+<section id="dir-c" class="direction">
+  <div class="direction-blurb">
+    <strong>C · Field Transmission / CRT.</strong> Compressed, terminal-like.
+    Each card opens with a timestamp + signal indicator, the action is rendered
+    as a shell prompt, dice are tight monospace pip-rows, the outcome is shown
+    as signal-bars + verdict word. Dire failure / lethal injuries glitch the
+    text. Maximum information density.
+  </div>
+
+  <div class="card-grid">
+
+    <!-- success -->
+    <div class="card-slot">
+      <div class="card-label">Roll · Success (with damage)</div>
+      <div class="chat-stub"><div class="tx-card">
+        <div class="tx-strip">
+          <span class="signal"><i></i><i></i><i></i></span>
+          <span class="ts">22:14:07</span>
+          <span>RECV · CHAN-04</span>
+          <span class="src">SRC: V.HALVOR</span>
+        </div>
+        <div class="tx-head">
+          <div class="tx-thumb fake-portrait"></div>
+          <div class="tx-id">
+            <span class="name">Dr. Vale Halvor</span>
+            <span class="codes">ID: 04A · ATTR: <span class="a">STR</span> · DIFF: HARD</span>
+          </div>
+        </div>
+        <div class="tx-prompt">roll str.hard --talent=quickdraw --gear=revolver</div>
+        <div class="tx-pips">
+          <div class="row"><span class="lbl">base ›</span><span class="pip">3</span><span class="pip six">[6]</span><span class="pip">2</span><span class="pip six">[6]</span></div>
+          <div class="row dread"><span class="lbl">dread›</span><span class="pip">4</span></div>
+        </div>
+        <div class="tx-status">
+          <span class="bars"><i></i><i></i><i></i><i></i></span>
+          <span class="verdict">Success</span>
+          <span class="count"><b>2</b>/4 hits</span>
+        </div>
+        <div class="tx-damage crit">
+          <span><span class="l">DMG ›</span> 3 + 1ext</span>
+          <span><span class="v">4</span> <span class="crit">⚠ CRIT</span></span>
+        </div>
+        <div class="tx-push"><button>push roll · re-roll non-locked</button></div>
+      </div></div>
+    </div>
+
+    <!-- tainted -->
+    <div class="card-slot">
+      <div class="card-label">Roll · Tainted Success</div>
+      <div class="chat-stub"><div class="tx-card tainted">
+        <div class="tx-strip">
+          <span class="signal"><i></i><i></i><i></i></span>
+          <span class="ts">22:31:44</span>
+          <span>RECV · CHAN-04</span>
+          <span class="src">SRC: V.HALVOR</span>
+        </div>
+        <div class="tx-head">
+          <div class="tx-thumb fake-portrait"></div>
+          <div class="tx-id">
+            <span class="name">Dr. Vale Halvor</span>
+            <span class="codes">ATTR: <span class="a">EMP</span> · DIFF: STD</span>
+          </div>
+        </div>
+        <div class="tx-prompt">roll emp.std</div>
+        <div class="tx-pips">
+          <div class="row"><span class="lbl">base ›</span><span class="pip">3</span><span class="pip">2</span><span class="pip">4</span></div>
+          <div class="row dread"><span class="lbl">dread›</span><span class="pip six">[6]</span><span class="pip">2</span></div>
+        </div>
+        <div class="tx-status">
+          <span class="bars"><i></i><i></i><i></i><i></i></span>
+          <span class="verdict">Tainted</span>
+          <span class="count"><b>1</b>/5 hits · dread</span>
+        </div>
+        <div class="tx-push"><button>push roll · re-roll non-locked</button></div>
+      </div></div>
+    </div>
+
+    <!-- dire failure -->
+    <div class="card-slot">
+      <div class="card-label">Roll · Dire Failure</div>
+      <div class="chat-stub"><div class="tx-card dire">
+        <div class="tx-strip">
+          <span class="signal"><i style="background:var(--dl-accent-red)"></i><i style="background:var(--dl-accent-red)"></i><i style="background:var(--dl-accent-red)"></i></span>
+          <span class="ts">22:48:19</span>
+          <span style="color:var(--dl-accent-red)">CORRUPT · CHAN-04</span>
+          <span class="src">SRC: V.HALVOR</span>
+        </div>
+        <div class="tx-head">
+          <div class="tx-thumb fake-portrait"></div>
+          <div class="tx-id">
+            <span class="name">Dr. Vale Halvor</span>
+            <span class="codes">ATTR: <span class="a">INS</span> · DIFF: DEMAND</span>
+          </div>
+        </div>
+        <div class="tx-prompt">roll ins.demand</div>
+        <div class="tx-pips">
+          <div class="row"><span class="lbl">base ›</span><span class="pip">2</span><span class="pip">3</span></div>
+          <div class="row dread"><span class="lbl">dread›</span><span class="pip one">[1]</span><span class="pip one">[1]</span><span class="pip">5</span></div>
+        </div>
+        <div class="tx-status">
+          <span class="bars"><i></i><i></i><i></i><i></i></span>
+          <span class="verdict">Dire Failure</span>
+          <span class="count"><b>0</b>/5 hits</span>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- armor -->
+    <div class="card-slot">
+      <div class="card-label">Armor Roll</div>
+      <div class="chat-stub"><div class="tx-card" style="border-left-color:var(--dl-track-mind)">
+        <div class="tx-strip">
+          <span class="signal"><i style="background:var(--dl-track-mind)"></i><i style="background:var(--dl-track-mind)"></i><i style="background:var(--dl-track-mind)"></i></span>
+          <span class="ts">22:14:09</span>
+          <span style="color:var(--dl-track-mind)">ARMOR · COAT</span>
+          <span class="src">SRC: V.HALVOR</span>
+        </div>
+        <div class="tx-head">
+          <div class="tx-thumb fake-portrait"></div>
+          <div class="tx-id">
+            <span class="name">Reinforced Coat</span>
+            <span class="codes">RATING: 2 dice · WORN BY V.HALVOR</span>
+          </div>
+        </div>
+        <div class="tx-prompt">roll armor reinforced-coat</div>
+        <div class="tx-pips">
+          <div class="row"><span class="lbl">armor›</span><span class="pip">3</span><span class="pip six" style="color:var(--dl-track-mind)">[6]</span></div>
+        </div>
+        <div class="tx-status">
+          <span class="bars"><i style="background:var(--dl-track-mind)"></i><i style="background:var(--dl-track-mind)"></i><i style="background:var(--dl-track-mind)"></i><i style="background:var(--dl-track-mind)"></i></span>
+          <span class="verdict" style="color:var(--dl-track-mind)">Blocked</span>
+          <span class="count"><b style="color:var(--dl-track-mind)">1</b> reduction</span>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- d66 result -->
+    <div class="card-slot">
+      <div class="card-label">D66 · Critical Injury (Lethal)</div>
+      <div class="chat-stub"><div class="tx-card broken dire">
+        <div class="tx-strip">
+          <span class="signal"><i style="background:var(--dl-accent-red)"></i><i style="background:var(--dl-accent-red)"></i><i style="background:var(--dl-accent-red)"></i></span>
+          <span class="ts">23:02:11</span>
+          <span style="color:var(--dl-accent-red)">CRITICAL · BODY</span>
+          <span class="src">SRC: V.HALVOR</span>
+        </div>
+        <div class="tx-head">
+          <div class="tx-thumb fake-portrait" style="filter:grayscale(0.8) brightness(0.6)"></div>
+          <div class="tx-id">
+            <span class="name" style="color:var(--dl-accent-red)">Subject Broken</span>
+            <span class="codes">TRACK: <span style="color:var(--dl-accent-red)">BODY</span> · DIAG: 53</span>
+          </div>
+        </div>
+        <div class="tx-injury">
+          <div class="roll-line">d66 ▸ <span class="v">5 3</span> ▸ table.body[53]</div>
+          <div class="name">Crushed Throat</div>
+          <div class="effect">Cannot speak above a whisper. −1 LOG to social rolls until healed. If unhealed by sundown, suffocation begins.</div>
+          <div class="meta">HEAL: 2d-WK · <span class="lethal">☠ LETHAL</span></div>
+        </div>
+        <div class="tx-push"><button style="color:var(--dl-accent-red)">apply to sheet</button></div>
+      </div></div>
+    </div>
+
+    <!-- d66 prompt -->
+    <div class="card-slot">
+      <div class="card-label">D66 · Broken Prompt</div>
+      <div class="chat-stub"><div class="tx-card broken dire">
+        <div class="tx-strip">
+          <span class="signal"><i style="background:var(--dl-accent-red)"></i><i style="background:var(--dl-accent-red)"></i><i style="background:var(--dl-accent-red)"></i></span>
+          <span class="ts">23:02:08</span>
+          <span style="color:var(--dl-accent-red)">ALERT · BODY=0</span>
+          <span class="src">SRC: V.HALVOR</span>
+        </div>
+        <div class="tx-head">
+          <div class="tx-thumb fake-portrait" style="filter:grayscale(0.8) brightness(0.6)"></div>
+          <div class="tx-id">
+            <span class="name" style="color:var(--dl-accent-red)">Subject Broken</span>
+            <span class="codes">TRACK: BODY · STATE: <span style="color:var(--dl-accent-red)">BROKEN</span></span>
+          </div>
+        </div>
+        <div class="tx-prompt" style="color:var(--dl-accent-red)">flesh.remembers --kindly=false</div>
+        <div style="padding:6px 10px 12px;font-family:'Courier New',monospace;font-size:11px;color:#c0d8c4;line-height:1.6;">
+          ▸ subject's body has given out.<br>
+          ▸ awaiting injury diagnosis.<br>
+          ▸ press button to roll d66 against table.body
+        </div>
+        <div class="tx-push"><button style="color:var(--dl-accent-red)">⚀ roll critical injury</button></div>
+      </div></div>
+    </div>
+
+  </div>
+</section>
+
+
+<div class="foot-hint">
+  ▸ Switch tabs at the top to compare. Mockup uses placeholder portraits with <code>"DV"</code> initials.<br>
+  ▸ Real font is Monaspace Krypton/Neon — the mockup falls back to <code>Courier New</code> if not installed.<br>
+  ▸ Sigils are loaded from <code>../../../assets/icons/system/*.svg</code> relative to this file.<br>
+  ▸ Reply with which direction you want (or which pieces to mix-and-match) and I'll fold the chosen design into the real templates + CSS.
+</div>
+
+</div>
+
+<script>
+  document.querySelectorAll('.tabs button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.direction').forEach(s => s.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.target).classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

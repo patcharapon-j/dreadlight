@@ -23,6 +23,8 @@ export async function sendRollToChat(roll) {
           difficulty: roll.difficulty,
           pushed: roll.pushed,
           actorId: roll.actor.id,
+          weaponDamage: roll.weaponDamage,
+          weaponCritThreshold: roll.weaponCritThreshold,
         },
       },
     },
@@ -126,6 +128,8 @@ export function registerChatListeners() {
           gearName: flags.gearName,
           difficulty: flags.difficulty,
           actor,
+          weaponDamage: flags.weaponDamage ?? null,
+          weaponCritThreshold: flags.weaponCritThreshold ?? null,
         });
 
         roll.baseResults = [...flags.baseResults];
