@@ -27,11 +27,11 @@
   <div class="chat-result">
     <div class="result-row">
       {{#if sixes}}
-        <span class="result-icon blue">🛡</span>
+        <span class="result-icon blue"><i class="dl-sigil dl-sigil-armor"></i></span>
         <span class="result-label">{{localize "DREADLIGHT.ArmorBlocked"}}</span>
         <span class="result-count">{{sixes}} {{localize "DREADLIGHT.ArmorReduction"}}</span>
       {{else}}
-        <span class="result-icon muted">✕</span>
+        <span class="result-icon muted"><i class="dl-sigil dl-sigil-failure"></i></span>
         <span class="result-label">{{localize "DREADLIGHT.ArmorNoBlock"}}</span>
       {{/if}}
     </div>

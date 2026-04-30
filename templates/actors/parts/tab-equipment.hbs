@@ -7,7 +7,7 @@
 <div class="section-header"><span>{{localize "DREADLIGHT.Weapons"}}</span><div class="section-line"></div></div>
 {{#each weapons}}
   <div class="item-row weapon-row" data-item-id="{{this.id}}">
-    <div class="item-icon red">⚔</div>
+    <div class="item-icon red"><i class="dl-sigil dl-sigil-weapon"></i></div>
     <div class="item-info" data-action="toggleExpand">
       <div class="item-name">{{this.name}}</div>
       <div class="item-meta">
@@ -23,7 +23,7 @@
         {{{gearPips this.system.gearBonus this.system.gearBonusMax "gold"}}}
       </div>
     {{/if}}
-    <button type="button" class="weapon-roll-btn" data-action="rollWeapon">⬡</button>
+    <button type="button" class="weapon-roll-btn" data-action="rollWeapon" title="{{localize "DREADLIGHT.RollButton"}}"><i class="fa-solid fa-dice-d6"></i></button>
   </div>
   <div class="item-expand" data-expand-id="{{this.id}}">
     <div class="expand-inner">
@@ -35,7 +35,7 @@
 <div class="section-header"><span>{{localize "DREADLIGHT.Armor"}}</span><div class="section-line"></div></div>
 {{#each armors}}
   <div class="item-row armor-row" data-item-id="{{this.id}}">
-    <div class="item-icon mind">🛡</div>
+    <div class="item-icon mind"><i class="dl-sigil dl-sigil-armor"></i></div>
     <div class="item-info" data-action="toggleExpand">
       <div class="item-name">{{this.name}}</div>
       <div class="item-meta">{{#each this.system.properties}}<span class="tag">{{this}}</span>{{/each}}</div>
@@ -46,7 +46,7 @@
         {{{gearPips this.system.armorCurrent this.system.armorRating "blue"}}}
       </div>
     {{/if}}
-    <button type="button" class="armor-roll-btn" data-action="rollArmor">🛡</button>
+    <button type="button" class="armor-roll-btn" data-action="rollArmor" title="{{localize "DREADLIGHT.Armor"}}"><i class="dl-sigil dl-sigil-armor"></i></button>
   </div>
   <div class="item-expand" data-expand-id="{{this.id}}">
     <div class="expand-inner">
@@ -58,7 +58,7 @@
 <div class="section-header"><span>{{localize "DREADLIGHT.Gear"}}</span><div class="section-line"></div></div>
 {{#each equipment}}
   <div class="item-row gear-row" data-item-id="{{this.id}}">
-    <div class="item-icon gold">⬡</div>
+    <div class="item-icon gold"><i class="dl-sigil dl-sigil-equipment"></i></div>
     <div class="item-info" data-action="toggleExpand">
       <div class="item-name">{{this.name}}</div>
       <div class="item-meta">{{#each this.system.applicableTalents}}<span class="tag tag-gold">{{this}}</span>{{/each}}</div>

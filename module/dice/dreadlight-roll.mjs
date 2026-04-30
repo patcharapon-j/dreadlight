@@ -147,6 +147,11 @@ export class DreadlightRoll {
       direFailure: this.direFailure,
       pushed: this.pushed,
       consequences: this.pushConsequences,
+      hasOnes: !this.pushed && (
+        this.baseResults.some(r => r === 1) ||
+        this.dreadResults.some(r => r === 1) ||
+        this.gearResults.some(r => r === 1)
+      ),
     };
   }
 

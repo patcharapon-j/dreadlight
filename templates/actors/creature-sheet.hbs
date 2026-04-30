@@ -56,7 +56,7 @@
   <div class="creature-body-armor">
     <div class="creature-body">
       <div class="track-btn body {{#if system.body.broken}}is-broken{{/if}}">
-        <div class="track-icon body">♥</div>
+        <div class="track-icon body"><i class="dl-sigil dl-sigil-body"></i></div>
         <div class="track-info">
           <div class="track-label body">{{localize "DREADLIGHT.TrackBody"}}</div>
           <div class="track-pips">{{{trackPips system.body.value system.body.max "body"}}}</div>
@@ -74,9 +74,14 @@
       <div class="section-label">{{localize "DREADLIGHT.Armor"}}</div>
       <input type="number" name="system.armor" value="{{system.armor}}" min="0" max="10" class="armor-value-input" />
     </div>
-    <div class="creature-armor">
+    <div class="creature-armor creature-ferocity">
       <div class="section-label">{{localize "DREADLIGHT.Ferocity"}}</div>
-      <input type="number" name="system.ferocity" value="{{system.ferocity}}" min="1" max="3" class="armor-value-input" />
+      <div class="ferocity-pips" data-value="{{system.ferocity}}">
+        <span class="ferocity-pip {{#if (gte system.ferocity 1)}}active{{/if}}"><i class="dl-sigil dl-sigil-ferocity"></i></span>
+        <span class="ferocity-pip {{#if (gte system.ferocity 2)}}active{{/if}}"><i class="dl-sigil dl-sigil-ferocity"></i></span>
+        <span class="ferocity-pip {{#if (gte system.ferocity 3)}}active{{/if}}"><i class="dl-sigil dl-sigil-ferocity"></i></span>
+      </div>
+      <input type="number" name="system.ferocity" value="{{system.ferocity}}" min="1" max="3" class="armor-value-input ferocity-input" />
     </div>
   </div>
 

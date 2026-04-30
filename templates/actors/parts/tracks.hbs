@@ -1,7 +1,7 @@
 <div class="tracks-bar" data-dread="{{system.dread.value}}">
   <div class="track-col">
     <div class="track-btn body {{#if system.tracks.body.broken}}is-broken{{/if}}">
-      <div class="track-icon body">♥</div>
+      <div class="track-icon body"><i class="dl-sigil dl-sigil-body"></i></div>
       <div class="track-info">
         <div class="track-label body">
           {{#if system.tracks.body.broken}}
@@ -12,14 +12,14 @@
         </div>
         <div class="track-pips">{{{trackPips system.tracks.body.value system.tracks.body.max "body"}}}</div>
       </div>
-      <span class="track-num">{{system.tracks.body.value}}</span>
+      <span class="track-num">{{system.tracks.body.value}}<span class="track-num-max">/{{system.tracks.body.max}}</span></span>
     </div>
-    <button type="button" class="d66-track-roll body" data-action="rollD66" data-track="body">⚅ {{localize "DREADLIGHT.D66BtnBody"}}</button>
+    <button type="button" class="d66-track-roll body" data-action="rollD66" data-track="body">{{localize "DREADLIGHT.D66BtnBody"}}</button>
   </div>
 
   <div class="track-col">
     <div class="track-btn mind {{#if system.tracks.mind.broken}}is-broken{{/if}}">
-      <div class="track-icon mind">◈</div>
+      <div class="track-icon mind"><i class="dl-sigil dl-sigil-mind"></i></div>
       <div class="track-info">
         <div class="track-label mind">
           {{#if system.tracks.mind.broken}}
@@ -30,14 +30,14 @@
         </div>
         <div class="track-pips">{{{trackPips system.tracks.mind.value system.tracks.mind.max "mind"}}}</div>
       </div>
-      <span class="track-num">{{system.tracks.mind.value}}</span>
+      <span class="track-num">{{system.tracks.mind.value}}<span class="track-num-max">/{{system.tracks.mind.max}}</span></span>
     </div>
-    <button type="button" class="d66-track-roll mind" data-action="rollD66" data-track="mind">⚅ {{localize "DREADLIGHT.D66BtnMind"}}</button>
+    <button type="button" class="d66-track-roll mind" data-action="rollD66" data-track="mind">{{localize "DREADLIGHT.D66BtnMind"}}</button>
   </div>
 
   <div class="track-col">
     <div class="track-btn soul {{#if system.tracks.soul.broken}}is-broken{{/if}}">
-      <div class="track-icon soul">◉</div>
+      <div class="track-icon soul"><i class="dl-sigil dl-sigil-soul"></i></div>
       <div class="track-info">
         <div class="track-label soul">
           {{#if system.tracks.soul.broken}}
@@ -48,15 +48,15 @@
         </div>
         <div class="track-pips">{{{trackPips system.tracks.soul.value system.tracks.soul.max "soul"}}}</div>
       </div>
-      <span class="track-num">{{system.tracks.soul.value}}</span>
+      <span class="track-num">{{system.tracks.soul.value}}<span class="track-num-max">/{{system.tracks.soul.max}}</span></span>
     </div>
-    <button type="button" class="d66-track-roll soul" data-action="rollD66" data-track="soul">⚅ {{localize "DREADLIGHT.D66BtnSoul"}}</button>
+    <button type="button" class="d66-track-roll soul" data-action="rollD66" data-track="soul">{{localize "DREADLIGHT.D66BtnSoul"}}</button>
   </div>
 
   <div class="track-separator"></div>
 
   <div class="track-btn dread">
-    <div class="track-icon dread">◼</div>
+    <div class="track-icon dread"><i class="dl-sigil dl-sigil-dread"></i></div>
     <div class="track-info">
       <div class="track-label dread">{{localize "DREADLIGHT.TrackDread"}}</div>
       <div class="dread-pips">{{{segmentedPips system.dread.value dreadMax "dread"}}}</div>
@@ -66,7 +66,7 @@
   <div class="track-separator"></div>
 
   <div class="track-btn supply">
-    <div class="track-icon supply">⬡</div>
+    <div class="track-icon supply"><i class="dl-sigil dl-sigil-supply"></i></div>
     <div class="track-info">
       <div class="track-label supply">{{localize "DREADLIGHT.Supply"}}</div>
       <div class="track-value">{{system.supply.value}}</div>

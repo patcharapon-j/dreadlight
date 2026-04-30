@@ -14,7 +14,7 @@
     <div class="npc-tracks">
       <div class="track-col">
         <div class="track-btn body {{#if system.body.broken}}is-broken{{/if}}">
-          <div class="track-icon body">♥</div>
+          <div class="track-icon body"><i class="dl-sigil dl-sigil-body"></i></div>
           <div class="track-info">
             <div class="track-label body">{{localize "DREADLIGHT.TrackBody"}}</div>
             <div class="track-pips">{{{trackPips system.body.value system.body.max "body"}}}</div>
@@ -24,7 +24,7 @@
       </div>
       <div class="track-col">
         <div class="track-btn mind {{#if system.mind.broken}}is-broken{{/if}}">
-          <div class="track-icon mind">◈</div>
+          <div class="track-icon mind"><i class="dl-sigil dl-sigil-mind"></i></div>
           <div class="track-info">
             <div class="track-label mind">{{localize "DREADLIGHT.TrackMind"}}</div>
             <div class="track-pips">{{{trackPips system.mind.value system.mind.max "mind"}}}</div>
@@ -39,7 +39,7 @@
       <div class="section-header"><span>{{localize "DREADLIGHT.Gear"}}</span><div class="section-line"></div></div>
       {{#each weapons}}
         <div class="item-row weapon-row" data-item-id="{{this.id}}">
-          <div class="item-icon red">⚔</div>
+          <div class="item-icon red"><i class="dl-sigil dl-sigil-weapon"></i></div>
           <div class="item-info">
             <div class="item-name">{{this.name}}</div>
           </div>
@@ -51,7 +51,7 @@
       {{/each}}
       {{#each equipment}}
         <div class="item-row gear-row" data-item-id="{{this.id}}">
-          <div class="item-icon gold">⬡</div>
+          <div class="item-icon gold"><i class="dl-sigil dl-sigil-equipment"></i></div>
           <div class="item-info">
             <div class="item-name">{{this.name}}</div>
           </div>
@@ -88,7 +88,7 @@
       <div class="npc-tracks">
         <div class="track-col">
           <div class="track-btn body {{#if system.body.broken}}is-broken{{/if}}">
-            <div class="track-icon body">♥</div>
+            <div class="track-icon body"><i class="dl-sigil dl-sigil-body"></i></div>
             <div class="track-info">
               <div class="track-label body">{{localize "DREADLIGHT.TrackBody"}}</div>
               <div class="track-pips">{{{trackPips system.body.value system.body.max "body"}}}</div>
@@ -98,7 +98,7 @@
         </div>
         <div class="track-col">
           <div class="track-btn mind {{#if system.mind.broken}}is-broken{{/if}}">
-            <div class="track-icon mind">◈</div>
+            <div class="track-icon mind"><i class="dl-sigil dl-sigil-mind"></i></div>
             <div class="track-info">
               <div class="track-label mind">{{localize "DREADLIGHT.TrackMind"}}</div>
               <div class="track-pips">{{{trackPips system.mind.value system.mind.max "mind"}}}</div>
@@ -108,7 +108,7 @@
         </div>
         <div class="track-col">
           <div class="track-btn soul {{#if system.soul.broken}}is-broken{{/if}}">
-            <div class="track-icon soul">◉</div>
+            <div class="track-icon soul"><i class="dl-sigil dl-sigil-soul"></i></div>
             <div class="track-info">
               <div class="track-label soul">{{localize "DREADLIGHT.TrackSoul"}}</div>
               <div class="track-pips">{{{trackPips system.soul.value system.soul.max "soul"}}}</div>
@@ -123,7 +123,7 @@
         <div class="section-header"><span>{{localize "DREADLIGHT.TabTalents"}}</span><div class="section-line"></div></div>
         {{#each talents}}
           <div class="item-row talent-row" data-item-id="{{this.id}}">
-            <div class="item-icon gold">◆</div>
+            <div class="item-icon gold"><i class="dl-sigil dl-sigil-talent"></i></div>
             <div class="item-info" data-action="openItem">
               <div class="item-name">{{this.name}}</div>
             </div>
@@ -134,7 +134,7 @@
         <div class="section-header"><span>{{localize "DREADLIGHT.Weapons"}}</span><div class="section-line"></div></div>
         {{#each weapons}}
           <div class="item-row weapon-row" data-item-id="{{this.id}}">
-            <div class="item-icon red">⚔</div>
+            <div class="item-icon red"><i class="dl-sigil dl-sigil-weapon"></i></div>
             <div class="item-info" data-action="openItem">
               <div class="item-name">{{this.name}}</div>
             </div>
@@ -146,7 +146,7 @@
         <div class="section-header"><span>{{localize "DREADLIGHT.Armor"}}</span><div class="section-line"></div></div>
         {{#each armors}}
           <div class="item-row armor-row" data-item-id="{{this.id}}">
-            <div class="item-icon mind">🛡</div>
+            <div class="item-icon mind"><i class="dl-sigil dl-sigil-armor"></i></div>
             <div class="item-info" data-action="openItem">
               <div class="item-name">{{this.name}}</div>
             </div>
@@ -157,7 +157,7 @@
         <div class="section-header"><span>{{localize "DREADLIGHT.Gear"}}</span><div class="section-line"></div></div>
         {{#each equipment}}
           <div class="item-row gear-row" data-item-id="{{this.id}}">
-            <div class="item-icon gold">⬡</div>
+            <div class="item-icon gold"><i class="dl-sigil dl-sigil-equipment"></i></div>
             <div class="item-info" data-action="openItem">
               <div class="item-name">{{this.name}}</div>
             </div>

@@ -1,4 +1,4 @@
-<div class="dreadlight-chat {{#if direFailure}}chat-dire{{else}}chat-{{outcome}}{{/if}} {{#if pushed}}pushed{{/if}}" data-sixes="{{totalSixes}}">
+<div class="dreadlight-chat {{#if direFailure}}chat-dire{{else}}chat-{{outcome}}{{/if}} {{#if pushed}}pushed{{/if}}" data-sixes="{{totalSixes}}" data-has-ones="{{#if hasOnes}}true{{else}}false{{/if}}">
   <div class="chat-accent"></div>
 
   <div class="chat-header {{#unless showPortrait}}no-portrait{{/unless}}">
@@ -17,7 +17,7 @@
       ({{capitalize difficulty}})
       {{#if pushed}}<span class="chat-pushed">⟳ {{localize "DREADLIGHT.ResultPushed"}}</span>{{/if}}
     </div>
-    {{#if gearName}}<div class="chat-gear-used">⚙ {{gearName}}</div>{{/if}}
+    {{#if gearName}}<div class="chat-gear-used"><i class="dl-sigil dl-sigil-equipment"></i> {{gearName}}</div>{{/if}}
   </div>
 
   <div class="chat-dice">
@@ -49,9 +49,9 @@
 
   <div class="chat-result">
     <div class="result-row">
-      {{#if (eq outcome "success")}}<span class="result-icon gold">✦</span>{{/if}}
-      {{#if (eq outcome "tainted")}}<span class="result-icon purple">⬡</span>{{/if}}
-      {{#if (eq outcome "failure")}}{{#if direFailure}}<span class="result-icon red dire-glow">✕</span>{{else}}<span class="result-icon muted">✕</span>{{/if}}{{/if}}
+      {{#if (eq outcome "success")}}<span class="result-icon gold"><i class="dl-sigil dl-sigil-success"></i></span>{{/if}}
+      {{#if (eq outcome "tainted")}}<span class="result-icon purple"><i class="dl-sigil dl-sigil-tainted"></i></span>{{/if}}
+      {{#if (eq outcome "failure")}}{{#if direFailure}}<span class="result-icon red dire-glow"><i class="dl-sigil dl-sigil-dire"></i></span>{{else}}<span class="result-icon muted"><i class="dl-sigil dl-sigil-failure"></i></span>{{/if}}{{/if}}
 
       <span class="result-label">
         {{#if (eq outcome "success")}}{{localize "DREADLIGHT.ResultSuccess"}}{{/if}}
@@ -65,22 +65,26 @@
     </div>
 
     {{#if showTaintedFlavorText}}{{#if (eq outcome "tainted")}}
-      <div class="dire-flavor">{{localize "DREADLIGHT.TaintedFlavorText"}}</div>
+      <div class="dire-flavor"><span class="flavor-mark">"</span>{{localize "DREADLIGHT.TaintedFlavorText"}}<span class="flavor-mark">"</span></div>
     {{/if}}{{/if}}
     {{#if showTaintedFlavorText}}{{#if direFailure}}
-      <div class="dire-flavor">{{localize "DREADLIGHT.DireFailureFlavorText"}}</div>
+      <div class="dire-flavor"><span class="flavor-mark">"</span>{{localize "DREADLIGHT.DireFailureFlavorText"}}<span class="flavor-mark">"</span></div>
     {{/if}}{{/if}}
 
     {{#if consequences}}
-      {{#if consequences.mindLoss}}<div class="consequence consequence-mind">◈ <strong>−{{consequences.mindLoss}} {{localize "DREADLIGHT.PushCostMind"}}</strong></div>{{/if}}
-      {{#if consequences.soulLoss}}<div class="consequence consequence-soul">◉ <strong>−{{consequences.soulLoss}} {{localize "DREADLIGHT.PushCostSoul"}}</strong></div>{{/if}}
-      {{#if consequences.gearDamage}}<div class="consequence consequence-gear">⚙ <strong>{{localize "DREADLIGHT.PushCostGear"}} −{{consequences.gearDamage}}</strong></div>{{/if}}
+      {{#if consequences.mindLoss}}<div class="consequence consequence-mind"><i class="dl-sigil dl-sigil-mind"></i> <strong>−{{consequences.mindLoss}} {{localize "DREADLIGHT.PushCostMind"}}</strong></div>{{/if}}
+      {{#if consequences.soulLoss}}<div class="consequence consequence-soul"><i class="dl-sigil dl-sigil-soul"></i> <strong>−{{consequences.soulLoss}} {{localize "DREADLIGHT.PushCostSoul"}}</strong></div>{{/if}}
+      {{#if consequences.gearDamage}}<div class="consequence consequence-gear"><i class="dl-sigil dl-sigil-equipment"></i> <strong>{{localize "DREADLIGHT.PushCostGear"}} −{{consequences.gearDamage}}</strong></div>{{/if}}
     {{/if}}
   </div>
 
   {{#unless pushed}}
     <div class="push-bar">
-      <button type="button" class="push-btn">{{localize "DREADLIGHT.Push"}} <span class="push-hint">· {{localize "DREADLIGHT.PushHint"}}</span></button>
+      <button type="button" class="push-btn">
+        <i class="dl-sigil dl-sigil-push push-btn-icon"></i>
+        <span class="push-btn-label">{{localize "DREADLIGHT.Push"}}</span>
+        <span class="push-hint">{{localize "DREADLIGHT.PushHint"}}</span>
+      </button>
     </div>
   {{/unless}}
 </div>

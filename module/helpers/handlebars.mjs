@@ -218,13 +218,15 @@ export function registerHandlebarsHelpers() {
     const num = Number(value) || 0;
     const whole = Math.floor(num);
     const frac = num - whole;
-    let fracStr = "";
-    if (Math.abs(frac - 0.25) < 0.01) fracStr = "¼";
-    else if (Math.abs(frac - 0.5) < 0.01) fracStr = "½";
-    else if (Math.abs(frac - 0.75) < 0.01) fracStr = "¾";
-    if (whole === 0 && fracStr) return fracStr;
-    if (fracStr) return `${whole}${fracStr}`;
-    return String(whole);
+    let fracHtml = "";
+    if (Math.abs(frac - 0.25) < 0.01) fracHtml = `<span class="frac"><sup>1</sup><span class="frac-bar">/</span><sub>4</sub></span>`;
+    else if (Math.abs(frac - 0.5) < 0.01) fracHtml = `<span class="frac"><sup>1</sup><span class="frac-bar">/</span><sub>2</sub></span>`;
+    else if (Math.abs(frac - 0.75) < 0.01) fracHtml = `<span class="frac"><sup>3</sup><span class="frac-bar">/</span><sub>4</sub></span>`;
+    let html;
+    if (whole === 0 && fracHtml) html = fracHtml;
+    else if (fracHtml) html = `${whole}${fracHtml}`;
+    else html = String(whole);
+    return new Handlebars.SafeString(html);
   });
 
   console.log("Dreadlight | Handlebars helpers registered");

@@ -19,7 +19,7 @@
         </div>
       </div>
       <div class="talent-level {{#if (eq this.name 'Occult')}}purple{{else}}gold{{/if}}">L{{this.system.level}}</div>
-      <button type="button" class="talent-roll-btn {{#if (eq this.name 'Occult')}}occult{{/if}}" data-action="rollTalent">⬡</button>
+      <button type="button" class="talent-roll-btn {{#if (eq this.name 'Occult')}}occult{{/if}}" data-action="rollTalent" title="{{localize "DREADLIGHT.RollButton"}}"><i class="fa-solid fa-dice-d6"></i></button>
     </div>
     <div class="talent-expand" data-expand-id="{{this.id}}">
       <div class="expand-inner">

@@ -47,9 +47,9 @@
 
   <div class="chat-result">
     <div class="result-row">
-      {{#if (eq outcome "success")}}<span class="result-icon gold">✦</span>{{/if}}
-      {{#if (eq outcome "tainted")}}<span class="result-icon purple">⬡</span>{{/if}}
-      {{#if (eq outcome "failure")}}{{#if direFailure}}<span class="result-icon red dire-glow">✕</span>{{else}}<span class="result-icon muted">✕</span>{{/if}}{{/if}}
+      {{#if (eq outcome "success")}}<span class="result-icon gold"><i class="dl-sigil dl-sigil-success"></i></span>{{/if}}
+      {{#if (eq outcome "tainted")}}<span class="result-icon purple"><i class="dl-sigil dl-sigil-tainted"></i></span>{{/if}}
+      {{#if (eq outcome "failure")}}{{#if direFailure}}<span class="result-icon red dire-glow"><i class="dl-sigil dl-sigil-dire"></i></span>{{else}}<span class="result-icon muted"><i class="dl-sigil dl-sigil-failure"></i></span>{{/if}}{{/if}}
 
       <span class="result-label">
         {{#if (eq outcome "success")}}{{localize "DREADLIGHT.ResultSuccess"}}{{/if}}

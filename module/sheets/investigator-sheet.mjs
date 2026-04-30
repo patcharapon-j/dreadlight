@@ -781,18 +781,17 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     const barW = barRect.width;
     const barH = barRect.height;
 
-    // Dread box: left edge origin points
     const ox = dreadRect.left - barRect.left;
-    const oy = dreadRect.top - barRect.top + dreadRect.height / 2;
-    const oyTop = dreadRect.top - barRect.top + 3;
-    const oyBot = dreadRect.bottom - barRect.top - 3;
+    const oyMid = dreadRect.top - barRect.top + dreadRect.height / 2;
+    const oyTop = dreadRect.top - barRect.top + 4;
+    const oyBot = dreadRect.bottom - barRect.top - 4;
 
-    // Soul box edges (target for wrapping)
-    const soulR = soulRect.right - barRect.left;   // right edge
-    const soulL = soulRect.left - barRect.left;     // left edge
-    const soulT = soulRect.top - barRect.top;       // top edge
-    const soulB = soulRect.bottom - barRect.top;    // bottom edge
-    const soulMidY = soulT + (soulB - soulT) / 2;
+    const soulR = soulRect.right - barRect.left;
+    const soulL = soulRect.left - barRect.left;
+    const soulT = soulRect.top - barRect.top;
+    const soulB = soulRect.bottom - barRect.top;
+    const soulW = soulR - soulL;
+    const soulH = soulB - soulT;
 
     const svgNS = "http://www.w3.org/2000/svg";
     const svg = document.createElementNS(svgNS, "svg");
@@ -800,134 +799,170 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     svg.setAttribute("viewBox", `0 0 ${barW} ${barH}`);
     svg.setAttribute("preserveAspectRatio", "none");
 
-    // Helper: jagged vein path with quadratic bezier segments
-    const veinPath = (startX, startY, segments, jitter, strokeW, opacity) => {
-      let d = `M ${startX} ${startY}`;
+    // Soft red glow filter for the corruption — tendrils bleed light into the surface
+    const defs = document.createElementNS(svgNS, "defs");
+    defs.innerHTML = `
+      <filter id="dl-vein-glow" x="-30%" y="-30%" width="160%" height="160%">
+        <feGaussianBlur stdDeviation="1.4" result="blur"/>
+        <feMerge>
+          <feMergeNode in="blur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>`;
+    svg.appendChild(defs);
+
+    const root = document.createElementNS(svgNS, "g");
+    root.setAttribute("filter", "url(#dl-vein-glow)");
+    svg.appendChild(root);
+
+    // Smooth organic tendril: cubic bezier with offset control points biased to the flow direction
+    // segments is array of [dx, dy, curveBias] where curveBias 0..1 controls how far the
+    // control points lean off the straight line. Builds a single S-curve from start to end.
+    const tendril = (startX, startY, segments, strokeW, opacity, dasharray = null) => {
+      let d = `M ${startX.toFixed(1)} ${startY.toFixed(1)}`;
       let cx = startX;
       let cy = startY;
-      for (const seg of segments) {
-        const jx = (Math.random() - 0.5) * jitter;
-        const jy = (Math.random() - 0.5) * jitter;
-        const nx = cx + seg[0] + jx;
-        const ny = Math.max(1, Math.min(barH - 1, cy + seg[1] + jy));
-        const cpx = (cx + nx) / 2 + (Math.random() - 0.5) * jitter * 0.6;
-        const cpy = (cy + ny) / 2 + (Math.random() - 0.5) * jitter * 0.8;
-        d += ` Q ${cpx} ${cpy} ${nx} ${ny}`;
+      for (let i = 0; i < segments.length; i++) {
+        const [dx, dy, bias = 0.5] = segments[i];
+        const nx = cx + dx;
+        const ny = cy + dy;
+        // Two control points for cubic bezier — biased perpendicular to flow for organic curl
+        const len = Math.hypot(dx, dy) || 1;
+        const px = -dy / len;
+        const py = dx / len;
+        const swing = (i % 2 === 0 ? 1 : -1) * bias * len * 0.45;
+        const c1x = cx + dx * 0.33 + px * swing;
+        const c1y = cy + dy * 0.33 + py * swing;
+        const c2x = cx + dx * 0.66 + px * swing * 0.6;
+        const c2y = cy + dy * 0.66 + py * swing * 0.6;
+        d += ` C ${c1x.toFixed(1)} ${c1y.toFixed(1)}, ${c2x.toFixed(1)} ${c2y.toFixed(1)}, ${nx.toFixed(1)} ${ny.toFixed(1)}`;
         cx = nx;
         cy = ny;
       }
       const path = document.createElementNS(svgNS, "path");
       path.setAttribute("d", d);
-      path.setAttribute("stroke", `rgba(224, 85, 85, ${opacity})`);
+      path.setAttribute("stroke", `rgba(224, 64, 64, ${opacity})`);
       path.setAttribute("stroke-width", strokeW);
+      path.setAttribute("fill", "none");
+      path.setAttribute("stroke-linecap", "round");
+      path.setAttribute("stroke-linejoin", "round");
+      if (dasharray) path.setAttribute("stroke-dasharray", dasharray);
       return path;
     };
 
-    // Helper: sub-branch
-    const branch = (startX, startY, dx, dy, strokeW, opacity) => {
-      const mx = startX + dx * 0.5 + (Math.random() - 0.5) * 3;
-      const my = startY + dy * 0.5 + (Math.random() - 0.5) * 3;
-      const path = document.createElementNS(svgNS, "path");
-      path.setAttribute("d", `M ${startX} ${startY} Q ${mx} ${my} ${startX + dx} ${startY + dy}`);
-      path.setAttribute("stroke", `rgba(224, 85, 85, ${opacity})`);
-      path.setAttribute("stroke-width", strokeW);
-      return path;
+    // Tapered tendril: stack two paths along the same trajectory — thicker base, thinner overlay
+    const taperedTendril = (startX, startY, segments, baseW, opacity) => {
+      const a = tendril(startX, startY, segments, baseW, opacity * 0.55);
+      const b = tendril(startX, startY, segments, baseW * 0.5, opacity);
+      const g = document.createElementNS(svgNS, "g");
+      g.append(a, b);
+      return g;
     };
 
-    // Distance from dread left edge to soul box right edge
-    const gapToSoul = ox - soulR;
+    const gapToSoul = Math.max(8, ox - soulR);
 
-    // ── Dread 1: tiny cracks from dread border, just hints ──
+    // ── d1: faint hairline cracks creeping from the dread border ──
     const g1 = document.createElementNS(svgNS, "g");
     g1.classList.add("vein-group", "vein-d1");
     g1.append(
-      veinPath(ox, oy - 2, [[-8, -2], [-6, 3]], 2, "1.2", 0.4),
-      veinPath(ox, oy + 3, [[-7, 2], [-5, -2]], 2, "0.8", 0.3),
-      branch(ox - 8, oy - 4, -4, -5, "0.6", 0.25),
+      tendril(ox, oyMid - 1, [[-gapToSoul * 0.35, -2, 0.4]], "0.9", 0.55),
+      tendril(ox, oyMid + 2, [[-gapToSoul * 0.28, 3, 0.5]], "0.7", 0.45),
+      tendril(ox - 4, oyTop + 2, [[-6, -3, 0.7]], "0.5", 0.35),
     );
 
-    // ── Dread 2: cracks reach toward the separator ──
+    // ── d2: tendril extends most of the gap, with a side branch ──
     const g2 = document.createElementNS(svgNS, "g");
     g2.classList.add("vein-group", "vein-d2");
-    const sepX = ox - gapToSoul * 0.4;
     g2.append(
-      veinPath(ox, oyTop, [[-10, -2], [-8, 3], [-7, -2]], 3, "1.3", 0.45),
-      veinPath(ox, oyBot, [[-9, 2], [-7, -3], [-6, 2]], 2, "1", 0.4),
-      branch(ox - 18, oyTop + 1, -5, -4, "0.7", 0.3),
-      branch(ox - 16, oyBot - 1, -5, 4, "0.7", 0.25),
+      taperedTendril(ox, oyMid, [
+        [-gapToSoul * 0.55, -1, 0.4],
+        [-gapToSoul * 0.25, 2, 0.5],
+      ], "1.4", 0.6),
+      tendril(ox, oyTop, [
+        [-gapToSoul * 0.4, -3, 0.5],
+        [-gapToSoul * 0.2, 2, 0.4],
+      ], "0.9", 0.45),
+      tendril(ox - gapToSoul * 0.5, oyMid - 1, [[-gapToSoul * 0.18, -5, 0.6]], "0.6", 0.35),
     );
 
-    // ── Dread 3: veins cross gap and touch soul box right edge ──
+    // ── d3: main tendril reaches the soul box and grips its right edge ──
     const g3 = document.createElementNS(svgNS, "g");
     g3.classList.add("vein-group", "vein-d3");
-    // Main vein snaking from dread to soul right edge
-    const stepSize3 = gapToSoul / 4;
     g3.append(
-      veinPath(ox, oy, [
-        [-stepSize3, -3], [-stepSize3, 4], [-stepSize3, -2], [-stepSize3, 1]
-      ], 3, "1.5", 0.5),
-      veinPath(ox, oyTop + 2, [
-        [-stepSize3, -2], [-stepSize3, 3], [-stepSize3, -3]
-      ], 3, "1.2", 0.4),
-      // Small branches at the soul box edge
-      branch(soulR + 2, oy + 1, 0, -6, "0.7", 0.3),
-      branch(soulR + 2, oy - 1, 0, 5, "0.7", 0.3),
+      // primary tendril spans the gap and lands on soul box right edge
+      taperedTendril(ox, oyMid, [
+        [-gapToSoul * 0.4, -2, 0.4],
+        [-gapToSoul * 0.4, 3, 0.5],
+        [-gapToSoul * 0.2, -1, 0.4],
+      ], "1.6", 0.7),
+      // secondary tendril running just below
+      tendril(ox, oyBot, [
+        [-gapToSoul * 0.45, 1, 0.4],
+        [-gapToSoul * 0.4, -2, 0.5],
+        [-gapToSoul * 0.15, 1, 0.3],
+      ], "1", 0.5),
+      // small offshoot curling up at the soul box edge
+      tendril(soulR + 1, oyMid - 1, [[0, -soulH * 0.32, 0.7]], "0.7", 0.45),
+      tendril(soulR + 1, oyMid + 1, [[0, soulH * 0.3, 0.7]], "0.7", 0.45),
     );
 
-    // ── Dread 4: veins wrap around the soul box — top and bottom edges ──
+    // ── d4: tendrils slither along the top and bottom edges of the soul box ──
     const g4 = document.createElementNS(svgNS, "g");
     g4.classList.add("vein-group", "vein-d4");
-    const soulW = soulR - soulL;
     g4.append(
-      // Vein running along soul box top edge (right to left)
-      veinPath(soulR, soulT - 1, [
-        [-soulW * 0.25, -2], [-soulW * 0.25, 1], [-soulW * 0.25, -1]
-      ], 2, "1.3", 0.45),
-      // Vein running along soul box bottom edge (right to left)
-      veinPath(soulR, soulB + 1, [
-        [-soulW * 0.25, 2], [-soulW * 0.25, -1], [-soulW * 0.25, 1]
-      ], 2, "1.3", 0.45),
-      // Extra tendril reaching further along top
-      veinPath(soulR - soulW * 0.3, soulT - 2, [
-        [-soulW * 0.2, -1], [-soulW * 0.15, 1]
-      ], 2, "0.9", 0.35),
-      // Branches curling inward from top
-      branch(soulR - soulW * 0.2, soulT - 1, 0, 4, "0.6", 0.25),
-      branch(soulR - soulW * 0.5, soulT - 2, 0, 3, "0.6", 0.2),
-      // Branches curling inward from bottom
-      branch(soulR - soulW * 0.15, soulB + 1, 0, -4, "0.6", 0.25),
-      branch(soulR - soulW * 0.4, soulB + 2, 0, -3, "0.6", 0.2),
+      // top edge tendril, hooks slightly downward at end as if gripping
+      taperedTendril(soulR, soulT - 1, [
+        [-soulW * 0.4, -1, 0.3],
+        [-soulW * 0.4, 1, 0.4],
+      ], "1.3", 0.55),
+      // bottom edge tendril, mirrored
+      taperedTendril(soulR, soulB + 1, [
+        [-soulW * 0.4, 1, 0.3],
+        [-soulW * 0.4, -1, 0.4],
+      ], "1.3", 0.55),
+      // Curl-down branches reaching into the soul box from above
+      tendril(soulR - soulW * 0.25, soulT, [[2, soulH * 0.35, 0.6]], "0.7", 0.35),
+      tendril(soulR - soulW * 0.55, soulT, [[-1, soulH * 0.28, 0.5]], "0.6", 0.3),
+      // Curl-up from below
+      tendril(soulR - soulW * 0.3, soulB, [[1, -soulH * 0.32, 0.6]], "0.7", 0.3),
+      tendril(soulR - soulW * 0.6, soulB, [[2, -soulH * 0.25, 0.5]], "0.5", 0.25),
     );
 
-    // ── Dread 5: veins fully envelop the soul box ──
+    // ── d5: full envelopment — tendrils wrap the box and crack across its face ──
     const g5 = document.createElementNS(svgNS, "g");
     g5.classList.add("vein-group", "vein-d5");
     g5.append(
-      // Top edge extends all the way to left side of soul box
-      veinPath(soulR - soulW * 0.6, soulT - 1, [
-        [-soulW * 0.15, -1], [-soulW * 0.12, 1], [-soulW * 0.1, -1]
-      ], 2, "1.2", 0.5),
-      // Bottom edge extends all the way
-      veinPath(soulR - soulW * 0.5, soulB + 1, [
-        [-soulW * 0.15, 1], [-soulW * 0.12, -1], [-soulW * 0.1, 1]
-      ], 2, "1.2", 0.5),
-      // Left edge — veins curl around the left side of soul box
-      veinPath(soulL + 2, soulT + 2, [
-        [0, (soulB - soulT) * 0.3], [1, (soulB - soulT) * 0.2]
-      ], 2, "1", 0.4),
-      veinPath(soulL + 1, soulB - 2, [
-        [0, -(soulB - soulT) * 0.25], [-1, -(soulB - soulT) * 0.2]
-      ], 2, "1", 0.4),
-      // Fine cracks across the face of soul box
-      branch(soulR - soulW * 0.3, soulT, 0, (soulB - soulT) * 0.3, "0.5", 0.2),
-      branch(soulR - soulW * 0.6, soulT + 2, 0, (soulB - soulT) * 0.25, "0.5", 0.18),
-      branch(soulL + soulW * 0.15, soulB, 0, -(soulB - soulT) * 0.3, "0.5", 0.18),
-      // Extra branch from dread side for density
-      branch(ox - 5, oy - 6, -4, -3, "0.5", 0.2),
-      branch(ox - 5, oy + 6, -4, 3, "0.5", 0.2),
+      // Tendrils continue past d4 ones along top/bottom edges, all the way to soul left
+      taperedTendril(soulR - soulW * 0.4, soulT - 1, [
+        [-soulW * 0.35, -1, 0.4],
+        [-soulW * 0.2, 2, 0.5],
+      ], "1.2", 0.6),
+      taperedTendril(soulR - soulW * 0.4, soulB + 1, [
+        [-soulW * 0.35, 1, 0.4],
+        [-soulW * 0.2, -2, 0.5],
+      ], "1.2", 0.6),
+      // Left-side tendrils curling around the back of the soul box
+      tendril(soulL - 1, soulT + 3, [[0, soulH * 0.45, 0.7]], "0.9", 0.5),
+      tendril(soulL + 1, soulT + soulH * 0.55, [[-2, soulH * 0.3, 0.5]], "0.7", 0.4),
+      // Cracks across the soul box face — vertical, branching
+      tendril(soulR - soulW * 0.25, soulT + 2, [
+        [-1, soulH * 0.35, 0.4],
+        [-3, soulH * 0.3, 0.6],
+      ], "0.6", 0.4, "3 2"),
+      tendril(soulR - soulW * 0.55, soulT + 1, [
+        [2, soulH * 0.4, 0.5],
+        [-1, soulH * 0.3, 0.4],
+      ], "0.5", 0.35, "2 2"),
+      tendril(soulL + soulW * 0.2, soulB - 2, [
+        [3, -soulH * 0.4, 0.5],
+        [1, -soulH * 0.25, 0.4],
+      ], "0.5", 0.32, "2 2"),
+      // A few extra side-branches off the dread origin for density
+      tendril(ox - 4, oyTop - 1, [[-6, -4, 0.7]], "0.5", 0.4),
+      tendril(ox - 4, oyBot + 1, [[-6, 4, 0.7]], "0.5", 0.4),
     );
 
-    svg.append(g1, g2, g3, g4, g5);
+    root.append(g1, g2, g3, g4, g5);
     tracksBar.appendChild(svg);
   }
 }

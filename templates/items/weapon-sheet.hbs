@@ -7,14 +7,13 @@
   <div class="corner br"></div>
 
   {{!-- Top accent line (red variant) --}}
-  <div class="accent-top" style="background: linear-gradient(90deg, transparent, rgba(224,85,85,0.3), transparent);"></div>
+  <div class="accent-top accent-red"></div>
 
   <div class="item-body">
 
     {{!-- Header: image, type label, name --}}
-    <div class="item-header" style="border-bottom-color: rgba(224,85,85,0.06);">
-      <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" width="36" height="36"
-           style="background: rgba(224,85,85,0.06); border-color: rgba(224,85,85,0.15);" />
+    <div class="item-header item-header-red">
+      <img class="item-img item-img-red" src="{{item.img}}" data-edit="img" title="{{item.name}}" width="36" height="36" />
       <div style="display:flex; flex-direction:column; gap:2px; flex:1; min-width:0;">
         <div class="item-type-label red">
           {{localize "DREADLIGHT.TypeWeapon"}}
