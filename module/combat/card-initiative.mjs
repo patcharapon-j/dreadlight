@@ -57,7 +57,7 @@ export function registerCardInitiative() {
   Hooks.once("ready", () => DreadlightInitiativeTracker.init());
 }
 
-export async function drawInitiativeCards(combat = game.combat, { postSummary = true } = {}) {
+export async function drawInitiativeCards(combat = game.combat, { postSummary = false } = {}) {
   const combatants = combat?.combatants?.contents ?? [];
   if (!combatants.length) return;
   if (!game.user.isGM) return ui.notifications?.warn(game.i18n.localize("DREADLIGHT.InitiativeGmOnly"));
