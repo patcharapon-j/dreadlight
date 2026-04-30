@@ -141,7 +141,6 @@ async function sendAdhocRollToChat(roll, actor) {
     totalSixes: roll.totalSixes,
     extraSuccesses: roll.extraSuccesses,
     outcome: roll.outcome,
-    omenGained: roll.omenGained,
     direFailure: roll.direFailure,
   };
 

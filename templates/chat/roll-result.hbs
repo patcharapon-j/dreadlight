@@ -64,10 +64,6 @@
       </span>
     </div>
 
-    {{#if omenGained}}
-      <div class="consequence consequence-dread">⬡ {{localize "DREADLIGHT.OmenGain"}} <strong>+{{omenGained}}</strong></div>
-    {{/if}}
-
     {{#if showTaintedFlavorText}}{{#if (eq outcome "tainted")}}
       <div class="dire-flavor">{{localize "DREADLIGHT.TaintedFlavorText"}}</div>
     {{/if}}{{/if}}
@@ -79,7 +75,6 @@
       {{#if consequences.mindLoss}}<div class="consequence consequence-mind">◈ <strong>−{{consequences.mindLoss}} {{localize "DREADLIGHT.PushCostMind"}}</strong></div>{{/if}}
       {{#if consequences.soulLoss}}<div class="consequence consequence-soul">◉ <strong>−{{consequences.soulLoss}} {{localize "DREADLIGHT.PushCostSoul"}}</strong></div>{{/if}}
       {{#if consequences.gearDamage}}<div class="consequence consequence-gear">⚙ <strong>{{localize "DREADLIGHT.PushCostGear"}} −{{consequences.gearDamage}}</strong></div>{{/if}}
-      {{#if consequences.omenGain}}<div class="consequence consequence-dread">⬡ {{localize "DREADLIGHT.OmenGain"}} <strong>+{{consequences.omenGain}}</strong></div>{{/if}}
     {{/if}}
   </div>
 

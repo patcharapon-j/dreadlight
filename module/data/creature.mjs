@@ -30,6 +30,8 @@ export class CreatureData extends foundry.abstract.TypeDataModel {
 
       armor: new fields.NumberField({ required: true, initial: 0, min: 0, max: 10, integer: true }),
 
+      ferocity: new fields.NumberField({ required: true, initial: 1, min: 1, max: 3, integer: true }),
+
       // 1-3 structured attacks, each independently rollable
       attacks: new fields.ArrayField(
         new fields.SchemaField({

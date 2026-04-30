@@ -34,11 +34,6 @@ export class DreadlightRoll {
 
   get extraSuccesses() { return Math.max(0, this.totalSixes - 1); }
 
-  get omenGained() {
-    if (this.outcome === "failure") return game.settings.get("dreadlight", "failureDreadGain");
-    return 0;
-  }
-
   get direFailure() {
     return this.outcome === "failure" && this.dreadOnes > 0;
   }
@@ -120,13 +115,10 @@ export class DreadlightRoll {
 
   get pushConsequences() {
     if (!this.pushed) return null;
-    // omenGain: +1 per Dread 6 rolled on push
-    const omenGain = this.dreadSixes;
     return {
       mindLoss: this.baseOnes,
       soulLoss: this.dreadOnes,
       gearDamage: this.gearOnes,
-      omenGain,
     };
   }
 
@@ -152,7 +144,6 @@ export class DreadlightRoll {
       totalSixes: this.totalSixes,
       extraSuccesses: this.extraSuccesses,
       outcome: this.outcome,
-      omenGained: this.omenGained,
       direFailure: this.direFailure,
       pushed: this.pushed,
       consequences: this.pushConsequences,

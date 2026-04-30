@@ -24,16 +24,6 @@ export function registerSettings() {
     range: { min: 1, max: 10, step: 1 },
   });
 
-  game.settings.register("dreadlight", "failureDreadGain", {
-    name: "DREADLIGHT.SettingFailureDreadGain",
-    hint: "DREADLIGHT.SettingFailureDreadGainHint",
-    scope: "world",
-    config: true,
-    type: Number,
-    default: 1,
-    range: { min: 0, max: 5, step: 1 },
-  });
-
   game.settings.register("dreadlight", "supplyWeight", {
     name: "DREADLIGHT.SettingSupplyWeight",
     hint: "DREADLIGHT.SettingSupplyWeightHint",
@@ -73,16 +63,13 @@ export function registerSettings() {
     range: { min: 5, max: 30, step: 1 },
   });
 
-  // --- Omen Pool (hidden, managed via HUD tracker) ---
-
-  game.settings.register("dreadlight", "omenPool", {
-    name: "DREADLIGHT.SettingOmenPool",
-    hint: "DREADLIGHT.SettingOmenPoolHint",
+  game.settings.register("dreadlight", "autoDrawCardInitiative", {
+    name: "DREADLIGHT.SettingAutoDrawCardInitiative",
+    hint: "DREADLIGHT.SettingAutoDrawCardInitiativeHint",
     scope: "world",
-    config: false,
-    type: Number,
-    default: 0,
-    requiresReload: false,
+    config: true,
+    type: Boolean,
+    default: true,
   });
 
   // --- Visual & Player-Facing Settings (client-scoped) ---
