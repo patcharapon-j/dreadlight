@@ -20,8 +20,13 @@ import { registerSettings } from "./module/settings.mjs";
 import { d66Tables } from "./module/data/d66-tables.mjs";
 import { registerCardInitiative } from "./module/combat/card-initiative.mjs";
 
+const DREADLIGHT_TURN_MARKER = "systems/dreadlight/assets/icons/system/turn-marker.svg";
+
 Hooks.once("init", () => {
   console.log("Dreadlight | Initializing system");
+
+  // Replace Foundry's default active-turn token marker with the Dreadlight marker.
+  CONFIG.Combat.fallbackTurnMarker = DREADLIGHT_TURN_MARKER;
 
   CONFIG.DREADLIGHT = {
     attributes: ["str", "agl", "log", "per", "ins", "emp"],
