@@ -28,7 +28,7 @@ https://github.com/patcharapon-j/dreadlight/releases/latest/download/system.json
 - **Dread Mechanic**: Dread dice (0-5) corrupt every roll, adding risk alongside reward
 - **Dice System**: Base, Dread, and Gear dice with distinct outcomes -- success, tainted success, dire failure
 - **Push Mechanic**: Re-roll for another chance, but 1s carry consequences
-- **Card Initiative**: Draw cards 1-10 each round; lowest card acts first, with creature Ferocity support
+- **Card Initiative**: Draw cards 1-10 each round; lowest card acts first, with Ferocity, card flipping, swaps, and a top-screen tracker HUD
 - **Conditions**: Six conditions tied to attributes that reduce your dice pools
 - **Dice So Nice Integration**: Custom colorsets for Base, Dread, and Gear dice
 
