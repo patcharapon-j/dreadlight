@@ -160,7 +160,9 @@ export class DreadlightAdvancementManager extends HandlebarsApplicationMixin(App
         return {
           id: doc.id,
           name: doc.name,
+          type: doc.type,
           img: doc.img,
+          system: doc.system,
           currentLevel,
           nextLevel,
           cost,

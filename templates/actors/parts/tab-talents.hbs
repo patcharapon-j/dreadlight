@@ -1,6 +1,9 @@
 <div class="talent-list">
   {{#each talents}}
     <div class="talent-row {{#if (or this.system.isDreadlore (eq this.system.category 'dreadlore'))}}dreadlore{{else}}{{#if (eq this.name 'Occult')}}occult{{/if}}{{/if}}" data-item-id="{{this.id}}">
+      <div class="talent-icon {{#if (or this.system.isDreadlore (eq this.system.category 'dreadlore'))}}dreadlore{{else}}{{#if (eq this.name 'Occult')}}occult{{/if}}{{/if}}">
+        <img src="{{itemIcon this}}" data-fallback-src="{{this.img}}" onerror="this.onerror=null; this.src=this.dataset.fallbackSrc;" alt="" />
+      </div>
       {{#if (or this.system.isDreadlore (eq this.system.category 'dreadlore'))}}
         {{{talentPips this.system.level "dreadlore"}}}
       {{else}}

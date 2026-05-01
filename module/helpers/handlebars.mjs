@@ -170,6 +170,35 @@ export function registerHandlebarsHelpers() {
   Handlebars.registerHelper("or", (a, b) => !!a || !!b);
 
   /**
+   * itemIcon(item) - Prefer the custom Dreadlight compendium icon path for known item types.
+   * The template image tag keeps the stored item image as an onerror fallback for custom items.
+   */
+  Handlebars.registerHelper("itemIcon", (item) => {
+    if (!item?.name || !item?.type) return item?.img ?? "icons/svg/item-bag.svg";
+    const packName = item.system?.isDreadlore || item.system?.category === "dreadlore"
+      ? "dreadlore"
+      : {
+          armor: "armor",
+          background: "backgrounds",
+          drive: "drives",
+          equipment: "equipment",
+          talent: "talents",
+          weapon: "weapons",
+        }[item.type];
+
+    if (!packName) return item.img ?? "icons/svg/item-bag.svg";
+
+    const slug = String(item.name)
+      .normalize("NFKD")
+      .toLowerCase()
+      .replace(/[']/g, "")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+
+    return `systems/dreadlight/assets/icons/compendium/${packName}/${slug}.svg`;
+  });
+
+  /**
    * split(str, delimiter) — Split a string into an array.
    * Usage: {{#each (split "a;b;c" ";")}}{{this}}{{/each}}
    */

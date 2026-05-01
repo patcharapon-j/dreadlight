@@ -7,7 +7,7 @@
 <div class="section-header"><span>{{localize "DREADLIGHT.Weapons"}}</span><div class="section-line"></div></div>
 {{#each weapons}}
   <div class="item-row weapon-row" data-item-id="{{this.id}}">
-    <div class="item-icon red"><i class="dl-sigil dl-sigil-weapon"></i></div>
+    <div class="item-icon red art"><img src="{{itemIcon this}}" data-fallback-src="{{this.img}}" onerror="this.onerror=null; this.src=this.dataset.fallbackSrc;" alt="" /></div>
     <div class="item-info" data-action="toggleExpand">
       <div class="item-name">{{this.name}}</div>
       <div class="item-meta">
@@ -35,7 +35,7 @@
 <div class="section-header"><span>{{localize "DREADLIGHT.Armor"}}</span><div class="section-line"></div></div>
 {{#each armors}}
   <div class="item-row armor-row" data-item-id="{{this.id}}">
-    <div class="item-icon mind"><i class="dl-sigil dl-sigil-armor"></i></div>
+    <div class="item-icon mind art"><img src="{{itemIcon this}}" data-fallback-src="{{this.img}}" onerror="this.onerror=null; this.src=this.dataset.fallbackSrc;" alt="" /></div>
     <div class="item-info" data-action="toggleExpand">
       <div class="item-name">{{this.name}}</div>
       <div class="item-meta">{{#each this.system.properties}}<span class="tag">{{this}}</span>{{/each}}</div>
@@ -58,7 +58,7 @@
 <div class="section-header"><span>{{localize "DREADLIGHT.Gear"}}</span><div class="section-line"></div></div>
 {{#each equipment}}
   <div class="item-row gear-row" data-item-id="{{this.id}}">
-    <div class="item-icon gold"><i class="dl-sigil dl-sigil-equipment"></i></div>
+    <div class="item-icon gold art"><img src="{{itemIcon this}}" data-fallback-src="{{this.img}}" onerror="this.onerror=null; this.src=this.dataset.fallbackSrc;" alt="" /></div>
     <div class="item-info" data-action="toggleExpand">
       <div class="item-name">{{this.name}}</div>
       <div class="item-meta">{{#each this.system.applicableTalents}}<span class="tag tag-gold">{{this}}</span>{{/each}}</div>

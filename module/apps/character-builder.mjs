@@ -266,6 +266,9 @@ export class DreadlightCharacterBuilder extends HandlebarsApplicationMixin(Appli
       .map((doc) => ({
         id: doc.id,
         name: doc.name,
+        type: doc.type,
+        img: doc.img,
+        system: doc.system,
         level: actorTalentLevels.get(doc.name) ?? 0,
         selected: (actorTalentLevels.get(doc.name) ?? 0) > 0,
         categoryLabel: categoryLabel(doc.system.category ?? ""),

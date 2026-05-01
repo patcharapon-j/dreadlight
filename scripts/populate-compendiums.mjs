@@ -6,6 +6,21 @@
 
 // ─── TALENTS ─────────────────────────────────────────────────────────────────
 
+const COMPENDIUM_ICON_ROOT = "systems/dreadlight/assets/icons/compendium";
+
+function iconSlug(name) {
+  return name
+    .normalize("NFKD")
+    .toLowerCase()
+    .replace(/[']/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function compendiumIcon(packName, itemName) {
+  return `${COMPENDIUM_ICON_ROOT}/${packName}/${iconSlug(itemName)}.svg`;
+}
+
 const BACKGROUNDS = [
   ["Academic", "Wise in research methods, scholarly networks, and peer review.", ["Research methods", "Scholarly networks", "Peer review"], ["Research materials", "Recording device", "Library/university access"], ["Researcher", "Science", "History"]],
   ["Aristocrat / Elite", "Wise in high society, political connections, and etiquette.", ["High society", "Political connections", "Etiquette"], ["Fine clothing", "Credentials/access papers", "Personal vehicle or driver"], ["Resources", "Persuasion", "Command"]],
@@ -1716,6 +1731,14 @@ const EQUIPMENT = [
     },
   },
 ];
+
+for (const item of BACKGROUNDS) item.img = compendiumIcon("backgrounds", item.name);
+for (const item of DRIVES) item.img = compendiumIcon("drives", item.name);
+for (const item of TALENTS) item.img = compendiumIcon("talents", item.name);
+for (const item of DREADLORE_TALENTS) item.img = compendiumIcon("dreadlore", item.name);
+for (const item of WEAPONS) item.img = compendiumIcon("weapons", item.name);
+for (const item of ARMOR) item.img = compendiumIcon("armor", item.name);
+for (const item of EQUIPMENT) item.img = compendiumIcon("equipment", item.name);
 
 // ─── POPULATE FUNCTION ───────────────────────────────────────────────────────
 

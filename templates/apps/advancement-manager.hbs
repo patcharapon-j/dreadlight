@@ -21,7 +21,7 @@
     </nav>
 
     <section class="builder-step-panel" data-builder-step-panel="0">
-      <div class="section-header"><span><i class="dl-sigil dl-sigil-talent"></i>{{localize "DREADLIGHT.AdvancementStepTalents"}}</span><div class="section-line"></div></div>
+      <div class="section-header"><span>{{localize "DREADLIGHT.AdvancementStepTalents"}}</span><div class="section-line"></div></div>
       <div class="builder-warning" data-builder-warning hidden></div>
       <div class="builder-talent-tools">
         <label class="builder-search">
@@ -43,7 +43,7 @@
 
       <div class="builder-selected-talents advancement-selected">
         <div class="builder-subsection-title">
-          <span><i class="dl-sigil dl-sigil-talent"></i>{{localize "DREADLIGHT.AdvancementSelected"}}</span>
+          <span>{{localize "DREADLIGHT.AdvancementSelected"}}</span>
         </div>
         <div class="advancement-selected-line">
           <strong data-advancement-selected-label>{{localize "DREADLIGHT.AdvancementNoSelection"}}</strong>
@@ -60,8 +60,11 @@
           <label class="builder-talent-row advancement-choice-row advancement-talent-card {{#if this.maxed}}is-maxed{{/if}}" data-advancement-choice-row data-advancement-talent-row data-talent-category="{{this.categoryLabel}}" data-affordable="{{this.canBuy}}" data-talent-search="{{this.name}} {{this.categoryLabel}} {{this.description}} {{this.perkName}} {{this.perkDescription}} {{this.masteryName}} {{this.masteryDescription}}">
             <input type="radio" name="talentId" value="{{this.id}}" data-cost="{{this.cost}}" data-label="{{this.name}} L{{this.nextLevel}}" {{#unless this.canBuy}}disabled{{/unless}} />
             <div class="builder-talent-card-head">
+              <span class="builder-talent-icon">
+                <img src="{{itemIcon this}}" data-fallback-src="{{this.img}}" onerror="this.onerror=null; this.src=this.dataset.fallbackSrc;" alt="" />
+              </span>
               <div class="builder-talent-main">
-                <strong><i class="dl-sigil dl-sigil-talent"></i>{{this.name}}</strong>
+                <strong>{{this.name}}</strong>
                 <span>{{this.categoryLabel}} | {{#each this.primaryAttributes}}{{attrAbbr this}}{{#unless @last}} / {{/unless}}{{/each}}</span>
               </div>
               <div class="advancement-talent-purchase">

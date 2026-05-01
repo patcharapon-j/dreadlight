@@ -13,7 +13,7 @@
 
     {{!-- Header: image, type label, name --}}
     <div class="item-header" style="border-bottom-color: rgba(107,157,245,0.06);">
-      <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" width="36" height="36"
+      <img class="item-img" src="{{itemIcon item}}" data-fallback-src="{{item.img}}" onerror="this.onerror=null; this.src=this.dataset.fallbackSrc;" data-edit="img" title="{{item.name}}" width="36" height="36"
            style="background: rgba(107,157,245,0.06); border-color: rgba(107,157,245,0.15);" />
       <div style="display:flex; flex-direction:column; gap:2px; flex:1; min-width:0;">
         <div class="item-type-label blue">{{localize "DREADLIGHT.TypeArmor"}}</div>

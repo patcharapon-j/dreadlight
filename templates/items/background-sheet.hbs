@@ -1,7 +1,7 @@
 <div class="dreadlight sheet item background">
   <div class="accent-top"></div>
   <div class="item-header">
-    <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" width="36" height="36" />
+    <img class="item-img" src="{{itemIcon item}}" data-fallback-src="{{item.img}}" onerror="this.onerror=null; this.src=this.dataset.fallbackSrc;" data-edit="img" title="{{item.name}}" width="36" height="36" />
     <div class="item-title">
       <div class="item-type-label gold">{{localize "TYPES.Item.background"}}</div>
       <input class="item-name-input" type="text" name="name" value="{{item.name}}" {{#unless editable}}disabled{{/unless}} />
