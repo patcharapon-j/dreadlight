@@ -61,6 +61,12 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
     context.actor = this.#actor;
     context.attribute = this.#attribute;
     context.attrValue = system.attributes[this.#attribute].value;
+    context.attributeOptions = CONFIG.DREADLIGHT.attributes.map(key => ({
+      key,
+      label: game.i18n.localize(CONFIG.DREADLIGHT.attributeLabels[key]),
+      value: system.attributes[key]?.value ?? 0,
+      selected: key === this.#attribute,
+    }));
 
     // Talent options
     context.talents = this.#actor.items
@@ -108,7 +114,13 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
     super._onRender(context, options);
     const el = this.element;
 
-    // Talent select → update display + pool
+    // Attribute select -> update display + pool
+    el.querySelector("[name=attribute]")?.addEventListener("change", (e) => {
+      this.#updateAttributeDisplay(e.target);
+      this.#updatePoolPreview();
+    });
+
+    // Talent select -> update display + pool
     el.querySelector("[name=talent]")?.addEventListener("change", (e) => {
       this.#updateTalentDisplay(e.target);
       this.#updatePoolPreview();
@@ -143,6 +155,21 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
 
     // Initial pool render to apply "first" class on dread blocks
     this.#updatePoolPreview();
+  }
+
+  /** Update the attribute source-row display from the select */
+  #updateAttributeDisplay(select) {
+    const option = select.selectedOptions[0];
+    const attribute = option?.value || this.#attribute;
+    const name = option?.dataset.name || game.i18n.localize(CONFIG.DREADLIGHT.attributeLabels[attribute]);
+    const value = parseInt(option?.dataset.value || "0");
+    const row = this.element.querySelector(".attribute-row");
+    if (!row) return;
+
+    this.#attribute = attribute;
+    row.querySelector(".attribute-name").textContent = name;
+    row.querySelector(".attribute-pips").innerHTML = Array(value).fill('<div class="pip pip-base"></div>').join("");
+    row.querySelector(".attribute-count").textContent = value;
   }
 
   /** Update the talent source-row display from the select */
@@ -205,6 +232,7 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
     const form = this.element;
     if (!form) return;
 
+    const attribute = form.querySelector("[name=attribute]")?.value || this.#attribute;
     const talentId = form.querySelector("[name=talent]")?.value || "";
     const gearId = form.querySelector("[name=gear]")?.value || "";
     const diffMod = parseInt(form.querySelector("[name=difficulty]:checked")?.value || "0");
@@ -216,7 +244,7 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
 
     const pool = buildPool({
       actor: this.#actor,
-      attribute: this.#attribute,
+      attribute,
       talentLevel: selectedTalent?.system.level || 0,
       gearBonus: selectedGear?.system.gearBonus || 0,
       difficultyMod: diffMod,
@@ -285,6 +313,7 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
     const form = this.element.querySelector("form");
     if (!form) return;
 
+    const attribute = form.querySelector("[name=attribute]")?.value || this.#attribute;
     const talentId = form.querySelector("[name=talent]")?.value || "";
     const gearId = form.querySelector("[name=gear]")?.value || "";
     const diffChecked = form.querySelector("[name=difficulty]:checked");
@@ -297,7 +326,7 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
 
     const pool = buildPool({
       actor: this.#actor,
-      attribute: this.#attribute,
+      attribute,
       talentLevel: selectedTalent?.system.level || 0,
       gearBonus: selectedGear?.system.gearBonus || 0,
       difficultyMod: diffMod,
@@ -311,7 +340,7 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
     const isWeapon = selectedGear?.type === "weapon";
     const roll = new DreadlightRoll({
       ...pool,
-      attribute: this.#attribute,
+      attribute,
       talentName: selectedTalent?.name || null,
       talentIsDreadlore: selectedTalent?.system?.isDreadlore || selectedTalent?.system?.category === "dreadlore",
       gearName: selectedGear?.name || null,
@@ -321,15 +350,15 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
       weaponCritThreshold: isWeapon ? (selectedGear.system.critThreshold ?? 6) : null,
     });
 
+    const resolve = this.#resolve;
+    this.#resolve = null;
+    this.close();
+
     await roll.evaluate();
     await roll.showDSN();
     await sendRollToChat(roll);
 
-    if (this.#resolve) {
-      this.#resolve(roll);
-      this.#resolve = null;
-    }
-    this.close();
+    if (resolve) resolve(roll);
   }
 
   /** @override */

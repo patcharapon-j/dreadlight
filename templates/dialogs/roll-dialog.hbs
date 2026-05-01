@@ -3,15 +3,23 @@
   {{!-- Attribute --}}
   <div class="dialog-field">
     <div class="field-label">{{localize "DREADLIGHT.RollAttribute"}}</div>
-    <div class="source-row static">
+    <div class="source-row attribute-row">
       <div class="source-info">
-        <div class="source-name">{{attrName attribute}}</div>
+        <div class="source-name attribute-name">{{attrName attribute}}</div>
         <div class="source-meta">Base attribute</div>
       </div>
-      <div class="source-pips">
+      <div class="source-pips attribute-pips">
         {{#times attrValue}}<div class="pip pip-base"></div>{{/times}}
       </div>
-      <span class="source-count">{{attrValue}}</span>
+      <span class="source-count attribute-count">{{attrValue}}</span>
+      <select name="attribute" class="source-select">
+        {{#each attributeOptions}}
+          <option value="{{this.key}}" data-value="{{this.value}}" data-name="{{this.label}}" {{#if this.selected}}selected{{/if}}>
+            {{this.label}} ({{this.value}})
+          </option>
+        {{/each}}
+      </select>
+      <span class="source-chevron">&#x25BE;</span>
     </div>
   </div>
 
