@@ -150,6 +150,7 @@ Hooks.once("init", () => {
     "systems/dreadlight/templates/chat/d66-result.hbs",
     "systems/dreadlight/templates/chat/d66-prompt.hbs",
     "systems/dreadlight/templates/apps/character-builder.hbs",
+    "systems/dreadlight/templates/apps/advancement-manager.hbs",
     "systems/dreadlight/templates/actors/npc-sheet.hbs",
     "systems/dreadlight/templates/actors/creature-sheet.hbs",
     "systems/dreadlight/templates/actors/parts/npc-header.hbs",

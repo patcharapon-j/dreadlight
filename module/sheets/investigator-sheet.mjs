@@ -2,6 +2,7 @@ import { DreadlightRollDialog } from "../dice/roll-dialog.mjs";
 import { rollD66 } from "../dice/d66-roll.mjs";
 import { sendD66ToChat, sendD66PromptToChat } from "../dice/chat-message.mjs";
 import { DreadlightCharacterBuilder } from "../apps/character-builder.mjs";
+import { DreadlightAdvancementManager } from "../apps/advancement-manager.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -30,6 +31,7 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       rollD66: InvestigatorSheet.#rollD66,
       deleteInjury: InvestigatorSheet.#deleteInjury,
       openCharacterBuilder: InvestigatorSheet.#openCharacterBuilder,
+      openAdvancement: InvestigatorSheet.#openAdvancement,
     },
     form: {
       submitOnChange: true,
@@ -93,6 +95,7 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     context.editable = this.isEditable;
     context.editMode = this._editMode && this.isEditable;
     context.dreadMax = game.settings.get("dreadlight", "dreadMax");
+    context.availableXp = Math.max(0, (Number(system.advancement?.xp) || 0) - (Number(system.advancement?.spent) || 0));
 
     // Build attributeList from the 6 attributes
     context.attributeList = CONFIG.DREADLIGHT.attributes.map((key) => {
@@ -321,6 +324,11 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
   static #openCharacterBuilder(event, target) {
     if (!this.isEditable) return;
     new DreadlightCharacterBuilder(this.actor).render({ force: true });
+  }
+
+  static #openAdvancement(event, target) {
+    if (!this.isEditable) return;
+    new DreadlightAdvancementManager(this.actor).render({ force: true });
   }
 
   static #editPortrait(event, target) {

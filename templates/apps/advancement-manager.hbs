@@ -1,0 +1,180 @@
+<form class="advancement-form character-builder-form" autocomplete="off">
+  <div class="builder-shell">
+    <header class="builder-header">
+      <div>
+        <div class="builder-kicker">{{localize "DREADLIGHT.Advancement"}}</div>
+        <input type="text" value="{{actor.name}}" readonly />
+      </div>
+      <div class="builder-budget">
+        <div class="advancement-budget-total"><span>{{totalXp}}</span><small>{{localize "DREADLIGHT.AdvancementTotalXP"}}</small></div>
+        <div class="advancement-budget-spent"><span>{{spentXp}}</span><small>{{localize "DREADLIGHT.XPSpent"}}</small></div>
+        <div class="advancement-budget-available" data-builder-budget="available"><span>{{availableXp}}</span><small>{{localize "DREADLIGHT.AdvancementAvailableXP"}}</small></div>
+      </div>
+    </header>
+
+    <nav class="builder-steps">
+      {{#each steps}}
+        <button type="button" data-action="goStep" data-builder-step="{{this.index}}">
+          <span>{{add this.index 1}}</span>{{this.label}}
+        </button>
+      {{/each}}
+    </nav>
+
+    <section class="builder-step-panel" data-builder-step-panel="0">
+      <div class="section-header"><span><i class="dl-sigil dl-sigil-talent"></i>{{localize "DREADLIGHT.AdvancementStepTalents"}}</span><div class="section-line"></div></div>
+      <div class="builder-warning" data-builder-warning hidden></div>
+      <div class="builder-talent-tools">
+        <label class="builder-search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="search" data-talent-search placeholder="{{localize 'DREADLIGHT.BuilderTalentSearch'}}" />
+        </label>
+        <select data-talent-category>
+          <option value="">{{localize "DREADLIGHT.BuilderAllCategories"}}</option>
+          {{#each talentCategories}}
+            <option value="{{this}}">{{this}}</option>
+          {{/each}}
+        </select>
+        <label class="builder-selected-toggle">
+          <input type="checkbox" data-talent-affordable />
+          <span>{{localize "DREADLIGHT.AdvancementAffordableOnly"}}</span>
+        </label>
+        <div class="builder-talent-count" data-talent-visible-count></div>
+      </div>
+
+      <div class="builder-selected-talents advancement-selected">
+        <div class="builder-subsection-title">
+          <span><i class="dl-sigil dl-sigil-talent"></i>{{localize "DREADLIGHT.AdvancementSelected"}}</span>
+        </div>
+        <div class="advancement-selected-line">
+          <strong data-advancement-selected-label>{{localize "DREADLIGHT.AdvancementNoSelection"}}</strong>
+          <b><span data-advancement-selected-cost>-</span> XP</b>
+        </div>
+        <label class="builder-field builder-field-wide">
+          <span>{{localize "DREADLIGHT.Notes"}}</span>
+          <textarea name="talentNote" rows="2" placeholder="{{localize 'DREADLIGHT.AdvancementNotePlaceholder'}}"></textarea>
+        </label>
+      </div>
+
+      <div class="builder-talent-list advancement-list">
+        {{#each talents}}
+          <label class="builder-talent-row advancement-choice-row {{#if this.maxed}}is-maxed{{/if}}" data-advancement-choice-row data-advancement-talent-row data-talent-category="{{this.categoryLabel}}" data-affordable="{{this.canBuy}}" data-talent-search="{{this.name}} {{this.categoryLabel}} {{this.description}}">
+            <input type="radio" name="talentId" value="{{this.id}}" data-cost="{{this.cost}}" data-label="{{this.name}} L{{this.nextLevel}}" {{#unless this.canBuy}}disabled{{/unless}} />
+            <div class="builder-talent-main">
+              <strong><i class="dl-sigil dl-sigil-talent"></i>{{this.name}}</strong>
+              <span>{{this.categoryLabel}} | {{#each this.primaryAttributes}}{{attrAbbr this}}{{#unless @last}} / {{/unless}}{{/each}}</span>
+              <em>{{this.description}}</em>
+              {{#if this.perkName}}<small>{{localize "DREADLIGHT.Perk"}}: {{this.perkName}}</small>{{/if}}
+              {{#if this.masteryName}}<small>{{localize "DREADLIGHT.Mastery"}}: {{this.masteryName}}</small>{{/if}}
+            </div>
+            <div class="advancement-levels">
+              <span>L{{this.currentLevel}}</span>
+              <i class="fa-solid fa-arrow-right"></i>
+              <strong>L{{this.nextLevel}}</strong>
+            </div>
+            <div class="builder-talent-cost"><span>{{this.cost}}</span> XP</div>
+          </label>
+        {{/each}}
+      </div>
+    </section>
+
+    <section class="builder-step-panel" data-builder-step-panel="1">
+      <div class="section-header"><span><i class="fa-solid fa-chart-simple"></i>{{localize "DREADLIGHT.AdvancementStepAttributes"}}</span><div class="section-line"></div></div>
+      <div class="builder-warning" data-builder-warning hidden></div>
+      <div class="builder-attr-grid advancement-attr-grid">
+        {{#each attributeRows}}
+          <label class="builder-attr advancement-choice-row {{#if this.maxed}}is-maxed{{/if}}" data-advancement-choice-row>
+            <input type="radio" name="attributeKey" value="{{this.key}}" data-cost="{{this.cost}}" data-label="{{attrName this.key}} {{this.current}} -> {{this.next}}" {{#unless this.canBuy}}disabled{{/unless}} />
+            <span class="builder-attr-abbr">{{attrAbbr this.key}}</span>
+            <div class="advancement-levels">
+              <span>{{this.current}}</span>
+              <i class="fa-solid fa-arrow-right"></i>
+              <strong>{{this.next}}</strong>
+            </div>
+            <span class="builder-attr-name">{{attrName this.key}}</span>
+            <b class="advancement-cost">{{this.cost}} XP</b>
+            <small>{{localize "DREADLIGHT.AdvancementTrackIncreases"}} {{this.trackLabel}}</small>
+          </label>
+        {{/each}}
+      </div>
+      <label class="builder-field builder-field-wide">
+        <span>{{localize "DREADLIGHT.Notes"}}</span>
+        <textarea name="attributeNote" rows="2" placeholder="{{localize 'DREADLIGHT.AdvancementNotePlaceholder'}}"></textarea>
+      </label>
+    </section>
+
+    <section class="builder-step-panel" data-builder-step-panel="2">
+      <div class="section-header"><span><i class="fa-solid fa-id-card-clip"></i>{{localize "DREADLIGHT.AdvancementStepBackgrounds"}}</span><div class="section-line"></div></div>
+      <div class="builder-warning" data-builder-warning hidden></div>
+      <div class="builder-two-col">
+        <div class="builder-background-card">
+          <label class="builder-field">
+            <span>{{localize "DREADLIGHT.Backgrounds"}}</span>
+            <select name="backgroundId">
+              <option value=""></option>
+              {{#each backgrounds}}
+                <option value="{{this.id}}" data-description="{{this.description}}" data-vantage="{{join this.vantage ';'}}" {{#if this.owned}}disabled{{/if}}>{{this.name}}{{#if this.owned}} ({{localize "DREADLIGHT.BuilderOwned"}}){{/if}}</option>
+              {{/each}}
+              <option value="__custom__">{{localize "DREADLIGHT.BuilderCustomBackground"}}</option>
+            </select>
+          </label>
+          <div class="builder-custom-background" data-advancement-custom-background>
+            <label class="builder-field">
+              <span>{{localize "DREADLIGHT.BuilderBackgroundName"}}</span>
+              <input type="text" name="customBackgroundName" />
+            </label>
+            <label class="builder-field">
+              <span>{{localize "DREADLIGHT.TalentDescription"}}</span>
+              <textarea name="customBackgroundDesc" rows="2"></textarea>
+            </label>
+            <label class="builder-field">
+              <span>{{localize "DREADLIGHT.Vantage"}}</span>
+              <input type="text" name="customBackgroundVantage" placeholder="{{localize 'DREADLIGHT.VantagePlaceholder'}}" />
+            </label>
+          </div>
+          <div class="builder-background-details">
+            <div class="builder-background-detail"><strong>{{localize "DREADLIGHT.TalentDescription"}}</strong><span data-background-description></span></div>
+            <div class="builder-background-detail"><strong>{{localize "DREADLIGHT.Vantage"}}</strong><span data-background-vantage></span></div>
+          </div>
+        </div>
+
+        <div class="builder-background-card advancement-background-cost">
+          <strong>{{localize "DREADLIGHT.AdvancementBackgroundCost"}}</strong>
+          <span>{{backgroundCost}} XP</span>
+          <p>{{localize "DREADLIGHT.AdvancementBackgroundRule"}}</p>
+          <label class="builder-field">
+            <span>{{localize "DREADLIGHT.AdvancementJustification"}}</span>
+            <textarea name="backgroundNote" rows="5" placeholder="{{localize 'DREADLIGHT.AdvancementBackgroundNotePlaceholder'}}"></textarea>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <section class="builder-step-panel" data-builder-step-panel="3">
+      <div class="section-header"><span><i class="fa-solid fa-clock-rotate-left"></i>{{localize "DREADLIGHT.AdvancementStepHistory"}}</span><div class="section-line"></div></div>
+      <div class="builder-warning" data-builder-warning hidden></div>
+      <div class="advancement-history">
+        {{#each history}}
+          <article class="advancement-history-entry">
+            <div>
+              <strong>{{this.label}}</strong>
+              <span>{{this.dateLabel}}</span>
+              {{#if this.note}}<p>{{this.note}}</p>{{/if}}
+            </div>
+            <b>{{this.cost}} XP</b>
+          </article>
+        {{/each}}
+        {{#unless history.length}}
+          <div class="builder-selected-talent-empty">{{localize "DREADLIGHT.AdvancementNoHistory"}}</div>
+        {{/unless}}
+      </div>
+    </section>
+  </div>
+
+  <footer class="builder-footer">
+    <div class="builder-status"></div>
+    <button type="button" data-action="cancel">{{localize "Cancel"}}</button>
+    <button type="button" data-action="previousStep">{{localize "DREADLIGHT.BuilderBack"}}</button>
+    <button type="button" data-action="nextStep">{{localize "DREADLIGHT.BuilderNext"}}</button>
+    <button type="button" class="builder-apply" data-action="purchase">{{localize "DREADLIGHT.AdvancementPurchase"}}</button>
+  </footer>
+</form>

@@ -70,6 +70,17 @@ export class InvestigatorData extends foundry.abstract.TypeDataModel {
       advancement: new fields.SchemaField({
         xp: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
         spent: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+        history: new fields.ArrayField(
+          new fields.SchemaField({
+            id: new fields.StringField({ required: true, initial: "" }),
+            date: new fields.StringField({ required: true, initial: "" }),
+            type: new fields.StringField({ required: true, initial: "" }),
+            label: new fields.StringField({ required: true, initial: "" }),
+            cost: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+            note: new fields.StringField({ required: true, initial: "" }),
+          }),
+          { initial: [] }
+        ),
       }),
 
       supply: new fields.SchemaField({

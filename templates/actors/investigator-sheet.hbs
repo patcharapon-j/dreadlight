@@ -26,7 +26,11 @@
         <div class="xp-value">
           <input type="number" name="system.advancement.xp" value="{{system.advancement.xp}}" data-dtype="Number" min="0" />
         </div>
-        <div class="xp-spent">{{localize "DREADLIGHT.XPSpent"}}: {{system.advancement.spent}}</div>
+        <div class="xp-spent">{{localize "DREADLIGHT.XPSpent"}}: {{system.advancement.spent}} | {{localize "DREADLIGHT.AdvancementAvailableXP"}}: {{availableXp}}</div>
+        <button type="button" class="xp-advance-btn" data-action="openAdvancement" title="{{localize 'DREADLIGHT.Advancement'}}">
+          <i class="fa-solid fa-arrow-up-right-dots"></i>
+          <span>{{localize "DREADLIGHT.Advancement"}}</span>
+        </button>
       </div>
     </div>
 

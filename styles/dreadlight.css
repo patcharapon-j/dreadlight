@@ -4635,6 +4635,32 @@
   text-align: center;
 }
 
+.dreadlight .xp-advance-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 100%;
+  min-height: 22px;
+  color: var(--dl-accent-gold);
+  background: rgba(var(--rgb-gold), 0.08);
+  border: 1px solid rgba(var(--rgb-gold), 0.38);
+  border-radius: var(--r-sm);
+  font-family: var(--dl-font-primary);
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+.dreadlight .xp-advance-btn:hover {
+  color: var(--dl-bg-void);
+  background: var(--dl-accent-gold);
+  box-shadow: 0 0 12px rgba(var(--rgb-gold), 0.25);
+  filter: brightness(1.08);
+}
+
 /* ----------------------------------------------------------
    24. SUPPLY ROW (Fix 10)
    ---------------------------------------------------------- */
@@ -8679,6 +8705,293 @@
   }
 
   .dreadlight.character-builder .builder-gear-group-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ----------------------------------------------------------
+   Character Advancement
+   ---------------------------------------------------------- */
+
+.dreadlight.advancement-manager .builder-header input[readonly] {
+  color: var(--dl-text-primary);
+  opacity: 0.92;
+  cursor: default;
+}
+
+.dreadlight.advancement-manager .section-header .dl-sigil {
+  width: 16px;
+  height: 16px;
+  margin-right: 7px;
+  vertical-align: -3px;
+}
+
+.dreadlight.advancement-manager .section-header i {
+  margin-right: 7px;
+  color: var(--dl-accent-gold);
+}
+
+.dreadlight.advancement-manager .builder-budget > div {
+  min-width: 86px;
+}
+
+.dreadlight.advancement-manager .builder-budget > .advancement-budget-available {
+  border-color: rgba(var(--rgb-gold), 0.55);
+  background:
+    var(--top-light),
+    linear-gradient(180deg, rgba(var(--rgb-gold), 0.12), rgba(0, 0, 0, 0.22));
+}
+
+.dreadlight.advancement-manager .builder-budget > .advancement-budget-available span {
+  color: var(--dl-accent-gold-bright);
+  text-shadow: 0 0 12px rgba(var(--rgb-gold), 0.35);
+}
+
+.dreadlight.advancement-manager .advancement-selected {
+  margin-bottom: 10px;
+  gap: 8px;
+}
+
+.dreadlight.advancement-manager .advancement-selected-line {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  color: var(--dl-text-primary);
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(var(--rgb-gold), 0.18);
+  border-radius: var(--r-sm);
+}
+
+.dreadlight.advancement-manager .advancement-selected-line strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dreadlight.advancement-manager .advancement-selected-line b,
+.dreadlight.advancement-manager .advancement-cost {
+  color: var(--dl-accent-gold);
+  font-family: var(--dl-font-primary);
+  font-weight: 900;
+}
+
+.dreadlight.advancement-manager .advancement-list {
+  max-height: 390px;
+}
+
+.dreadlight.advancement-manager .builder-talent-row {
+  grid-template-columns: 18px minmax(0, 1fr) 88px 72px;
+  padding-left: 10px;
+}
+
+.dreadlight.advancement-manager .builder-talent-cost {
+  min-width: 62px;
+  text-align: center;
+}
+
+.dreadlight.advancement-manager .advancement-choice-row {
+  position: relative;
+  cursor: pointer;
+}
+
+.dreadlight.advancement-manager .advancement-choice-row > input[type="radio"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--dl-accent-gold);
+  align-self: center;
+}
+
+.dreadlight.advancement-manager .advancement-choice-row.is-selected {
+  border-color: rgba(var(--rgb-gold), 0.72);
+  background: linear-gradient(135deg, rgba(var(--rgb-gold), 0.14), rgba(0, 0, 0, 0.18));
+  box-shadow: 0 0 18px rgba(var(--rgb-gold), 0.14);
+}
+
+.dreadlight.advancement-manager .advancement-choice-row.is-selected::before {
+  background: var(--dl-accent-gold);
+  box-shadow: 0 0 10px rgba(var(--rgb-gold), 0.55);
+}
+
+.dreadlight.advancement-manager .advancement-choice-row.is-maxed,
+.dreadlight.advancement-manager .advancement-choice-row:has(input:disabled) {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.dreadlight.advancement-manager .builder-talent-main small {
+  display: block;
+  margin-top: 3px;
+  color: var(--dl-text-muted);
+  font-size: 10px;
+}
+
+.dreadlight.advancement-manager .advancement-levels {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  color: var(--dl-text-muted);
+  font-family: var(--dl-font-primary);
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.dreadlight.advancement-manager .advancement-levels strong {
+  color: var(--dl-accent-gold);
+}
+
+.dreadlight.advancement-manager .advancement-attr-grid .builder-attr {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  min-height: 132px;
+  padding: 12px 10px;
+}
+
+.dreadlight.advancement-manager .advancement-attr-grid .builder-attr > input[type="radio"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.dreadlight.advancement-manager .advancement-attr-grid .builder-attr::after {
+  content: "";
+  position: absolute;
+  top: 9px;
+  right: 9px;
+  width: 16px;
+  height: 16px;
+  border: 1px solid rgba(var(--rgb-gold), 0.32);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.28);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  pointer-events: none;
+}
+
+.dreadlight.advancement-manager .advancement-attr-grid .builder-attr.is-selected::before {
+  background: radial-gradient(ellipse at 50% 0%, rgba(var(--rgb-gold), 0.18), transparent 72%);
+  opacity: 1;
+}
+
+.dreadlight.advancement-manager .advancement-attr-grid .builder-attr.is-selected::after {
+  border-color: rgba(var(--rgb-gold), 0.85);
+  background:
+    radial-gradient(circle at center, var(--dl-accent-gold) 0 38%, transparent 42%),
+    rgba(var(--rgb-gold), 0.12);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 0 12px rgba(var(--rgb-gold), 0.35);
+}
+
+.dreadlight.advancement-manager .advancement-attr-grid .builder-attr-abbr {
+  grid-column: 1 / -1;
+}
+
+.dreadlight.advancement-manager .advancement-attr-grid .advancement-levels,
+.dreadlight.advancement-manager .advancement-attr-grid .builder-attr-name,
+.dreadlight.advancement-manager .advancement-attr-grid .advancement-cost,
+.dreadlight.advancement-manager .advancement-attr-grid small {
+  grid-column: 1 / -1;
+}
+
+.dreadlight.advancement-manager .advancement-attr-grid small {
+  color: var(--dl-text-muted);
+  font-size: 10px;
+  text-align: center;
+}
+
+.dreadlight.advancement-manager .builder-custom-background.active {
+  display: grid;
+}
+
+.dreadlight.advancement-manager .advancement-background-cost {
+  align-content: start;
+  gap: 10px;
+}
+
+.dreadlight.advancement-manager .advancement-background-cost > strong {
+  color: var(--dl-accent-gold);
+  font-family: var(--dl-font-primary);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.dreadlight.advancement-manager .advancement-background-cost > span {
+  color: var(--dl-text-primary);
+  font-family: var(--dl-font-primary);
+  font-size: 30px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.dreadlight.advancement-manager .advancement-background-cost p {
+  margin: 0;
+  color: var(--dl-text-muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.dreadlight.advancement-manager .advancement-history {
+  display: grid;
+  gap: 8px;
+  max-height: 500px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.dreadlight.advancement-manager .advancement-history-entry {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(var(--rgb-gold), 0.18);
+  border-radius: var(--r-sm);
+}
+
+.dreadlight.advancement-manager .advancement-history-entry strong {
+  display: block;
+  color: var(--dl-text-primary);
+  font-family: var(--dl-font-primary);
+  font-size: 13px;
+}
+
+.dreadlight.advancement-manager .advancement-history-entry span {
+  display: block;
+  margin-top: 2px;
+  color: var(--dl-text-muted);
+  font-size: 10px;
+}
+
+.dreadlight.advancement-manager .advancement-history-entry p {
+  margin: 6px 0 0;
+  color: var(--dl-text-secondary);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.dreadlight.advancement-manager .advancement-history-entry b {
+  color: var(--dl-accent-gold);
+  font-family: var(--dl-font-primary);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .dreadlight.advancement-manager .builder-talent-row {
+    grid-template-columns: 18px minmax(0, 1fr);
+  }
+
+  .dreadlight.advancement-manager .builder-talent-row .advancement-levels,
+  .dreadlight.advancement-manager .builder-talent-row .builder-talent-cost {
+    grid-column: 2;
+    justify-content: flex-start;
+  }
+
+  .dreadlight.advancement-manager .advancement-history-entry {
     grid-template-columns: 1fr;
   }
 }
