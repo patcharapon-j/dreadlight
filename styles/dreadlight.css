@@ -5014,19 +5014,30 @@
   display: flex;
   gap: 2px;
   align-items: center;
-  flex-wrap: nowrap;
-  overflow: hidden;
   min-width: 0;
 }
 
-/* Track pips auto-shrink when too many — gracefully scales down width */
+.dreadlight .track-pips {
+  flex-wrap: wrap;
+  align-content: center;
+  overflow: visible;
+  row-gap: 2px;
+}
+
+.dreadlight .dread-pips,
+.dreadlight .supply-pips {
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
+/* Track pips wrap instead of shrinking so each health box stays square. */
 .dreadlight .track-info {
   min-width: 0;
 }
 
 .dreadlight .track-pips .pip {
-  flex: 1 1 auto;
-  min-width: 3px;
+  flex: 0 0 8px;
+  min-width: 8px;
   max-width: 8px;
 }
 
@@ -8421,6 +8432,329 @@
   text-shadow: 0 0 10px rgba(var(--rgb-gold), 0.4);
 }
 
+.dreadlight.character-builder:not(.advancement-manager) .builder-subsection-title small {
+  color: var(--dl-text-muted);
+  font-size: var(--t-micro);
+  font-weight: 700;
+  letter-spacing: var(--track-base);
+  text-transform: uppercase;
+}
+
+.dreadlight.character-builder:not(.advancement-manager) .builder-talent-browser-title {
+  align-items: end;
+}
+
+.dreadlight.character-builder:not(.advancement-manager) .builder-talent-tools {
+  position: sticky;
+  top: -14px;
+  z-index: 2;
+  padding: 10px;
+  margin: 0 0 12px;
+  background:
+    linear-gradient(180deg, rgba(10, 10, 15, 0.96), rgba(10, 10, 15, 0.88)),
+    var(--dl-bg-primary);
+  border: 1px solid rgba(var(--rgb-gold), 0.14);
+  border-radius: var(--r-md);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.035),
+    0 10px 22px -14px rgba(0, 0, 0, 0.75);
+}
+
+.dreadlight.character-builder:not(.advancement-manager) .builder-talent-list {
+  gap: 12px;
+  max-height: 430px;
+  padding: 2px 6px 2px 1px;
+}
+
+.dreadlight.character-builder:not(.advancement-manager) .builder-talent-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  align-items: stretch;
+  padding: 13px;
+  background:
+    radial-gradient(ellipse at 12% 0%, rgba(var(--rgb-gold), 0.08), transparent 45%),
+    var(--top-light),
+    linear-gradient(180deg, rgba(18, 18, 24, 0.96), rgba(9, 9, 13, 0.98));
+  border-color: rgba(var(--rgb-gold), 0.14);
+  border-radius: var(--r-md);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.045),
+    0 9px 20px -14px rgba(0, 0, 0, 0.85);
+  cursor: default;
+}
+
+.dreadlight.character-builder:not(.advancement-manager) .builder-talent-row:hover {
+  border-color: rgba(var(--rgb-gold), 0.3);
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 14px 28px -18px rgba(0, 0, 0, 0.9),
+    0 0 18px -10px rgba(var(--rgb-gold), 0.45);
+}
+
+.dreadlight.character-builder:not(.advancement-manager) .builder-talent-row::before {
+  top: 12px;
+  bottom: 12px;
+}
+
+.dreadlight.character-builder:not(.advancement-manager) .builder-talent-row.is-selected {
+  background:
+    radial-gradient(ellipse at 12% 0%, rgba(var(--rgb-gold), 0.17), transparent 52%),
+    var(--top-light),
+    linear-gradient(180deg, rgba(var(--rgb-gold), 0.09), rgba(9, 9, 13, 0.98) 72%);
+}
+
+.dreadlight.character-builder:not(.advancement-manager) .builder-talent-card-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: start;
+}
+
+.dreadlight.character-builder:not(.advancement-manager) .builder-talent-main strong {
+  font-size: 15px;
+  letter-spacing: 0.01em;
+  white-space: normal;
+}
+
+.dreadlight.character-builder:not(.advancement-manager) .builder-talent-main span {
+  display: inline-flex;
+  width: auto;
+  margin-top: 5px;
+  padding: 3px 7px;
+  color: var(--dl-text-secondary);
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.065);
+  border-radius: var(--r-sm);
+  font-size: var(--t-micro);
+  font-weight: 800;
+  letter-spacing: var(--track-base);
+  text-transform: uppercase;
+  white-space: normal;
+}
+
+.dreadlight.character-builder:not(.advancement-manager) .builder-talent-level-state {
+  display: grid;
+  justify-items: end;
+  gap: 4px;
+  min-width: 72px;
+}
+
+.dreadlight.character-builder:not(.advancement-manager) .builder-talent-level-state > span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
+  height: 34px;
+  padding: 0 10px;
+  color: #0e0c08;
+  background: linear-gradient(180deg, var(--dl-accent-gold-bright), var(--dl-accent-gold));
+  border: 1px solid rgba(var(--rgb-gold), 0.8);
+  border-radius: var(--r-sm);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 0 16px rgba(var(--rgb-gold), 0.35);
+  font-family: var(--dl-font-primary);
+  font-size: 18px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.dreadlight.character-builder:not(.advancement-manager) .builder-talent-level-state b {
+  color: var(--dl-accent-gold);
+  font-size: var(--t-micro);
+  font-weight: 900;
+  letter-spacing: var(--track-base);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.dreadlight.character-builder:not(.advancement-manager) .builder-talent-level-picker {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  padding: 5px;
+  background: rgba(0, 0, 0, 0.24);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--r-sm);
+}
+
+.dreadlight.character-builder:not(.advancement-manager) .builder-talent-level-picker button,
+.dreadlight.character-builder:not(.advancement-manager) .builder-talent-level-picker > span {
+  min-height: 34px;
+  margin: 0;
+  padding: 7px 10px;
+  color: var(--dl-text-muted);
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.065);
+  border-radius: var(--r-sm);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: var(--track-base);
+  text-align: center;
+  text-transform: uppercase;
+  transition:
+    color var(--dur-base) var(--ease-out),
+    background var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-emp) var(--ease-out),
+    transform var(--dur-base) var(--ease-spring);
+}
+
+.dreadlight.character-builder:not(.advancement-manager) .builder-talent-level-picker button {
+  cursor: pointer;
+}
+
+.dreadlight.character-builder:not(.advancement-manager) .builder-talent-level-picker button:hover {
+  color: var(--dl-text-primary);
+  border-color: rgba(var(--rgb-gold), 0.32);
+  transform: translateY(-1px);
+}
+
+.dreadlight.character-builder:not(.advancement-manager) .builder-talent-level-picker button.active {
+  color: #0e0c08;
+  background: linear-gradient(180deg, var(--dl-accent-gold-bright), var(--dl-accent-gold));
+  border-color: rgba(var(--rgb-gold), 0.8);
+  box-shadow: 0 0 14px rgba(var(--rgb-gold), 0.35);
+}
+
+.dreadlight.character-builder:not(.advancement-manager) .builder-talent-level-picker > span {
+  position: relative;
+  color: var(--dl-text-faint);
+  border-style: dashed;
+  opacity: 0.72;
+}
+
+.dreadlight.character-builder:not(.advancement-manager) .builder-talent-level-picker > span::after {
+  content: attr(data-preview-label);
+  display: block;
+  margin-top: 1px;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.dreadlight.character-builder:not(.advancement-manager) .builder-talent-level-select {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.dreadlight.character-builder:not(.advancement-manager) .builder-talent-ability-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.dreadlight.character-builder:not(.advancement-manager) .builder-talent-ability {
+  position: relative;
+  min-height: 112px;
+  padding: 10px;
+  color: var(--dl-text-secondary);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.026), rgba(255, 255, 255, 0.008));
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--r-sm);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025);
+  overflow: hidden;
+}
+
+.dreadlight.character-builder:not(.advancement-manager) .builder-talent-ability::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 0% 0%, rgba(var(--rgb-gold), 0.09), transparent 58%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+
+.dreadlight.character-builder:not(.advancement-manager) .builder-talent-ability.is-earned {
+  color: var(--dl-text-primary);
+  border-color: rgba(var(--rgb-gold), 0.36);
+  background:
+    linear-gradient(180deg, rgba(var(--rgb-gold), 0.08), rgba(var(--rgb-gold), 0.02));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.045),
+    0 0 14px -8px rgba(var(--rgb-gold), 0.45);
+}
+
+.dreadlight.character-builder:not(.advancement-manager) .builder-talent-ability.is-earned::before {
+  opacity: 1;
+}
+
+.dreadlight.character-builder:not(.advancement-manager) .builder-talent-ability.is-preview {
+  border-color: rgba(var(--rgb-gold), 0.14);
+  background:
+    linear-gradient(180deg, rgba(var(--rgb-gold), 0.035), rgba(255, 255, 255, 0.008));
+}
+
+.dreadlight.character-builder:not(.advancement-manager) .builder-talent-ability header {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 7px;
+  align-items: center;
+  margin-bottom: 7px;
+}
+
+.dreadlight.character-builder:not(.advancement-manager) .builder-talent-ability header span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 22px;
+  padding: 0 6px;
+  color: var(--dl-accent-gold);
+  background: rgba(var(--rgb-gold), 0.08);
+  border: 1px solid rgba(var(--rgb-gold), 0.26);
+  border-radius: var(--r-sm);
+  font-size: 10px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.dreadlight.character-builder:not(.advancement-manager) .builder-talent-ability.is-earned header span {
+  color: #0e0c08;
+  background: var(--dl-accent-gold);
+  border-color: var(--dl-accent-gold-bright);
+  box-shadow: 0 0 10px rgba(var(--rgb-gold), 0.35);
+}
+
+.dreadlight.character-builder:not(.advancement-manager) .builder-talent-ability header strong {
+  overflow: hidden;
+  color: var(--dl-text-primary);
+  font-size: var(--t-tiny);
+  font-weight: 900;
+  letter-spacing: var(--track-base);
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.dreadlight.character-builder:not(.advancement-manager) .builder-talent-ability div {
+  position: relative;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 6;
+  overflow: hidden;
+  font-size: var(--t-tiny);
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+}
+
+.dreadlight.character-builder:not(.advancement-manager) .builder-talent-ability div p {
+  margin: 0;
+}
+
+.dreadlight.character-builder:not(.advancement-manager) .builder-talent-ability div strong {
+  color: var(--dl-accent-gold);
+}
+
 /* ── Details / Drive preview ───────────────────────────── */
 
 .dreadlight.character-builder .builder-preview {
@@ -8930,6 +9264,18 @@
     justify-content: flex-start;
   }
 
+  .dreadlight.character-builder:not(.advancement-manager) .builder-talent-card-head,
+  .dreadlight.character-builder:not(.advancement-manager) .builder-talent-ability-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dreadlight.character-builder:not(.advancement-manager) .builder-talent-level-state {
+    grid-template-columns: auto auto;
+    justify-content: start;
+    justify-items: start;
+    align-items: center;
+  }
+
   .dreadlight.character-builder .builder-gear-group-grid {
     grid-template-columns: 1fr;
   }
@@ -9004,12 +9350,27 @@
 }
 
 .dreadlight.advancement-manager .advancement-list {
-  max-height: 390px;
+  display: grid;
+  gap: 12px;
+  max-height: 430px;
+  padding: 2px 6px 2px 1px;
 }
 
 .dreadlight.advancement-manager .builder-talent-row {
-  grid-template-columns: 18px minmax(0, 1fr) 88px 72px;
-  padding-left: 10px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  align-items: stretch;
+  padding: 13px;
+  background:
+    radial-gradient(ellipse at 12% 0%, rgba(var(--rgb-gold), 0.08), transparent 45%),
+    var(--top-light),
+    linear-gradient(180deg, rgba(18, 18, 24, 0.96), rgba(9, 9, 13, 0.98));
+  border-color: rgba(var(--rgb-gold), 0.14);
+  border-radius: var(--r-md);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.045),
+    0 9px 20px -14px rgba(0, 0, 0, 0.85);
 }
 
 .dreadlight.advancement-manager .builder-talent-cost {
@@ -9017,9 +9378,79 @@
   text-align: center;
 }
 
+.dreadlight.advancement-manager .builder-talent-card-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: start;
+}
+
+.dreadlight.advancement-manager .builder-talent-main strong {
+  font-size: 15px;
+  letter-spacing: 0.01em;
+  white-space: normal;
+}
+
+.dreadlight.advancement-manager .builder-talent-main .dl-sigil {
+  width: 16px;
+  height: 16px;
+  filter: drop-shadow(0 0 5px rgba(var(--rgb-gold), 0.4));
+}
+
+.dreadlight.advancement-manager .builder-talent-main span {
+  display: inline-flex;
+  width: auto;
+  margin-top: 5px;
+  padding: 3px 7px;
+  color: var(--dl-text-secondary);
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.065);
+  border-radius: var(--r-sm);
+  font-size: var(--t-micro);
+  font-weight: 800;
+  letter-spacing: var(--track-base);
+  text-transform: uppercase;
+  white-space: normal;
+}
+
+.dreadlight.advancement-manager .advancement-talent-purchase {
+  display: grid;
+  justify-items: end;
+  gap: 6px;
+  min-width: 118px;
+}
+
+.dreadlight.advancement-manager .advancement-talent-purchase .builder-talent-cost {
+  min-width: 76px;
+  padding: 5px 8px;
+  color: var(--dl-accent-gold);
+  background: rgba(var(--rgb-gold), 0.08);
+  border: 1px solid rgba(var(--rgb-gold), 0.25);
+  border-radius: var(--r-sm);
+  box-shadow: 0 0 12px rgba(var(--rgb-gold), 0.14);
+  font-size: 12px;
+}
+
 .dreadlight.advancement-manager .advancement-choice-row {
   position: relative;
   cursor: pointer;
+}
+
+.dreadlight.advancement-manager .advancement-talent-card:hover {
+  border-color: rgba(var(--rgb-gold), 0.3);
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 14px 28px -18px rgba(0, 0, 0, 0.9),
+    0 0 18px -10px rgba(var(--rgb-gold), 0.45);
+}
+
+.dreadlight.advancement-manager .advancement-talent-card > input[type="radio"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .dreadlight.advancement-manager .advancement-choice-row > input[type="radio"] {
@@ -9031,8 +9462,13 @@
 
 .dreadlight.advancement-manager .advancement-choice-row.is-selected {
   border-color: rgba(var(--rgb-gold), 0.72);
-  background: linear-gradient(135deg, rgba(var(--rgb-gold), 0.14), rgba(0, 0, 0, 0.18));
-  box-shadow: 0 0 18px rgba(var(--rgb-gold), 0.14);
+  background:
+    radial-gradient(ellipse at 12% 0%, rgba(var(--rgb-gold), 0.2), transparent 52%),
+    var(--top-light),
+    linear-gradient(180deg, rgba(var(--rgb-gold), 0.12), rgba(9, 9, 13, 0.98) 72%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 0 20px rgba(var(--rgb-gold), 0.18);
 }
 
 .dreadlight.advancement-manager .advancement-choice-row.is-selected::before {
@@ -9042,15 +9478,8 @@
 
 .dreadlight.advancement-manager .advancement-choice-row.is-maxed,
 .dreadlight.advancement-manager .advancement-choice-row:has(input:disabled) {
-  opacity: 0.5;
+  opacity: 0.62;
   cursor: not-allowed;
-}
-
-.dreadlight.advancement-manager .builder-talent-main small {
-  display: block;
-  margin-top: 3px;
-  color: var(--dl-text-muted);
-  font-size: 10px;
 }
 
 .dreadlight.advancement-manager .advancement-levels {
@@ -9064,7 +9493,137 @@
   white-space: nowrap;
 }
 
+.dreadlight.advancement-manager .advancement-talent-purchase .advancement-levels {
+  min-height: 34px;
+  padding: 0 10px;
+  color: var(--dl-text-muted);
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: var(--r-sm);
+  font-size: 12px;
+}
+
 .dreadlight.advancement-manager .advancement-levels strong {
+  color: var(--dl-accent-gold);
+}
+
+.dreadlight.advancement-manager .builder-talent-ability-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.dreadlight.advancement-manager .builder-talent-ability {
+  position: relative;
+  min-height: 112px;
+  padding: 10px;
+  color: var(--dl-text-secondary);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.026), rgba(255, 255, 255, 0.008));
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--r-sm);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025);
+  overflow: hidden;
+}
+
+.dreadlight.advancement-manager .builder-talent-ability::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 0% 0%, rgba(var(--rgb-gold), 0.09), transparent 58%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+
+.dreadlight.advancement-manager .builder-talent-ability.is-earned {
+  color: var(--dl-text-primary);
+  border-color: rgba(var(--rgb-gold), 0.34);
+  background:
+    linear-gradient(180deg, rgba(var(--rgb-gold), 0.08), rgba(var(--rgb-gold), 0.02));
+}
+
+.dreadlight.advancement-manager .builder-talent-ability.is-next {
+  color: var(--dl-text-primary);
+  border-color: rgba(var(--rgb-body), 0.42);
+  background:
+    linear-gradient(180deg, rgba(var(--rgb-body), 0.08), rgba(var(--rgb-gold), 0.018));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.045),
+    0 0 14px -8px rgba(var(--rgb-body), 0.5);
+}
+
+.dreadlight.advancement-manager .builder-talent-ability.is-earned::before,
+.dreadlight.advancement-manager .builder-talent-ability.is-next::before {
+  opacity: 1;
+}
+
+.dreadlight.advancement-manager .builder-talent-ability header {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 7px;
+  align-items: center;
+  margin-bottom: 7px;
+}
+
+.dreadlight.advancement-manager .builder-talent-ability header span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 22px;
+  padding: 0 6px;
+  color: var(--dl-accent-gold);
+  background: rgba(var(--rgb-gold), 0.08);
+  border: 1px solid rgba(var(--rgb-gold), 0.26);
+  border-radius: var(--r-sm);
+  font-size: 10px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.dreadlight.advancement-manager .builder-talent-ability.is-earned header span {
+  color: #0e0c08;
+  background: var(--dl-accent-gold);
+  border-color: var(--dl-accent-gold-bright);
+  box-shadow: 0 0 10px rgba(var(--rgb-gold), 0.35);
+}
+
+.dreadlight.advancement-manager .builder-talent-ability.is-next header span {
+  color: #08100c;
+  background: var(--dl-track-body);
+  border-color: rgba(var(--rgb-body), 0.85);
+  box-shadow: 0 0 10px rgba(var(--rgb-body), 0.35);
+}
+
+.dreadlight.advancement-manager .builder-talent-ability header strong {
+  overflow: hidden;
+  color: var(--dl-text-primary);
+  font-size: var(--t-tiny);
+  font-weight: 900;
+  letter-spacing: var(--track-base);
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.dreadlight.advancement-manager .builder-talent-ability div {
+  position: relative;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 6;
+  overflow: hidden;
+  font-size: var(--t-tiny);
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+}
+
+.dreadlight.advancement-manager .builder-talent-ability div p {
+  margin: 0;
+}
+
+.dreadlight.advancement-manager .builder-talent-ability div strong {
   color: var(--dl-accent-gold);
 }
 
@@ -9206,18 +9765,96 @@
   white-space: nowrap;
 }
 
+.dreadlight.advancement-manager .advancement-history-edit {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 96px;
+  grid-column: 1 / -1;
+  gap: 10px;
+}
+
+.dreadlight.advancement-manager .advancement-history-edit .builder-field-wide {
+  grid-column: 1 / -1;
+}
+
+.dreadlight.advancement-manager .advancement-history-cost-field input {
+  text-align: center;
+}
+
+.dreadlight.advancement-manager .advancement-history-meta {
+  display: flex;
+  grid-column: 1 / -1;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  color: var(--dl-text-muted);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.dreadlight.advancement-manager .advancement-history-actions {
+  display: flex;
+  grid-column: 1 / -1;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.dreadlight.advancement-manager .advancement-history-actions button {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  width: auto;
+  min-height: 30px;
+  padding: 6px 10px;
+  border: 1px solid rgba(var(--rgb-gold), 0.24);
+  border-radius: var(--r-sm);
+  background: rgba(0, 0, 0, 0.26);
+  color: var(--dl-text-secondary);
+  font-family: var(--dl-font-primary);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.dreadlight.advancement-manager .advancement-history-actions button:hover:not(:disabled) {
+  border-color: rgba(var(--rgb-gold), 0.58);
+  color: var(--dl-accent-gold);
+}
+
+.dreadlight.advancement-manager .advancement-history-actions button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 @media (max-width: 760px) {
   .dreadlight.advancement-manager .builder-talent-row {
-    grid-template-columns: 18px minmax(0, 1fr);
+    grid-template-columns: 1fr;
   }
 
-  .dreadlight.advancement-manager .builder-talent-row .advancement-levels,
-  .dreadlight.advancement-manager .builder-talent-row .builder-talent-cost {
-    grid-column: 2;
-    justify-content: flex-start;
+  .dreadlight.advancement-manager .builder-talent-card-head,
+  .dreadlight.advancement-manager .builder-talent-ability-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dreadlight.advancement-manager .advancement-talent-purchase {
+    grid-template-columns: auto auto;
+    justify-content: start;
+    justify-items: start;
+    align-items: center;
   }
 
   .dreadlight.advancement-manager .advancement-history-entry {
     grid-template-columns: 1fr;
+  }
+
+  .dreadlight.advancement-manager .advancement-history-edit {
+    grid-template-columns: 1fr;
+  }
+
+  .dreadlight.advancement-manager .advancement-history-actions {
+    justify-content: flex-start;
   }
 }

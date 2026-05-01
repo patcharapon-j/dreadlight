@@ -57,21 +57,40 @@
 
       <div class="builder-talent-list advancement-list">
         {{#each talents}}
-          <label class="builder-talent-row advancement-choice-row {{#if this.maxed}}is-maxed{{/if}}" data-advancement-choice-row data-advancement-talent-row data-talent-category="{{this.categoryLabel}}" data-affordable="{{this.canBuy}}" data-talent-search="{{this.name}} {{this.categoryLabel}} {{this.description}}">
+          <label class="builder-talent-row advancement-choice-row advancement-talent-card {{#if this.maxed}}is-maxed{{/if}}" data-advancement-choice-row data-advancement-talent-row data-talent-category="{{this.categoryLabel}}" data-affordable="{{this.canBuy}}" data-talent-search="{{this.name}} {{this.categoryLabel}} {{this.description}} {{this.perkName}} {{this.perkDescription}} {{this.masteryName}} {{this.masteryDescription}}">
             <input type="radio" name="talentId" value="{{this.id}}" data-cost="{{this.cost}}" data-label="{{this.name}} L{{this.nextLevel}}" {{#unless this.canBuy}}disabled{{/unless}} />
-            <div class="builder-talent-main">
-              <strong><i class="dl-sigil dl-sigil-talent"></i>{{this.name}}</strong>
-              <span>{{this.categoryLabel}} | {{#each this.primaryAttributes}}{{attrAbbr this}}{{#unless @last}} / {{/unless}}{{/each}}</span>
-              <em>{{this.description}}</em>
-              {{#if this.perkName}}<small>{{localize "DREADLIGHT.Perk"}}: {{this.perkName}}</small>{{/if}}
-              {{#if this.masteryName}}<small>{{localize "DREADLIGHT.Mastery"}}: {{this.masteryName}}</small>{{/if}}
+            <div class="builder-talent-card-head">
+              <div class="builder-talent-main">
+                <strong><i class="dl-sigil dl-sigil-talent"></i>{{this.name}}</strong>
+                <span>{{this.categoryLabel}} | {{#each this.primaryAttributes}}{{attrAbbr this}}{{#unless @last}} / {{/unless}}{{/each}}</span>
+              </div>
+              <div class="advancement-talent-purchase">
+                <div class="advancement-levels">
+                  <span>L{{this.currentLevel}}</span>
+                  <i class="fa-solid fa-arrow-right"></i>
+                  <strong>L{{this.nextLevel}}</strong>
+                </div>
+                <div class="builder-talent-cost"><span>{{this.cost}}</span> XP</div>
+              </div>
             </div>
-            <div class="advancement-levels">
-              <span>L{{this.currentLevel}}</span>
-              <i class="fa-solid fa-arrow-right"></i>
-              <strong>L{{this.nextLevel}}</strong>
+            <div class="builder-talent-ability-grid">
+              <section class="builder-talent-ability {{#if (gte this.currentLevel 1)}}is-earned{{else}}{{#if (eq this.nextLevel 1)}}is-next{{/if}}{{/if}}" data-talent-preview-level="1">
+                <header><span>L1</span><strong>{{localize "DREADLIGHT.TalentLevel"}} 1</strong></header>
+                <div>{{{this.description}}}</div>
+              </section>
+              {{#if this.perkName}}
+                <section class="builder-talent-ability {{#if (gte this.currentLevel 2)}}is-earned{{else}}{{#if (eq this.nextLevel 2)}}is-next{{/if}}{{/if}}" data-talent-preview-level="2">
+                  <header><span>L2</span><strong>{{this.perkName}}</strong></header>
+                  {{#if this.perkDescription}}<div>{{{this.perkDescription}}}</div>{{/if}}
+                </section>
+              {{/if}}
+              {{#if this.masteryName}}
+                <section class="builder-talent-ability {{#if (gte this.currentLevel 3)}}is-earned{{else}}{{#if (eq this.nextLevel 3)}}is-next{{/if}}{{/if}}" data-talent-preview-level="3">
+                  <header><span>L3</span><strong>{{this.masteryName}}</strong></header>
+                  {{#if this.masteryDescription}}<div>{{{this.masteryDescription}}}</div>{{/if}}
+                </section>
+              {{/if}}
             </div>
-            <div class="builder-talent-cost"><span>{{this.cost}}</span> XP</div>
           </label>
         {{/each}}
       </div>
@@ -154,13 +173,39 @@
       <div class="builder-warning" data-builder-warning hidden></div>
       <div class="advancement-history">
         {{#each history}}
-          <article class="advancement-history-entry">
-            <div>
-              <strong>{{this.label}}</strong>
-              <span>{{this.dateLabel}}</span>
-              {{#if this.note}}<p>{{this.note}}</p>{{/if}}
-            </div>
-            <b>{{this.cost}} XP</b>
+          <article class="advancement-history-entry" data-advancement-history-entry data-entry-id="{{this.id}}">
+            {{#if ../isGM}}
+              <div class="advancement-history-edit">
+                <label class="builder-field">
+                  <span>{{localize "DREADLIGHT.AdvancementHistoryLabel"}}</span>
+                  <input type="text" name="historyLabel" value="{{this.label}}" />
+                </label>
+                <label class="builder-field advancement-history-cost-field">
+                  <span>{{localize "DREADLIGHT.XP"}}</span>
+                  <input type="number" name="historyCost" value="{{this.cost}}" min="0" step="1" />
+                </label>
+                <label class="builder-field builder-field-wide">
+                  <span>{{localize "DREADLIGHT.Notes"}}</span>
+                  <textarea name="historyNote" rows="2">{{this.note}}</textarea>
+                </label>
+              </div>
+              <div class="advancement-history-meta">
+                <span>{{this.dateLabel}}</span>
+                <span>{{this.type}}</span>
+              </div>
+              <div class="advancement-history-actions">
+                <button type="button" data-action="updateHistory"><i class="fa-solid fa-floppy-disk"></i>{{localize "Save"}}</button>
+                <button type="button" data-action="undoHistory" {{#unless this.canUndo}}disabled title="{{localize 'DREADLIGHT.AdvancementHistoryUndoUnavailable'}}"{{/unless}}><i class="fa-solid fa-rotate-left"></i>{{localize "DREADLIGHT.AdvancementUndo"}}</button>
+                <button type="button" data-action="removeHistory"><i class="fa-solid fa-trash"></i>{{localize "DREADLIGHT.Remove"}}</button>
+              </div>
+            {{else}}
+              <div>
+                <strong>{{this.label}}</strong>
+                <span>{{this.dateLabel}}</span>
+                {{#if this.note}}<p>{{this.note}}</p>{{/if}}
+              </div>
+              <b>{{this.cost}} XP</b>
+            {{/if}}
           </article>
         {{/each}}
         {{#unless history.length}}

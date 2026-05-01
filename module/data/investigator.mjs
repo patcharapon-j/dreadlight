@@ -78,6 +78,12 @@ export class InvestigatorData extends foundry.abstract.TypeDataModel {
             label: new fields.StringField({ required: true, initial: "" }),
             cost: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
             note: new fields.StringField({ required: true, initial: "" }),
+            targetId: new fields.StringField({ required: true, initial: "" }),
+            targetName: new fields.StringField({ required: true, initial: "" }),
+            key: new fields.StringField({ required: true, initial: "" }),
+            track: new fields.StringField({ required: true, initial: "" }),
+            from: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
+            to: new fields.NumberField({ required: true, initial: 0, min: 0, integer: true }),
           }),
           { initial: [] }
         ),

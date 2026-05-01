@@ -75,7 +75,7 @@ function currentAttributeCap(system, attr) {
   return { maxed: false, next: current + 1 };
 }
 
-function historyEntry(type, label, cost, note = "") {
+function historyEntry(type, label, cost, note = "", undo = {}) {
   return {
     id: foundry.utils.randomID(16),
     date: new Date().toISOString(),
@@ -83,6 +83,12 @@ function historyEntry(type, label, cost, note = "") {
     label,
     cost,
     note,
+    targetId: undo.targetId ?? "",
+    targetName: undo.targetName ?? "",
+    key: undo.key ?? "",
+    track: undo.track ?? "",
+    from: Number(undo.from) || 0,
+    to: Number(undo.to) || 0,
   };
 }
 
@@ -101,6 +107,9 @@ export class DreadlightAdvancementManager extends HandlebarsApplicationMixin(App
       previousStep: DreadlightAdvancementManager.#previousStep,
       goStep: DreadlightAdvancementManager.#goStep,
       purchase: DreadlightAdvancementManager.#purchase,
+      updateHistory: DreadlightAdvancementManager.#updateHistory,
+      removeHistory: DreadlightAdvancementManager.#removeHistory,
+      undoHistory: DreadlightAdvancementManager.#undoHistory,
     },
   };
 
@@ -132,6 +141,7 @@ export class DreadlightAdvancementManager extends HandlebarsApplicationMixin(App
     context.availableXp = available;
     context.totalXp = Number(system.advancement?.xp) || 0;
     context.spentXp = Number(system.advancement?.spent) || 0;
+    context.isGM = game.user.isGM;
     context.backgroundCost = XP_COSTS.background;
     context.steps = STEPS.map((key, index) => ({
       key,
@@ -160,7 +170,9 @@ export class DreadlightAdvancementManager extends HandlebarsApplicationMixin(App
           primaryAttributes: doc.system.primaryAttributes ?? [],
           description: doc.system.description ?? "",
           perkName: doc.system.perkName ?? "",
+          perkDescription: doc.system.perkDescription ?? "",
           masteryName: doc.system.masteryName ?? "",
+          masteryDescription: doc.system.masteryDescription ?? "",
         };
       })
       .sort((a, b) => a.categoryLabel.localeCompare(b.categoryLabel) || a.name.localeCompare(b.name));
@@ -196,6 +208,7 @@ export class DreadlightAdvancementManager extends HandlebarsApplicationMixin(App
       .map((entry) => ({
         ...entry,
         dateLabel: entry.date ? new Date(entry.date).toLocaleString() : "",
+        canUndo: Boolean(entry.targetId || entry.targetName || entry.key),
       }))
       .reverse();
 
@@ -338,6 +351,83 @@ export class DreadlightAdvancementManager extends HandlebarsApplicationMixin(App
     });
   }
 
+  #historyWithout(id) {
+    return foundry.utils.deepClone(this.actor.system.advancement?.history ?? []).filter((entry) => entry.id !== id);
+  }
+
+  async #updateHistoryEntry(id, updateEntry) {
+    const system = this.actor.system;
+    const history = foundry.utils.deepClone(system.advancement?.history ?? []);
+    const index = history.findIndex((entry) => entry.id === id);
+    if (index < 0) return false;
+
+    const previousCost = Number(history[index].cost) || 0;
+    history[index] = { ...history[index], ...updateEntry };
+    const nextCost = Number(history[index].cost) || 0;
+    await this.actor.update({
+      "system.advancement.spent": Math.max(0, (Number(system.advancement?.spent) || 0) + nextCost - previousCost),
+      "system.advancement.history": history,
+    });
+    return true;
+  }
+
+  async #removeHistoryEntry(id) {
+    const system = this.actor.system;
+    const history = foundry.utils.deepClone(system.advancement?.history ?? []);
+    const entry = history.find((item) => item.id === id);
+    if (!entry) return false;
+
+    await this.actor.update({
+      "system.advancement.spent": Math.max(0, (Number(system.advancement?.spent) || 0) - (Number(entry.cost) || 0)),
+      "system.advancement.history": history.filter((item) => item.id !== id),
+    });
+    return true;
+  }
+
+  async #undoHistoryEntry(id) {
+    const system = this.actor.system;
+    const history = foundry.utils.deepClone(system.advancement?.history ?? []);
+    const entry = history.find((item) => item.id === id);
+    if (!entry) return false;
+
+    const targetName = String(entry.targetName ?? "");
+    const from = Number(entry.from) || 0;
+    const to = Number(entry.to) || 0;
+    const updateData = {
+      "system.advancement.spent": Math.max(0, (Number(system.advancement?.spent) || 0) - (Number(entry.cost) || 0)),
+      "system.advancement.history": this.#historyWithout(id),
+    };
+
+    if (entry.type === "talent") {
+      const talent = this.actor.items.get(entry.targetId) ?? this.actor.items.find((item) => item.type === "talent" && item.name === targetName);
+      if (!talent || !targetName) return false;
+      if (from <= 0) await this.actor.deleteEmbeddedDocuments("Item", [talent.id]);
+      else await talent.update({ "system.level": from });
+    } else if (entry.type === "attribute") {
+      const key = String(entry.key ?? "");
+      const track = String(entry.track ?? TRACK_BY_ATTRIBUTE[key] ?? "");
+      if (!ATTRIBUTES.includes(key) || !track) return false;
+
+      const delta = Math.max(1, to - from);
+      const trackData = system.tracks?.[track];
+      const nextMax = Math.max(0, (Number(trackData?.max) || 0) - delta);
+      updateData[`system.attributes.${key}.value`] = from;
+      updateData[`system.tracks.${track}.max`] = nextMax;
+      updateData[`system.tracks.${track}.value`] = Math.min(nextMax, Math.max(0, (Number(trackData?.value) || 0) - delta));
+    } else if (entry.type === "background") {
+      const backgrounds = foundry.utils.deepClone(system.backgrounds ?? []);
+      const index = backgrounds.findLastIndex((background) => background.name === targetName);
+      if (index < 0 || !targetName) return false;
+      backgrounds.splice(index, 1);
+      updateData["system.backgrounds"] = backgrounds;
+    } else {
+      return false;
+    }
+
+    await this.actor.update(updateData);
+    return true;
+  }
+
   static #previousStep(event, target) {
     const form = this.element.querySelector(".advancement-form");
     this.#showStep(form, this.#step - 1);
@@ -370,6 +460,53 @@ export class DreadlightAdvancementManager extends HandlebarsApplicationMixin(App
     this.actor.sheet?.render(true);
   }
 
+  static async #updateHistory(event, target) {
+    if (!game.user.isGM) return;
+    const row = target.closest("[data-advancement-history-entry]");
+    if (!row) return;
+
+    const label = row.querySelector("[name='historyLabel']")?.value.trim() ?? "";
+    const cost = Math.max(0, Math.floor(Number(row.querySelector("[name='historyCost']")?.value) || 0));
+    const note = row.querySelector("[name='historyNote']")?.value.trim() ?? "";
+    if (!label) {
+      ui.notifications.warn(game.i18n.localize("DREADLIGHT.AdvancementHistoryLabelRequired"));
+      return;
+    }
+
+    const updated = await this.#updateHistoryEntry(row.dataset.entryId, { label, cost, note });
+    if (updated) ui.notifications.info(game.i18n.localize("DREADLIGHT.AdvancementHistoryUpdated"));
+    this.render({ force: true });
+    this.actor.sheet?.render(true);
+  }
+
+  static async #removeHistory(event, target) {
+    if (!game.user.isGM) return;
+    const id = target.closest("[data-advancement-history-entry]")?.dataset.entryId;
+    if (!id) return;
+    if (!window.confirm(game.i18n.localize("DREADLIGHT.AdvancementHistoryRemoveConfirm"))) return;
+
+    const removed = await this.#removeHistoryEntry(id);
+    if (removed) ui.notifications.info(game.i18n.localize("DREADLIGHT.AdvancementHistoryRemoved"));
+    this.render({ force: true });
+    this.actor.sheet?.render(true);
+  }
+
+  static async #undoHistory(event, target) {
+    if (!game.user.isGM) return;
+    const id = target.closest("[data-advancement-history-entry]")?.dataset.entryId;
+    if (!id) return;
+    if (!window.confirm(game.i18n.localize("DREADLIGHT.AdvancementHistoryUndoConfirm"))) return;
+
+    const undone = await this.#undoHistoryEntry(id);
+    if (!undone) {
+      ui.notifications.warn(game.i18n.localize("DREADLIGHT.AdvancementHistoryUndoUnavailable"));
+      return;
+    }
+    ui.notifications.info(game.i18n.localize("DREADLIGHT.AdvancementHistoryUndone"));
+    this.render({ force: true });
+    this.actor.sheet?.render(true);
+  }
+
   async #purchaseTalent(form, purchase) {
     const selected = form.querySelector("input[name='talentId']:checked");
     const packs = await loadAdvancementPacks();
@@ -380,19 +517,25 @@ export class DreadlightAdvancementManager extends HandlebarsApplicationMixin(App
     const currentLevel = Math.min(3, Number(existing?.system.level) || 0);
     const nextLevel = Math.min(3, currentLevel + 1);
     const note = form.elements.talentNote?.value.trim() ?? "";
+    let talentItem = existing;
     if (existing) {
       await existing.update({ "system.level": nextLevel });
     } else {
       const data = doc.toObject();
       delete data._id;
       data.system.level = nextLevel;
-      await this.actor.createEmbeddedDocuments("Item", [data]);
+      [talentItem] = await this.actor.createEmbeddedDocuments("Item", [data]);
     }
 
     const label = currentLevel
       ? game.i18n.format("DREADLIGHT.AdvancementTalentIncreaseLabel", { name: doc.name, from: currentLevel, to: nextLevel })
       : game.i18n.format("DREADLIGHT.AdvancementTalentLearnLabel", { name: doc.name, to: nextLevel });
-    await this.#spend(purchase.cost, historyEntry("talent", label, purchase.cost, note));
+    await this.#spend(purchase.cost, historyEntry("talent", label, purchase.cost, note, {
+      targetId: talentItem?.id ?? "",
+      targetName: doc.name,
+      from: currentLevel,
+      to: nextLevel,
+    }));
   }
 
   async #purchaseAttribute(form, purchase) {
@@ -411,7 +554,12 @@ export class DreadlightAdvancementManager extends HandlebarsApplicationMixin(App
       from: current,
       to: next,
     });
-    await this.#spend(purchase.cost, historyEntry("attribute", label, purchase.cost, note), {
+    await this.#spend(purchase.cost, historyEntry("attribute", label, purchase.cost, note, {
+      key: attr,
+      track,
+      from: current,
+      to: next,
+    }), {
       [`system.attributes.${attr}.value`]: next,
       [`system.tracks.${track}.value`]: Math.min((Number(trackData?.value) || 0) + 1, (Number(trackData?.max) || 0) + 1),
       [`system.tracks.${track}.max`]: (Number(trackData?.max) || 0) + 1,
@@ -441,7 +589,9 @@ export class DreadlightAdvancementManager extends HandlebarsApplicationMixin(App
     const backgrounds = foundry.utils.deepClone(this.actor.system.backgrounds ?? []);
     backgrounds.push(background);
     const label = game.i18n.format("DREADLIGHT.AdvancementBackgroundLabel", { name: background.name });
-    await this.#spend(purchase.cost, historyEntry("background", label, purchase.cost, note), {
+    await this.#spend(purchase.cost, historyEntry("background", label, purchase.cost, note, {
+      targetName: background.name,
+    }), {
       "system.backgrounds": backgrounds,
     });
   }

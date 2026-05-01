@@ -200,6 +200,7 @@ export class DreadlightCharacterBuilder extends HandlebarsApplicationMixin(Appli
       apply: DreadlightCharacterBuilder.#apply,
       cancel: DreadlightCharacterBuilder.#cancel,
       adjustAttribute: DreadlightCharacterBuilder.#adjustAttribute,
+      setTalentLevel: DreadlightCharacterBuilder.#setTalentLevel,
       removeSelectedTalent: DreadlightCharacterBuilder.#removeSelectedTalent,
       nextStep: DreadlightCharacterBuilder.#nextStep,
       previousStep: DreadlightCharacterBuilder.#previousStep,
@@ -270,6 +271,10 @@ export class DreadlightCharacterBuilder extends HandlebarsApplicationMixin(Appli
         categoryLabel: categoryLabel(doc.system.category ?? ""),
         primaryAttributes: doc.system.primaryAttributes ?? [],
         description: doc.system.description ?? "",
+        perkName: doc.system.perkName ?? "",
+        perkDescription: doc.system.perkDescription ?? "",
+        masteryName: doc.system.masteryName ?? "",
+        masteryDescription: doc.system.masteryDescription ?? "",
       }))
       .sort((a, b) => a.categoryLabel.localeCompare(b.categoryLabel) || a.name.localeCompare(b.name));
     context.talentCategories = Array.from(new Set(context.talents.map((talent) => talent.categoryLabel))).sort();
@@ -346,6 +351,16 @@ export class DreadlightCharacterBuilder extends HandlebarsApplicationMixin(Appli
       const row = select.closest(".builder-talent-row");
       row.querySelector("[data-talent-cost]").textContent = String(cost);
       row.classList.toggle("is-selected", level > 0);
+      row.querySelector("[data-talent-level-current]").textContent = String(level);
+      for (const button of row.querySelectorAll("[data-talent-level-choice]")) {
+        const choice = Number(button.dataset.talentLevelChoice) || 0;
+        button.classList.toggle("active", choice === level);
+        button.setAttribute("aria-pressed", String(choice === level));
+      }
+      for (const ability of row.querySelectorAll("[data-talent-preview-level]")) {
+        const previewLevel = Number(ability.dataset.talentPreviewLevel) || 0;
+        ability.classList.toggle("is-earned", previewLevel > 0 && previewLevel <= level);
+      }
     }
     this.#updateSelectedTalents(form);
 
@@ -524,6 +539,15 @@ export class DreadlightCharacterBuilder extends HandlebarsApplicationMixin(Appli
     const select = form?.querySelector(`[data-talent-level="${target.dataset.talentId}"]`);
     if (!select) return;
     select.value = "0";
+    select.dispatchEvent(new Event("input", { bubbles: true }));
+  }
+
+  static #setTalentLevel(event, target) {
+    const form = this.element.querySelector(".character-builder-form");
+    const row = target.closest("[data-talent-row]");
+    const select = row?.querySelector("[data-talent-level]");
+    if (!form || !select) return;
+    select.value = String(Math.max(0, Math.min(2, Number(target.dataset.talentLevelChoice) || 0)));
     select.dispatchEvent(new Event("input", { bubbles: true }));
   }
 
