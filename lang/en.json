@@ -200,6 +200,7 @@
   "DREADLIGHT.DamageCritHint": "damage ≥ crit {threshold}",
   "DREADLIGHT.Base": "Base",
   "DREADLIGHT.Dread": "Dread",
+  "DREADLIGHT.Dreadlore": "Dreadlore",
   "DREADLIGHT.RangeEngaged": "Engaged",
   "DREADLIGHT.RangeShort": "Short",
   "DREADLIGHT.RangeMedium": "Medium",
@@ -214,6 +215,7 @@
   "DREADLIGHT.CategoryKnowledge": "Knowledge",
   "DREADLIGHT.CategoryResilience": "Resilience",
   "DREADLIGHT.CategoryPractical": "Practical",
+  "DREADLIGHT.CategoryDreadlore": "Dreadlore",
 
   "DREADLIGHT.TypeTalent": "Talent",
   "DREADLIGHT.TypeWeapon": "Weapon",

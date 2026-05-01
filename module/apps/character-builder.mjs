@@ -61,6 +61,10 @@ function categoryLabel(category) {
   return label === locKey ? cap(category) : label;
 }
 
+function isDreadloreTalent(doc) {
+  return doc.system?.isDreadlore || doc.system?.category === "dreadlore";
+}
+
 function toDelimited(value) {
   return Array.isArray(value) ? value.join(";") : String(value ?? "");
 }
@@ -257,6 +261,7 @@ export class DreadlightCharacterBuilder extends HandlebarsApplicationMixin(Appli
       value: system.attributes?.[attr]?.value ?? 4,
     }));
     context.talents = packs.talents
+      .filter((doc) => !isDreadloreTalent(doc))
       .map((doc) => ({
         id: doc.id,
         name: doc.name,

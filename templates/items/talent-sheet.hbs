@@ -1,4 +1,4 @@
-<div class="dreadlight sheet item talent">
+<div class="dreadlight sheet item talent {{#if (or system.isDreadlore (eq system.category 'dreadlore'))}}dreadlore{{/if}}">
 
   {{!-- Corner brackets --}}
   <div class="corner tl"></div>
@@ -15,7 +15,7 @@
     <div class="item-header">
       <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" width="36" height="36" />
       <div style="display:flex; flex-direction:column; gap:2px; flex:1; min-width:0;">
-        <div class="item-type-label">{{localize "DREADLIGHT.TypeTalent"}}</div>
+        <div class="item-type-label">{{#if (or system.isDreadlore (eq system.category 'dreadlore'))}}Dreadlore{{else}}{{localize "DREADLIGHT.TypeTalent"}}{{/if}}</div>
         <input class="item-name-input" type="text" name="name" value="{{item.name}}" {{#unless editable}}disabled{{/unless}} />
       </div>
     </div>
@@ -56,30 +56,30 @@
       {{/if}}
     </div>
 
-    {{!-- Description --}}
+    {{!-- Description / L1 --}}
     <div class="field-group">
-      <div class="field-label">{{localize "DREADLIGHT.Description"}}</div>
+      <div class="field-label">{{#if (or system.isDreadlore (eq system.category 'dreadlore'))}}Overview / L1 Minor Lore{{else}}{{localize "DREADLIGHT.Description"}}{{/if}}</div>
       <textarea name="system.description" class="field-textarea" {{#unless editable}}disabled{{/unless}}>{{system.description}}</textarea>
     </div>
 
-    {{!-- L2 Perk box --}}
+    {{!-- L2 Perk / Dreadlore Grave Lore --}}
     <div class="perk-box {{#if (gte system.level 2)}}active{{else}}locked{{/if}}">
       <div class="field-label" style="margin-bottom:4px;">
-        L2 {{localize "DREADLIGHT.TalentPerk"}}{{#if system.perkName}} — {{system.perkName}}{{/if}}
+        {{#if (or system.isDreadlore (eq system.category 'dreadlore'))}}L2 Grave Lore{{else}}L2 {{localize "DREADLIGHT.TalentPerk"}}{{/if}}{{#if system.perkName}} - {{system.perkName}}{{/if}}
       </div>
       {{#if editable}}
-        <input type="text" name="system.perkName" value="{{system.perkName}}" placeholder="{{localize "DREADLIGHT.TalentPerkName"}}" style="width:100%; margin-bottom:4px;" />
+        <input type="text" name="system.perkName" value="{{system.perkName}}" placeholder="{{#if (or system.isDreadlore (eq system.category 'dreadlore'))}}Grave lore name...{{else}}{{localize "DREADLIGHT.TalentPerkName"}}{{/if}}" style="width:100%; margin-bottom:4px;" />
       {{/if}}
       <textarea name="system.perkDescription" class="field-textarea" style="min-height:48px;" {{#unless editable}}disabled{{/unless}}>{{system.perkDescription}}</textarea>
     </div>
 
-    {{!-- L3 Mastery box --}}
+    {{!-- L3 Mastery / Dreadlore Abyssal Lore --}}
     <div class="mastery-box {{#if (gte system.level 3)}}active{{else}}locked{{/if}}">
       <div class="field-label" style="margin-bottom:4px;">
-        L3 {{localize "DREADLIGHT.TalentMastery"}}{{#if system.masteryName}} — {{system.masteryName}}{{/if}}
+        {{#if (or system.isDreadlore (eq system.category 'dreadlore'))}}L3 Abyssal Lore{{else}}L3 {{localize "DREADLIGHT.TalentMastery"}}{{/if}}{{#if system.masteryName}} - {{system.masteryName}}{{/if}}
       </div>
       {{#if editable}}
-        <input type="text" name="system.masteryName" value="{{system.masteryName}}" placeholder="{{localize "DREADLIGHT.TalentMasteryName"}}" style="width:100%; margin-bottom:4px;" />
+        <input type="text" name="system.masteryName" value="{{system.masteryName}}" placeholder="{{#if (or system.isDreadlore (eq system.category 'dreadlore'))}}Abyssal lore name...{{else}}{{localize "DREADLIGHT.TalentMasteryName"}}{{/if}}" style="width:100%; margin-bottom:4px;" />
       {{/if}}
       <textarea name="system.masteryDescription" class="field-textarea" style="min-height:48px;" {{#unless editable}}disabled{{/unless}}>{{system.masteryDescription}}</textarea>
     </div>

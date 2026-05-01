@@ -1,4 +1,4 @@
-<div class="dreadlight-chat {{#if direFailure}}chat-dire{{else}}chat-{{outcome}}{{/if}} {{#if pushed}}pushed{{/if}}" data-sixes="{{totalSixes}}" data-has-ones="{{#if hasOnes}}true{{else}}false{{/if}}">
+<div class="dreadlight-chat {{#if direFailure}}chat-dire{{else}}chat-{{outcome}}{{/if}} {{#if talentIsDreadlore}}chat-dreadlore{{/if}} {{#if pushed}}pushed{{/if}}" data-sixes="{{totalSixes}}" data-has-ones="{{#if hasOnes}}true{{else}}false{{/if}}">
   <div class="chat-accent"></div>
 
   <div class="chat-header {{#unless showPortrait}}no-portrait{{/unless}}">
@@ -17,6 +17,7 @@
       ({{capitalize difficulty}})
       {{#if pushed}}<span class="chat-pushed">⟳ {{localize "DREADLIGHT.ResultPushed"}}</span>{{/if}}
     </div>
+    {{#if talentIsDreadlore}}<div class="chat-dreadlore-used">Dreadlore invoked</div>{{/if}}
     {{#if gearName}}<div class="chat-gear-used"><i class="dl-sigil dl-sigil-equipment"></i> {{gearName}}</div>{{/if}}
   </div>
 

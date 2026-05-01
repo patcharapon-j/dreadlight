@@ -56,6 +56,13 @@
       "system": "dreadlight"
     },
     {
+      "name": "dreadlore",
+      "label": "Dreadlight Dreadlore",
+      "path": "packs/dreadlore",
+      "type": "Item",
+      "system": "dreadlight"
+    },
+    {
       "name": "weapons",
       "label": "Dreadlight Weapons",
       "path": "packs/weapons",

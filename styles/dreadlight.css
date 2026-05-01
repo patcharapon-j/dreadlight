@@ -65,6 +65,7 @@
   --rgb-body: 85, 184, 122;
   --rgb-mind: 107, 157, 245;
   --rgb-soul: 168, 139, 245;
+  --rgb-dreadlore: 224, 85, 85;
 
   /* ── Borders ── */
   --dl-border-subtle: rgba(255, 255, 255, 0.06);
@@ -1135,12 +1136,19 @@
 .dreadlight .pip.filled.pip-soul { background: var(--dl-track-soul); }
 .dreadlight .pip.filled.pip-dread { background: var(--dl-track-dread); }
 .dreadlight .pip.filled.pip-gold { background: var(--dl-accent-gold); }
+.dreadlight .pip.filled.pip-occult { background: var(--dl-track-soul); }
+.dreadlight .pip.filled.pip-dreadlore {
+  background: linear-gradient(180deg, #ff7a7a, var(--dl-accent-red));
+  box-shadow: 0 0 7px rgba(var(--rgb-dreadlore), 0.45);
+}
 
 .dreadlight .pip.empty.pip-body { border: 1px solid rgba(85, 184, 122, 0.2); background: transparent; }
 .dreadlight .pip.empty.pip-mind { border: 1px solid rgba(107, 157, 245, 0.2); background: transparent; }
 .dreadlight .pip.empty.pip-soul { border: 1px solid rgba(168, 139, 245, 0.2); background: transparent; }
 .dreadlight .pip.empty.pip-dread { border: 1px solid rgba(224, 85, 85, 0.2); background: transparent; }
 .dreadlight .pip.empty.pip-gold { border: 1px solid rgba(201, 169, 110, 0.2); background: transparent; }
+.dreadlight .pip.empty.pip-occult { border: 1px solid rgba(var(--rgb-soul), 0.2); background: transparent; }
+.dreadlight .pip.empty.pip-dreadlore { border: 1px solid rgba(var(--rgb-dreadlore), 0.32); background: transparent; }
 
 .dreadlight .pip-gap {
   width: 4px;
@@ -1430,6 +1438,19 @@
   background: linear-gradient(180deg, transparent, var(--dl-track-soul), transparent);
 }
 
+.dreadlight .talent-row.dreadlore {
+  background:
+    radial-gradient(ellipse at 0% 50%, rgba(var(--rgb-dreadlore), 0.12), transparent 62%),
+    linear-gradient(180deg, rgba(37, 12, 14, 0.72), rgba(12, 9, 10, 0.94));
+  border-color: rgba(var(--rgb-dreadlore), 0.28);
+}
+
+.dreadlight .talent-row.dreadlore::before {
+  width: 2px;
+  background: linear-gradient(180deg, transparent, var(--dl-accent-red), var(--dl-track-soul), transparent);
+  box-shadow: 0 0 12px rgba(var(--rgb-dreadlore), 0.5);
+}
+
 .dreadlight .talent-row:hover {
   border-color: rgba(var(--rgb-gold), 0.22);
   box-shadow: var(--elev-2), 0 0 10px -4px rgba(var(--rgb-gold), 0.18);
@@ -1438,6 +1459,11 @@
 .dreadlight .talent-row.occult:hover {
   border-color: rgba(var(--rgb-soul), 0.22);
   box-shadow: var(--elev-2), 0 0 10px -4px rgba(var(--rgb-soul), 0.18);
+}
+
+.dreadlight .talent-row.dreadlore:hover {
+  border-color: rgba(var(--rgb-dreadlore), 0.5);
+  box-shadow: var(--elev-2), 0 0 18px -6px rgba(var(--rgb-dreadlore), 0.45);
 }
 
 .dreadlight .talent-row:hover::before {
@@ -1484,6 +1510,20 @@
   font-weight: 700;
 }
 
+.dreadlight .talent-dreadlore-badge {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 6px;
+  padding: 1px 5px;
+  border: 1px solid rgba(var(--rgb-dreadlore), 0.38);
+  border-radius: var(--r-xs);
+  background: rgba(var(--rgb-dreadlore), 0.12);
+  color: #ff8a8a;
+  font-size: 7px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
 .dreadlight .talent-sub {
   font-size: 8px;
   color: var(--dl-text-muted);
@@ -1494,6 +1534,10 @@
   color: var(--dl-track-soul);
 }
 
+.dreadlight .talent-sub.dreadlore {
+  color: #ff8a8a;
+}
+
 .dreadlight .talent-level {
   font-size: 9px;
   font-weight: 700;
@@ -1502,6 +1546,11 @@
 
 .dreadlight .talent-level.purple {
   color: var(--dl-track-soul);
+}
+
+.dreadlight .talent-level.dreadlore {
+  color: #ff8a8a;
+  text-shadow: 0 0 8px rgba(var(--rgb-dreadlore), 0.55);
 }
 
 .dreadlight .talent-roll-btn,
@@ -1524,6 +1573,17 @@
 .dreadlight .roll-sm:hover {
   border-color: rgba(201, 169, 110, 0.35);
   box-shadow: 0 0 8px rgba(201, 169, 110, 0.12);
+}
+
+.dreadlight .talent-roll-btn.dreadlore {
+  border-color: rgba(var(--rgb-dreadlore), 0.32);
+  color: #ff8a8a;
+  background: rgba(var(--rgb-dreadlore), 0.06);
+}
+
+.dreadlight .talent-roll-btn.dreadlore:hover {
+  border-color: rgba(var(--rgb-dreadlore), 0.55);
+  box-shadow: 0 0 12px rgba(var(--rgb-dreadlore), 0.28);
 }
 
 /* Talent & Item Expand Panels */
@@ -1555,6 +1615,12 @@
   grid-template-rows: 1fr;
   opacity: 1;
   border-color: var(--dl-border-subtle);
+}
+
+.dreadlight .talent-expand.dreadlore.open {
+  background:
+    linear-gradient(180deg, rgba(var(--rgb-dreadlore), 0.07), rgba(0, 0, 0, 0.12));
+  border-color: rgba(var(--rgb-dreadlore), 0.24);
 }
 
 .dreadlight .talent-row.expanded,
@@ -3026,6 +3092,8 @@
 .dreadlight-chat {
   background: transparent;
   overflow: hidden;
+  position: relative;
+  isolation: isolate;
   font-family: var(--dl-font-primary);
   color: var(--dl-text-primary);
 }
@@ -3092,6 +3160,34 @@
   height: 4px;
   background: linear-gradient(90deg, transparent 0%, var(--dl-accent-red) 20%, var(--dl-accent-red) 80%, transparent 100%);
   box-shadow: 0 1px 8px rgba(224, 85, 85, 0.5);
+}
+
+.chat-message:has(.chat-dreadlore) {
+  border-color: rgba(var(--rgb-dreadlore), 0.58) !important;
+  box-shadow:
+    0 0 18px rgba(var(--rgb-dreadlore), 0.14),
+    0 0 0 1px rgba(var(--rgb-soul), 0.08) inset;
+}
+
+.dreadlight-chat.chat-dreadlore .chat-accent {
+  height: 5px;
+  background: linear-gradient(90deg, transparent 0%, var(--dl-accent-red) 18%, var(--dl-track-soul) 52%, var(--dl-accent-red) 82%, transparent 100%);
+  box-shadow: 0 1px 12px rgba(var(--rgb-dreadlore), 0.55);
+}
+
+.dreadlight-chat.chat-dreadlore::before {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  inset: 0;
+  z-index: 4;
+  opacity: 0.85;
+  background:
+    linear-gradient(90deg, rgba(var(--rgb-dreadlore), 0.18), transparent 17%, transparent 83%, rgba(var(--rgb-dreadlore), 0.16)),
+    linear-gradient(180deg, rgba(var(--rgb-soul), 0.12), transparent 18%, transparent 82%, rgba(var(--rgb-dreadlore), 0.16));
+  box-shadow:
+    inset 0 0 0 1px rgba(var(--rgb-dreadlore), 0.16),
+    inset 0 0 22px rgba(var(--rgb-dreadlore), 0.12);
 }
 
 .chat-message:has(.chat-pushed) {
@@ -3236,6 +3332,82 @@
 .dreadlight-chat.chat-tainted[data-sixes="7"] .result-row,
 .dreadlight-chat.chat-tainted[data-sixes="8"] .result-row { border-left-width: 4px; }
 
+/* Dreadlore rolls keep a corrupted palette while preserving outcome color differences. */
+.chat-message:has(.chat-dreadlore) {
+  border-color: rgba(var(--rgb-dreadlore), 0.62) !important;
+  box-shadow:
+    0 0 18px rgba(var(--rgb-dreadlore), 0.16),
+    0 0 0 1px rgba(var(--rgb-soul), 0.10) inset !important;
+}
+
+.dreadlight-chat.chat-dreadlore {
+  --dl-dreadlore-result: #ff8a8a;
+  --dl-dreadlore-result-deep: #7b1e2d;
+  --dl-dreadlore-result-rgb: 224, 85, 85;
+  --dl-dreadlore-result-soft: rgba(var(--dl-dreadlore-result-rgb), 0.14);
+  --dl-dreadlore-result-glow: rgba(var(--dl-dreadlore-result-rgb), 0.52);
+  background:
+    radial-gradient(ellipse at 0% 12%, var(--dl-dreadlore-result-soft), transparent 42%),
+    radial-gradient(ellipse at 100% 88%, rgba(var(--rgb-soul), 0.10), transparent 40%),
+    linear-gradient(180deg, #16080d 0%, #0b0709 100%);
+}
+
+.dreadlight-chat.chat-dreadlore.chat-success {
+  --dl-dreadlore-result: #d8b66a;
+  --dl-dreadlore-result-deep: #8b5f20;
+  --dl-dreadlore-result-rgb: 216, 182, 106;
+}
+
+.dreadlight-chat.chat-dreadlore.chat-tainted {
+  --dl-dreadlore-result: #b994ff;
+  --dl-dreadlore-result-deep: #6d48bd;
+  --dl-dreadlore-result-rgb: 185, 148, 255;
+}
+
+.dreadlight-chat.chat-dreadlore.chat-failure {
+  --dl-dreadlore-result: #a9979d;
+  --dl-dreadlore-result-deep: #5b454d;
+  --dl-dreadlore-result-rgb: 169, 151, 157;
+}
+
+.dreadlight-chat.chat-dreadlore.chat-dire {
+  --dl-dreadlore-result: #ff5f64;
+  --dl-dreadlore-result-deep: #8f1424;
+  --dl-dreadlore-result-rgb: 255, 95, 100;
+}
+
+.chat-message:has(.chat-dreadlore.chat-success) { border-color: rgba(216, 182, 106, 0.48) !important; }
+.chat-message:has(.chat-dreadlore.chat-tainted) { border-color: rgba(185, 148, 255, 0.48) !important; }
+.chat-message:has(.chat-dreadlore.chat-failure) { border-color: rgba(169, 151, 157, 0.38) !important; }
+.chat-message:has(.chat-dreadlore.chat-dire) { border-color: rgba(255, 95, 100, 0.58) !important; }
+
+.dreadlight-chat.chat-dreadlore .chat-accent,
+.dreadlight-chat.chat-dreadlore.chat-success[data-sixes] .chat-accent,
+.dreadlight-chat.chat-dreadlore.chat-tainted[data-sixes] .chat-accent {
+  height: 5px;
+  background: linear-gradient(90deg, transparent 0%, var(--dl-dreadlore-result-deep) 16%, var(--dl-dreadlore-result) 48%, var(--dl-track-soul) 58%, var(--dl-dreadlore-result-deep) 84%, transparent 100%);
+  box-shadow: 0 1px 12px var(--dl-dreadlore-result-glow);
+  animation: none;
+}
+
+.dreadlight-chat.chat-dreadlore .chat-header.no-portrait,
+.dreadlight-chat.chat-dreadlore .chat-info,
+.dreadlight-chat.chat-dreadlore .chat-dice,
+.dreadlight-chat.chat-dreadlore .chat-result,
+.dreadlight-chat.chat-dreadlore .push-bar {
+  background:
+    radial-gradient(ellipse at 0% 50%, var(--dl-dreadlore-result-soft), transparent 55%),
+    linear-gradient(180deg, rgba(22, 8, 13, 0.96), rgba(10, 7, 9, 0.98));
+  border-color: rgba(var(--dl-dreadlore-result-rgb), 0.18);
+}
+
+.dreadlight-chat.chat-dreadlore .dice-group.group-base,
+.dreadlight-chat.chat-dreadlore .dice-group.group-dread,
+.dreadlight-chat.chat-dreadlore .dice-group.group-gear {
+  background: rgba(var(--dl-dreadlore-result-rgb), 0.055);
+  box-shadow: inset 0 0 0 1px rgba(var(--dl-dreadlore-result-rgb), 0.08);
+}
+
 /* Chat header */
 .dreadlight-chat .chat-header {
   position: relative;
@@ -3311,6 +3483,13 @@
     linear-gradient(135deg, rgba(224, 85, 85, 0.15) 0%, rgba(180, 50, 50, 0.08) 50%, transparent 100%);
 }
 
+.dreadlight-chat.chat-dreadlore .chat-portrait-bg {
+  background:
+    radial-gradient(ellipse at 30% 42%, rgba(var(--dl-dreadlore-result-rgb), 0.28) 0%, transparent 70%),
+    radial-gradient(ellipse at 72% 18%, rgba(var(--rgb-soul), 0.22) 0%, transparent 58%),
+    linear-gradient(135deg, rgba(var(--dl-dreadlore-result-rgb), 0.14) 0%, rgba(var(--rgb-soul), 0.08) 55%, transparent 100%);
+}
+
 /* Name overlays the portrait — anchored to bottom of header */
 .dreadlight-chat .chat-header .chat-name {
   position: absolute;
@@ -3343,6 +3522,27 @@
 .dreadlight-chat .chat-info .chat-talent {
   color: var(--dl-accent-gold);
   font-weight: 600;
+}
+
+.dreadlight-chat.chat-dreadlore .chat-info .chat-talent {
+  color: #ff8a8a;
+  text-shadow: 0 0 8px rgba(var(--rgb-dreadlore), 0.45);
+}
+
+.dreadlight-chat .chat-dreadlore-used {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  margin-top: 4px;
+  padding: 2px 6px;
+  color: #ff8a8a;
+  background: rgba(var(--rgb-dreadlore), 0.08);
+  border: 1px solid rgba(var(--rgb-dreadlore), 0.28);
+  border-radius: var(--r-xs);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
 }
 
 .dreadlight-chat .chat-info .chat-pushed {
@@ -3708,6 +3908,51 @@
 .dreadlight-chat.chat-tainted .result-count-num { color: var(--dl-track-soul); }
 .dreadlight-chat.chat-failure .result-count-num { color: var(--dl-text-muted); }
 .dreadlight-chat.chat-dire .result-count-num { color: var(--dl-accent-red); }
+
+.dreadlight-chat.chat-dreadlore .result-row,
+.dreadlight-chat.chat-dreadlore.chat-success[data-sixes] .result-row,
+.dreadlight-chat.chat-dreadlore.chat-tainted[data-sixes] .result-row {
+  border-left: 4px solid var(--dl-dreadlore-result-deep);
+}
+
+.dreadlight-chat.chat-dreadlore .result-row::before,
+.dreadlight-chat.chat-dreadlore.chat-success[data-sixes] .result-row::before,
+.dreadlight-chat.chat-dreadlore.chat-tainted[data-sixes] .result-row::before {
+  background: linear-gradient(90deg, rgba(var(--dl-dreadlore-result-rgb), 0.32), rgba(var(--rgb-soul), 0.12) 46%, transparent 88%);
+  opacity: 0.26;
+}
+
+.dreadlight-chat.chat-dreadlore .result-icon,
+.dreadlight-chat.chat-dreadlore .result-icon.gold,
+.dreadlight-chat.chat-dreadlore .result-icon.purple,
+.dreadlight-chat.chat-dreadlore .result-icon.red,
+.dreadlight-chat.chat-dreadlore .result-icon.muted {
+  color: var(--dl-dreadlore-result);
+  filter: drop-shadow(0 0 5px var(--dl-dreadlore-result-glow));
+}
+
+.dreadlight-chat.chat-dreadlore .result-label,
+.dreadlight-chat.chat-dreadlore.chat-success .result-label,
+.dreadlight-chat.chat-dreadlore.chat-tainted .result-label,
+.dreadlight-chat.chat-dreadlore.chat-failure .result-label,
+.dreadlight-chat.chat-dreadlore.chat-dire .result-label,
+.dreadlight-chat.chat-dreadlore.chat-pushed .result-label,
+.dreadlight-chat.chat-dreadlore.pushed .result-label {
+  color: var(--dl-dreadlore-result);
+  text-shadow: 0 0 10px var(--dl-dreadlore-result-glow);
+}
+
+.dreadlight-chat.chat-dreadlore .result-count {
+  color: rgba(255, 210, 210, 0.78);
+}
+
+.dreadlight-chat.chat-dreadlore .result-count-num,
+.dreadlight-chat.chat-dreadlore.chat-success .result-count-num,
+.dreadlight-chat.chat-dreadlore.chat-tainted .result-count-num,
+.dreadlight-chat.chat-dreadlore.chat-failure .result-count-num,
+.dreadlight-chat.chat-dreadlore.chat-dire .result-count-num {
+  color: var(--dl-dreadlore-result);
+}
 
 .dreadlight-chat .consequence {
   display: flex;

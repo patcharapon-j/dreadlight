@@ -1,27 +1,37 @@
 <div class="talent-list">
   {{#each talents}}
-    <div class="talent-row {{#if (eq this.name 'Occult')}}occult{{/if}}" data-item-id="{{this.id}}">
-      {{#if (eq this.name "Occult")}}
-        {{{talentPips this.system.level "occult"}}}
+    <div class="talent-row {{#if (or this.system.isDreadlore (eq this.system.category 'dreadlore'))}}dreadlore{{else}}{{#if (eq this.name 'Occult')}}occult{{/if}}{{/if}}" data-item-id="{{this.id}}">
+      {{#if (or this.system.isDreadlore (eq this.system.category 'dreadlore'))}}
+        {{{talentPips this.system.level "dreadlore"}}}
       {{else}}
-        {{{talentPips this.system.level "gold"}}}
+        {{#if (eq this.name "Occult")}}
+          {{{talentPips this.system.level "occult"}}}
+        {{else}}
+          {{{talentPips this.system.level "gold"}}}
+        {{/if}}
       {{/if}}
       <div class="talent-info" data-action="toggleExpand">
-        <div class="talent-name">{{this.name}}</div>
-        <div class="talent-sub {{#if (eq this.name 'Occult')}}occult{{/if}}">
+        <div class="talent-name">
+          {{this.name}}
+          {{#if (or this.system.isDreadlore (eq this.system.category 'dreadlore'))}}<span class="talent-dreadlore-badge">Dreadlore</span>{{/if}}
+        </div>
+        <div class="talent-sub {{#if (or this.system.isDreadlore (eq this.system.category 'dreadlore'))}}dreadlore{{else}}{{#if (eq this.name 'Occult')}}occult{{/if}}{{/if}}">
           {{join this.system.primaryAttributes " / "}}
+          {{#if (or this.system.isDreadlore (eq this.system.category 'dreadlore'))}}
+            {{#if this.system.dreadloreTypes}} &middot; {{join this.system.dreadloreTypes " / "}}{{/if}}
+          {{/if}}
           {{#if (gte this.system.level 2)}}
-            {{#if this.system.perkName}} — {{this.system.perkName}}{{/if}}
+            {{#if this.system.perkName}} - {{this.system.perkName}}{{/if}}
           {{/if}}
           {{#if (gte this.system.level 3)}}
-            {{#if this.system.masteryName}} · {{this.system.masteryName}}{{/if}}
+            {{#if this.system.masteryName}} &middot; {{this.system.masteryName}}{{/if}}
           {{/if}}
         </div>
       </div>
-      <div class="talent-level {{#if (eq this.name 'Occult')}}purple{{else}}gold{{/if}}">L{{this.system.level}}</div>
-      <button type="button" class="talent-roll-btn {{#if (eq this.name 'Occult')}}occult{{/if}}" data-action="rollTalent" title="{{localize "DREADLIGHT.RollButton"}}"><i class="fa-solid fa-dice-d6"></i></button>
+      <div class="talent-level {{#if (or this.system.isDreadlore (eq this.system.category 'dreadlore'))}}dreadlore{{else}}{{#if (eq this.name 'Occult')}}purple{{else}}gold{{/if}}{{/if}}">L{{this.system.level}}</div>
+      <button type="button" class="talent-roll-btn {{#if (or this.system.isDreadlore (eq this.system.category 'dreadlore'))}}dreadlore{{else}}{{#if (eq this.name 'Occult')}}occult{{/if}}{{/if}}" data-action="rollTalent" title="{{localize "DREADLIGHT.RollButton"}}"><i class="fa-solid fa-dice-d6"></i></button>
     </div>
-    <div class="talent-expand" data-expand-id="{{this.id}}">
+    <div class="talent-expand {{#if (or this.system.isDreadlore (eq this.system.category 'dreadlore'))}}dreadlore{{/if}}" data-expand-id="{{this.id}}">
       <div class="expand-inner">
         {{#if this.system.description}}
           <div class="expand-description">{{{this.system.description}}}</div>
@@ -29,7 +39,7 @@
         {{#if (gte this.system.level 2)}}
           {{#if this.system.perkName}}
             <div class="expand-ability">
-              <span class="expand-ability-label">{{localize "DREADLIGHT.Perk"}}</span>
+              <span class="expand-ability-label">{{#if (or this.system.isDreadlore (eq this.system.category 'dreadlore'))}}L2 Grave Lore{{else}}{{localize "DREADLIGHT.Perk"}}{{/if}}</span>
               <span class="expand-ability-name">{{this.system.perkName}}</span>
               {{#if this.system.perkDescription}}
                 <div class="expand-ability-desc">{{{this.system.perkDescription}}}</div>
@@ -40,7 +50,7 @@
         {{#if (gte this.system.level 3)}}
           {{#if this.system.masteryName}}
             <div class="expand-ability">
-              <span class="expand-ability-label">{{localize "DREADLIGHT.Mastery"}}</span>
+              <span class="expand-ability-label">{{#if (or this.system.isDreadlore (eq this.system.category 'dreadlore'))}}L3 Abyssal Lore{{else}}{{localize "DREADLIGHT.Mastery"}}{{/if}}</span>
               <span class="expand-ability-name">{{this.system.masteryName}}</span>
               {{#if this.system.masteryDescription}}
                 <div class="expand-ability-desc">{{{this.system.masteryDescription}}}</div>

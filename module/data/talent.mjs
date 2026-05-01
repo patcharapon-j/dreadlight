@@ -10,6 +10,10 @@ export class TalentData extends foundry.abstract.TypeDataModel {
       ),
 
       category: new fields.StringField({ required: true, initial: "" }),
+      isDreadlore: new fields.BooleanField({ required: true, initial: false }),
+      dreadloreTypes: new fields.ArrayField(
+        new fields.StringField({ required: true, initial: "" })
+      ),
 
       description: new fields.HTMLField({ required: true, initial: "" }),
 

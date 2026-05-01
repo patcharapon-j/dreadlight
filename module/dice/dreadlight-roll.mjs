@@ -5,6 +5,7 @@ export class DreadlightRoll {
     this.gearDice = options.gearDice || 0;
     this.attribute = options.attribute;
     this.talentName = options.talentName || null;
+    this.talentIsDreadlore = options.talentIsDreadlore || false;
     this.gearName = options.gearName || null;
     this.difficulty = options.difficulty || "normal";
     this.actor = options.actor;
@@ -152,6 +153,7 @@ export class DreadlightRoll {
       showTaintedFlavorText: game.settings.get("dreadlight", "showTaintedFlavorText"),
       attribute: this.attribute,
       talentName: this.talentName,
+      talentIsDreadlore: this.talentIsDreadlore,
       gearName: this.gearName,
       difficulty: this.difficulty,
       baseResults: this.baseResults,

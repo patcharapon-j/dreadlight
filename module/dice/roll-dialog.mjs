@@ -313,6 +313,7 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
       ...pool,
       attribute: this.#attribute,
       talentName: selectedTalent?.name || null,
+      talentIsDreadlore: selectedTalent?.system?.isDreadlore || selectedTalent?.system?.category === "dreadlore",
       gearName: selectedGear?.name || null,
       difficulty: diffName,
       actor: this.#actor,

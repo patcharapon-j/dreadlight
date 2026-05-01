@@ -50,6 +50,10 @@ function categoryLabel(category) {
   return label === locKey ? cap(category) : label;
 }
 
+function isDreadloreTalent(doc) {
+  return doc.system?.isDreadlore || doc.system?.category === "dreadlore";
+}
+
 function toDelimited(value) {
   return Array.isArray(value) ? value.join(";") : String(value ?? "");
 }
@@ -136,6 +140,7 @@ export class DreadlightAdvancementManager extends HandlebarsApplicationMixin(App
     }));
     context.selectedStep = this.#step;
     context.talents = packs.talents
+      .filter((doc) => !isDreadloreTalent(doc))
       .map((doc) => {
         const actorTalent = actorTalents.get(doc.name);
         const currentLevel = Math.min(3, Number(actorTalent?.system.level) || 0);
