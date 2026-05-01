@@ -23,6 +23,8 @@ class DreadlightItemSheetBase extends HandlebarsApplicationMixin(ItemSheetV2) {
     context.isWeapon = this.item.type === "weapon";
     context.isArmor = this.item.type === "armor";
     context.isEquipment = this.item.type === "equipment";
+    context.isBackground = this.item.type === "background";
+    context.isDrive = this.item.type === "drive";
     return context;
   }
 }
@@ -42,6 +44,18 @@ export class ArmorSheet extends DreadlightItemSheetBase {
 export class EquipmentSheet extends DreadlightItemSheetBase {
   static PARTS = {
     sheet: { template: "systems/dreadlight/templates/items/equipment-sheet.hbs" },
+  };
+}
+
+export class BackgroundSheet extends DreadlightItemSheetBase {
+  static PARTS = {
+    sheet: { template: "systems/dreadlight/templates/items/background-sheet.hbs" },
+  };
+}
+
+export class DriveSheet extends DreadlightItemSheetBase {
+  static PARTS = {
+    sheet: { template: "systems/dreadlight/templates/items/drive-sheet.hbs" },
   };
 }
 

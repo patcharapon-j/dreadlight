@@ -6,6 +6,56 @@
 
 // ─── TALENTS ─────────────────────────────────────────────────────────────────
 
+const BACKGROUNDS = [
+  ["Academic", "Wise in research methods, scholarly networks, and peer review.", ["Research methods", "Scholarly networks", "Peer review"], ["Research materials", "Recording device", "Library/university access"], ["Researcher", "Science", "History"]],
+  ["Aristocrat / Elite", "Wise in high society, political connections, and etiquette.", ["High society", "Political connections", "Etiquette"], ["Fine clothing", "Credentials/access papers", "Personal vehicle or driver"], ["Resources", "Persuasion", "Command"]],
+  ["Artist", "Wise in creative expression, emotional undercurrents, and improvisation.", ["Creative expression", "Emotional undercurrents", "Improvisation"], ["Art supplies", "Recording device", "Distinctive clothing"], ["Performance", "Empath", "Deception"]],
+  ["Business", "Wise in financial records, supply chains, and negotiation.", ["Financial records", "Supply chains", "Negotiation"], ["Communication device", "Financial records/ledger", "Business attire"], ["Resources", "Persuasion", "Researcher"]],
+  ["Clergy / Spiritual", "Wise in pastoral care, theology, and community trust.", ["Pastoral care", "Theology", "Community trust"], ["Holy symbol or text", "Ritual components", "Modest clothing"], ["Theology", "Command", "Empath"]],
+  ["Criminal", "Wise in underworld contacts, evading law, and reading danger.", ["Underworld contacts", "Evading law", "Reading danger"], ["Lockpick set", "Knife", "Concealment kit", "Disguise kit or dark clothing"], ["Infiltration", "Streetwise", "Sleight of Hand"]],
+  ["Drifter", "Wise in reading people fast, disappearing, and odd jobs.", ["Reading people", "Disappearing", "Odd jobs"], ["Bedroll", "Fire kit", "Knife", "Sturdy clothing"], ["Streetwise", "Survival", "Stealth"]],
+  ["Engineer", "Wise in mechanical systems, structural assessment, and blueprints.", ["Mechanical systems", "Structural assessment", "Blueprints"], ["Tool kit", "Flashlight", "Technical references or blueprints", "Protective case"], ["Technology", "Craft", "Demolitions"]],
+  ["Government / Civil Service", "Wise in public records, regulatory systems, and inter-agency contacts.", ["Public records", "Regulatory systems", "Inter-agency contacts"], ["Identification credentials", "Communication device", "Access to public records"], ["Resources", "Researcher", "Investigator"]],
+  ["Journalist", "Wise in information gathering, interviewing, and source protection.", ["Information gathering", "Interviewing", "Source protection"], ["Recording device", "Camera", "Press credentials"], ["Investigator", "Interrogator", "Researcher"]],
+  ["Law Enforcement", "Wise in crime scenes, interrogation, and chain of evidence.", ["Crime scenes", "Interrogation", "Chain of evidence"], ["Pistol (standard)", "Handcuffs", "Badge", "Flashlight"], ["Investigator", "Interrogator", "Marksman"]],
+  ["Medical", "Wise in anatomy, pharmacology, and triage.", ["Anatomy", "Pharmacology", "Triage"], ["Basic medical kit", "Flashlight", "Recording device"], ["Medicine", "First Aid", "Science"]],
+  ["Military / Veteran", "Wise in tactics, discipline under fire, and field craft.", ["Tactics", "Discipline under fire", "Field craft"], ["Pistol or rifle", "Combat knife", "Survival gear", "Protective mask"], ["Tactics", "Marksman", "Endurance"]],
+  ["Occult Dabbler", "Wise in fringe beliefs, ritual basics, and recognizing symbols.", ["Fringe beliefs", "Ritual basics", "Recognizing symbols"], ["Occult reference", "Candles/chalk", "Recording device"], ["Occult", "Theology", "History"]],
+  ["Rural", "Wise in land and animals, small-community dynamics, and practical repair.", ["Land and animals", "Small communities", "Practical repair"], ["Hunting rifle or shotgun", "Knife", "Survival gear"], ["Survival", "Craft", "Marksman"]],
+  ["Sailor / Traveler", "Wise in navigation, foreign cultures, and self-sufficiency.", ["Navigation", "Foreign cultures", "Self-sufficiency"], ["Rope", "Compass/map", "Knife", "Waterproof bag"], ["Survival", "Operate", "Athletics"]],
+  ["Student", "Wise in current academic knowledge, campus life, and research access.", ["Academic knowledge", "Campus life", "Research access"], ["Research materials", "Recording device", "Backpack"], ["Researcher", "Observation", "Empath"]],
+  ["Trades / Labor", "Wise in hands-on skills, practical repair, and physical endurance.", ["Hands-on skills", "Practical repair", "Physical endurance"], ["Tool kit", "Crowbar or hammer", "Work clothes"], ["Craft", "Athletics", "Endurance"]],
+  ["Urban", "Wise in city navigation, bureaucracy, and knowing where things are.", ["City navigation", "Bureaucracy", "Local knowledge"], ["Communication device", "Transit pass", "Flashlight"], ["Streetwise", "Resources", "Observation"]],
+].map(([name, description, vantage, startingGear, suggestedTalents]) => ({
+  name,
+  type: "background",
+  img: "systems/dreadlight/assets/icons/treasure-map.svg",
+  system: {
+    description,
+    vantage: vantage.join(";"),
+    startingGear: startingGear.join(";"),
+    suggestedTalents: suggestedTalents.join(";"),
+  },
+}));
+
+const DRIVES = [
+  ["Curiosity", "You need to know. The question itself compels you."],
+  ["Duty", "Someone has to. If not you, who?"],
+  ["Guilt", "Something happened that you could have prevented. You owe a debt."],
+  ["Revenge", "Something was taken from you. You'll find out what and why."],
+  ["Protection", "Someone you love is in danger, or could be."],
+  ["Compulsion", "You can't stop. You've tried. The mystery won't let you go."],
+  ["Faith", "Your beliefs demand that you confront evil where you find it."],
+  ["Greed", "There's something valuable in the dark. You intend to take it."],
+  ["Legacy", "Someone you trusted started this. They couldn't finish. Now it's yours."],
+  ["Truth", "Something is being hidden. Lies are unacceptable. You will expose it."],
+].map(([name, description]) => ({
+  name,
+  type: "drive",
+  img: "systems/dreadlight/assets/icons/system/drive.svg",
+  system: { description },
+}));
+
 const TALENTS = [
   // ── Investigation ──
   {
@@ -1612,9 +1662,19 @@ const EQUIPMENT = [
 // ─── POPULATE FUNCTION ───────────────────────────────────────────────────────
 
 async function populatePack(packName, items) {
-  const pack = game.packs.get(`dreadlight.${packName}`);
+  const collection = `dreadlight.${packName}`;
+  const pack = Array.from(game.packs.values()).find((candidate) =>
+    candidate.collection === collection
+    || (candidate.metadata?.packageName === "dreadlight" && candidate.metadata?.name === packName)
+  );
   if (!pack) {
-    ui.notifications.error(`Pack dreadlight.${packName} not found!`);
+    const loadedPacks = Array.from(game.packs.values())
+      .filter((candidate) => candidate.metadata?.packageName === "dreadlight" || candidate.collection?.startsWith("dreadlight."))
+      .map((candidate) => candidate.collection)
+      .sort()
+      .join(", ");
+    ui.notifications.error(`Pack ${collection} not found. Restart the Foundry application so it reloads system.json, then run this script again.`);
+    console.error(`Dreadlight | Pack ${collection} not found. Loaded Dreadlight packs: ${loadedPacks || "none"}`);
     return;
   }
 
@@ -1645,6 +1705,8 @@ const confirm = await Dialog.confirm({
   title: "Populate Dreadlight Compendiums",
   content: `<p>This will <strong>clear and repopulate</strong> all Dreadlight system compendiums with the core rules data:</p>
   <ul>
+    <li><strong>Backgrounds:</strong> ${BACKGROUNDS.length} items</li>
+    <li><strong>Drives:</strong> ${DRIVES.length} items</li>
     <li><strong>Talents:</strong> ${TALENTS.length} items</li>
     <li><strong>Weapons:</strong> ${WEAPONS.length} items</li>
     <li><strong>Armor:</strong> ${ARMOR.length} items</li>
@@ -1654,6 +1716,8 @@ const confirm = await Dialog.confirm({
 });
 
 if (confirm) {
+  await populatePack("backgrounds", BACKGROUNDS);
+  await populatePack("drives", DRIVES);
   await populatePack("talents", TALENTS);
   await populatePack("weapons", WEAPONS);
   await populatePack("armor", ARMOR);

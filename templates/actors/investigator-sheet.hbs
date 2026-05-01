@@ -6,6 +6,9 @@
   <div class="accent-top"></div>
 
   {{#if editable}}
+    <button type="button" class="character-builder-btn" data-action="openCharacterBuilder" title="{{localize 'DREADLIGHT.CharacterBuilder'}}">
+      <i class="fa-solid fa-user-gear"></i>
+    </button>
     <button type="button" class="edit-toggle-btn" data-action="toggleEditMode" title="{{#if editMode}}Play Mode{{else}}Edit Mode{{/if}}">
       {{#if editMode}}<i class="fa-solid fa-lock-open"></i>{{else}}<i class="fa-solid fa-pen"></i>{{/if}}
     </button>

@@ -1,0 +1,15 @@
+<div class="dreadlight sheet item drive">
+  <div class="accent-top"></div>
+  <div class="item-header">
+    <img class="item-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" width="36" height="36" />
+    <div class="item-title">
+      <div class="item-type-label gold">{{localize "TYPES.Item.drive"}}</div>
+      <input class="item-name-input" type="text" name="name" value="{{item.name}}" {{#unless editable}}disabled{{/unless}} />
+    </div>
+  </div>
+
+  <div class="item-section">
+    <div class="field-label">{{localize "DREADLIGHT.Description"}}</div>
+    <textarea name="system.description" class="field-textarea" rows="5" {{#unless editable}}disabled{{/unless}}>{{system.description}}</textarea>
+  </div>
+</div>

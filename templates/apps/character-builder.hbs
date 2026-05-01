@@ -1,0 +1,297 @@
+<form class="character-builder-form" autocomplete="off">
+  <div class="builder-shell">
+    <header class="builder-header">
+      <div>
+        <div class="builder-kicker">{{localize "DREADLIGHT.CharacterBuilder"}}</div>
+        <input type="text" name="characterName" value="{{actor.name}}" placeholder="{{localize 'DREADLIGHT.BuilderNamePlaceholder'}}" />
+      </div>
+      <div class="builder-budget">
+        <div data-builder-budget="attributes"><span data-builder-total="attributes">24</span><small>/ 24 {{localize "DREADLIGHT.BuilderAttributePoints"}}</small></div>
+        <div data-builder-budget="talents"><span data-builder-total="talents">{{talentPoints}}</span><small>/ 8 {{localize "DREADLIGHT.BuilderTalentPoints"}}</small></div>
+      </div>
+    </header>
+
+    <nav class="builder-steps">
+      {{#each steps}}
+        <button type="button" data-action="goStep" data-builder-step="{{this.index}}">
+          <span>{{add this.index 1}}</span>{{this.label}}
+        </button>
+      {{/each}}
+    </nav>
+
+    <section class="builder-step-panel" data-builder-step-panel="0">
+      <div class="section-header"><span>{{localize "DREADLIGHT.BuilderStepIdentity"}}</span><div class="section-line"></div></div>
+      <div class="builder-warning" data-builder-warning hidden></div>
+      <label class="builder-field builder-field-wide">
+        <span>{{localize "DREADLIGHT.Concept"}}</span>
+        <textarea name="concept" rows="2" placeholder="{{localize 'DREADLIGHT.BuilderConceptPlaceholder'}}">{{system.concept}}</textarea>
+      </label>
+      <div class="builder-two-col">
+        <div class="builder-background-card" data-background-card>
+          <label class="builder-field">
+            <span>{{localize "DREADLIGHT.Background1"}}</span>
+            <select name="background1">
+              <option value=""></option>
+              {{#each backgrounds}}
+                <option value="{{this.id}}" data-description="{{this.description}}" data-vantage="{{join this.vantage ';'}}" data-gear="{{join this.startingGear ';'}}" data-talents="{{join this.suggestedTalents ';'}}" {{#if (eq this.id ../selectedBackground1)}}selected{{/if}}>{{this.name}}</option>
+              {{/each}}
+              <option value="__custom__" {{#if customBackground1.name}}selected{{/if}}>{{localize "DREADLIGHT.BuilderCustomBackground"}}</option>
+            </select>
+          </label>
+          <div class="builder-custom-background">
+            <label class="builder-field">
+              <span>{{localize "DREADLIGHT.BuilderBackgroundName"}}</span>
+              <input type="text" name="customBackground1Name" value="{{customBackground1.name}}" />
+            </label>
+            <label class="builder-field">
+              <span>{{localize "DREADLIGHT.TalentDescription"}}</span>
+              <textarea name="customBackground1Desc" rows="2">{{customBackground1.desc}}</textarea>
+            </label>
+            <label class="builder-field">
+              <span>{{localize "DREADLIGHT.Vantage"}}</span>
+              <input type="text" name="customBackground1Vantage" value="{{customBackground1.vantage}}" placeholder="{{localize 'DREADLIGHT.VantagePlaceholder'}}" />
+            </label>
+          </div>
+          <div class="builder-background-details">
+            <div class="builder-background-detail"><strong>{{localize "DREADLIGHT.TalentDescription"}}</strong><span data-background-description></span></div>
+            <div class="builder-background-detail"><strong>{{localize "DREADLIGHT.Vantage"}}</strong><span data-background-vantage></span></div>
+            <div class="builder-background-detail"><strong>{{localize "DREADLIGHT.BuilderGear"}}</strong><span data-background-gear></span></div>
+            <div class="builder-background-detail"><strong>{{localize "DREADLIGHT.BuilderSuggestedTalents"}}</strong><span data-background-talents></span></div>
+          </div>
+        </div>
+
+        <div class="builder-background-card" data-background-card>
+          <label class="builder-field">
+            <span>{{localize "DREADLIGHT.Background2"}}</span>
+            <select name="background2">
+              <option value=""></option>
+              {{#each backgrounds}}
+                <option value="{{this.id}}" data-description="{{this.description}}" data-vantage="{{join this.vantage ';'}}" data-gear="{{join this.startingGear ';'}}" data-talents="{{join this.suggestedTalents ';'}}" {{#if (eq this.id ../selectedBackground2)}}selected{{/if}}>{{this.name}}</option>
+              {{/each}}
+              <option value="__custom__" {{#if customBackground2.name}}selected{{/if}}>{{localize "DREADLIGHT.BuilderCustomBackground"}}</option>
+            </select>
+          </label>
+          <div class="builder-custom-background">
+            <label class="builder-field">
+              <span>{{localize "DREADLIGHT.BuilderBackgroundName"}}</span>
+              <input type="text" name="customBackground2Name" value="{{customBackground2.name}}" />
+            </label>
+            <label class="builder-field">
+              <span>{{localize "DREADLIGHT.TalentDescription"}}</span>
+              <textarea name="customBackground2Desc" rows="2">{{customBackground2.desc}}</textarea>
+            </label>
+            <label class="builder-field">
+              <span>{{localize "DREADLIGHT.Vantage"}}</span>
+              <input type="text" name="customBackground2Vantage" value="{{customBackground2.vantage}}" placeholder="{{localize 'DREADLIGHT.VantagePlaceholder'}}" />
+            </label>
+          </div>
+          <div class="builder-background-details">
+            <div class="builder-background-detail"><strong>{{localize "DREADLIGHT.TalentDescription"}}</strong><span data-background-description></span></div>
+            <div class="builder-background-detail"><strong>{{localize "DREADLIGHT.Vantage"}}</strong><span data-background-vantage></span></div>
+            <div class="builder-background-detail"><strong>{{localize "DREADLIGHT.BuilderGear"}}</strong><span data-background-gear></span></div>
+            <div class="builder-background-detail"><strong>{{localize "DREADLIGHT.BuilderSuggestedTalents"}}</strong><span data-background-talents></span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="builder-step-panel" data-builder-step-panel="1">
+      <div class="section-header"><span>{{localize "DREADLIGHT.BuilderStepAttributes"}}</span><div class="section-line"></div></div>
+      <div class="builder-warning" data-builder-warning hidden></div>
+      <div class="builder-attr-grid">
+        {{#each attributeRows}}
+          <div class="builder-attr">
+            <span class="builder-attr-abbr">{{attrAbbr this.key}}</span>
+            <div class="builder-attr-control">
+              <button type="button" data-action="adjustAttribute" data-attr-delta="-1" title="{{localize 'DREADLIGHT.BuilderDecrease'}}"><i class="fa-solid fa-minus"></i></button>
+              <input type="number" name="attr-{{this.key}}" value="{{this.value}}" min="2" max="6" data-builder-attr="{{this.key}}" />
+              <button type="button" data-action="adjustAttribute" data-attr-delta="1" title="{{localize 'DREADLIGHT.BuilderIncrease'}}"><i class="fa-solid fa-plus"></i></button>
+            </div>
+            <span class="builder-attr-name">{{attrName this.key}}</span>
+          </div>
+        {{/each}}
+      </div>
+      <div class="builder-track-preview">
+        <div class="track-body"><span class="track-icon body"><i class="dl-sigil dl-sigil-body"></i></span><span>{{localize "DREADLIGHT.TrackBody"}}</span><strong data-track="body">0</strong></div>
+        <div class="track-mind"><span class="track-icon mind"><i class="dl-sigil dl-sigil-mind"></i></span><span>{{localize "DREADLIGHT.TrackMind"}}</span><strong data-track="mind">0</strong></div>
+        <div class="track-soul"><span class="track-icon soul"><i class="dl-sigil dl-sigil-soul"></i></span><span>{{localize "DREADLIGHT.TrackSoul"}}</span><strong data-track="soul">0</strong></div>
+      </div>
+    </section>
+
+    <section class="builder-step-panel" data-builder-step-panel="2">
+      <div class="section-header"><span>{{localize "DREADLIGHT.BuilderStepTalents"}}</span><div class="section-line"></div></div>
+      <div class="builder-warning" data-builder-warning hidden></div>
+      <div class="builder-selected-talents">
+        <div class="builder-subsection-title">
+          <span><i class="dl-sigil dl-sigil-talent"></i>{{localize "DREADLIGHT.BuilderSelectedTalents"}}</span>
+        </div>
+        <div class="builder-selected-talent-empty" data-selected-talents-empty>{{localize "DREADLIGHT.BuilderNoSelectedTalents"}}</div>
+        <div class="builder-selected-talent-list">
+          {{#each talents}}
+            <div class="builder-selected-talent-card" data-selected-talent="{{this.id}}" {{#unless this.selected}}hidden{{/unless}}>
+              <div class="builder-selected-talent-main">
+                <strong>{{this.name}}</strong>
+                <span>{{this.categoryLabel}} | {{#each this.primaryAttributes}}{{attrAbbr this}}{{#unless @last}} / {{/unless}}{{/each}}</span>
+              </div>
+              <div class="builder-selected-talent-meta">
+                <span>{{localize "DREADLIGHT.TalentLevel"}} <strong data-selected-talent-level>{{this.level}}</strong></span>
+                <span><strong data-selected-talent-cost>0</strong> {{localize "DREADLIGHT.BuilderPointsShort"}}</span>
+              </div>
+              <button type="button" class="builder-selected-talent-remove" data-action="removeSelectedTalent" data-talent-id="{{this.id}}" title="{{localize 'DREADLIGHT.BuilderRemoveTalent'}}">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+      <div class="builder-subsection-title builder-talent-browser-title">
+        <span><i class="fa-solid fa-list"></i>{{localize "DREADLIGHT.BuilderAvailableTalents"}}</span>
+      </div>
+      <div class="builder-talent-tools">
+        <label class="builder-search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="search" data-talent-search placeholder="{{localize 'DREADLIGHT.BuilderTalentSearch'}}" />
+        </label>
+        <select data-talent-category>
+          <option value="">{{localize "DREADLIGHT.BuilderAllCategories"}}</option>
+          {{#each talentCategories}}
+            <option value="{{this}}">{{this}}</option>
+          {{/each}}
+        </select>
+        <label class="builder-selected-toggle">
+          <input type="checkbox" data-talent-selected-only />
+          <span>{{localize "DREADLIGHT.BuilderSelectedOnly"}}</span>
+        </label>
+        <div class="builder-talent-count" data-talent-visible-count></div>
+      </div>
+      <div class="builder-talent-list">
+        {{#each talents}}
+          <div class="builder-talent-row {{#if this.selected}}is-selected{{/if}}" data-talent-row data-talent-category="{{this.categoryLabel}}" data-talent-search="{{this.name}} {{this.categoryLabel}} {{this.description}}">
+            <div class="builder-talent-main">
+              <strong><i class="fa-solid fa-star"></i>{{this.name}}</strong>
+              <span>{{this.categoryLabel}} | {{#each this.primaryAttributes}}{{attrAbbr this}}{{#unless @last}} / {{/unless}}{{/each}}</span>
+              <em>{{this.description}}</em>
+            </div>
+            <select name="talent-{{this.id}}" data-talent-level="{{this.id}}">
+              <option value="0" {{#if (eq this.level 0)}}selected{{/if}}>0</option>
+              <option value="1" {{#if (eq this.level 1)}}selected{{/if}}>1</option>
+              <option value="2" {{#if (eq this.level 2)}}selected{{/if}}>2</option>
+            </select>
+            <div class="builder-talent-cost"><span data-talent-cost>0</span> {{localize "DREADLIGHT.BuilderPointsShort"}}</div>
+          </div>
+        {{/each}}
+      </div>
+    </section>
+
+    <section class="builder-step-panel" data-builder-step-panel="3">
+      <div class="section-header"><span>{{localize "DREADLIGHT.BuilderStepDetails"}}</span><div class="section-line"></div></div>
+      <div class="builder-warning" data-builder-warning hidden></div>
+      <label class="builder-field builder-field-wide">
+        <span>{{localize "DREADLIGHT.Anchor"}}</span>
+        <textarea name="anchor" rows="2">{{system.details.anchor}}</textarea>
+      </label>
+      <div class="builder-two-col">
+        <label class="builder-field">
+          <span>{{localize "DREADLIGHT.Drive"}}</span>
+          <select name="drive">
+            <option value=""></option>
+            {{#each drives}}
+              <option value="{{this.id}}" data-description="{{this.description}}" {{#if (eq this.id ../selectedDrive)}}selected{{/if}}>{{this.name}}</option>
+            {{/each}}
+          </select>
+          <div class="builder-preview" data-drive-preview></div>
+        </label>
+        <label class="builder-field">
+          <span>{{localize "DREADLIGHT.BuilderDriveDetail"}}</span>
+          <input type="text" name="driveDesc" value="{{system.details.driveDesc}}" />
+        </label>
+      </div>
+      <label class="builder-field builder-field-wide">
+        <span>{{localize "DREADLIGHT.Fear"}}</span>
+        <textarea name="fear" rows="2">{{system.details.fear}}</textarea>
+      </label>
+      <label class="builder-field builder-field-wide">
+        <span>{{localize "DREADLIGHT.Connections"}}</span>
+        <textarea name="connections" rows="3" placeholder="{{localize 'DREADLIGHT.BuilderConnectionsPlaceholder'}}">{{connectionsText}}</textarea>
+      </label>
+    </section>
+
+    <section class="builder-step-panel" data-builder-step-panel="4">
+      <div class="section-header"><span>{{localize "DREADLIGHT.BuilderStepGear"}}</span><div class="section-line"></div></div>
+      <div class="builder-warning" data-builder-warning hidden></div>
+      <div class="builder-gear-preview" data-gear-preview></div>
+      <div class="builder-gear-list">
+        {{#each gearGroups}}
+          <section class="builder-gear-group">
+            <div class="builder-gear-group-header">
+              <span>{{this.label}}</span>
+              <small>{{this.count}}</small>
+            </div>
+            <div class="builder-gear-group-grid">
+              {{#each this.items}}
+                <label class="builder-gear-option {{#if this.owned}}is-owned{{/if}}">
+                  <input type="checkbox" data-gear-option="{{this.uuid}}" {{#if this.owned}}checked disabled{{/if}} />
+                  <img src="{{this.img}}" alt="" />
+                  <span class="builder-gear-main">
+                    <strong>{{this.name}}</strong>
+                    <em>{{this.typeLabel}}{{#if this.categoryLabel}} | {{this.categoryLabel}}{{/if}}{{#if this.owned}} | {{localize "DREADLIGHT.BuilderOwned"}}{{/if}}</em>
+                  </span>
+                  {{#if this.hasGearBonus}}<b class="builder-gear-bonus-corner">+{{this.gearBonus}}</b>{{/if}}
+                  <span class="builder-gear-badges">
+                    {{#if this.hasSupplyCost}}<b class="builder-gear-badge">{{localize "DREADLIGHT.BuilderSupplyCostShort"}} {{this.supplyPointCost}}</b>{{/if}}
+                    {{#if this.weight}}<b class="builder-gear-badge">{{localize "DREADLIGHT.Weight"}} {{this.weight}}</b>{{/if}}
+                  </span>
+
+                  {{#if this.isWeapon}}
+                    <span class="builder-gear-stats">
+                      <b>{{this.weaponTypeLabel}}</b>
+                      <b>{{localize "DREADLIGHT.WeaponDamage"}} {{this.damage}}</b>
+                      <b>{{localize "DREADLIGHT.Crit"}} {{this.critThreshold}}</b>
+                      <b>{{localize "DREADLIGHT.Range"}} {{this.rangeLabel}}</b>
+                    </span>
+                  {{/if}}
+
+                  {{#if this.isArmor}}
+                    <span class="builder-gear-stats">
+                      <b>{{localize "DREADLIGHT.ArmorRating"}} {{this.armorRating}}</b>
+                      <b>{{localize "DREADLIGHT.ArmorCurrent"}} {{this.armorCurrent}}</b>
+                    </span>
+                  {{/if}}
+
+                  {{#if this.description}}<span class="builder-gear-description">{{{this.description}}}</span>{{/if}}
+
+                  {{#if this.hasProperties}}
+                    <span class="builder-gear-traits">
+                      {{#each this.properties}}<b>{{this}}</b>{{/each}}
+                    </span>
+                  {{/if}}
+
+                  {{#if this.hasApplicableTalents}}
+                    <span class="builder-gear-traits is-talents">
+                      {{#each this.applicableTalents}}<b>{{this}}</b>{{/each}}
+                    </span>
+                  {{/if}}
+                </label>
+              {{/each}}
+            </div>
+          </section>
+        {{/each}}
+      </div>
+      <div class="builder-supply-row">
+        <label class="builder-field">
+          <span>{{localize "DREADLIGHT.Supply"}}</span>
+          <input type="number" name="supply" value="{{system.supply.value}}" min="0" />
+        </label>
+        <button type="button" class="builder-icon-btn" data-action="rollSupply" title="{{localize 'DREADLIGHT.BuilderRollSupply'}}"><i class="fa-solid fa-dice-d6"></i></button>
+      </div>
+    </section>
+  </div>
+
+  <footer class="builder-footer">
+    <div class="builder-status"></div>
+    <button type="button" data-action="cancel">{{localize "Cancel"}}</button>
+    <button type="button" data-action="previousStep">{{localize "DREADLIGHT.BuilderBack"}}</button>
+    <button type="button" data-action="nextStep">{{localize "DREADLIGHT.BuilderNext"}}</button>
+    <button type="button" class="builder-apply" data-action="apply">{{localize "DREADLIGHT.BuilderApply"}}</button>
+  </footer>
+</form>

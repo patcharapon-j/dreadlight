@@ -1,6 +1,7 @@
 import { DreadlightRollDialog } from "../dice/roll-dialog.mjs";
 import { rollD66 } from "../dice/d66-roll.mjs";
 import { sendD66ToChat, sendD66PromptToChat } from "../dice/chat-message.mjs";
+import { DreadlightCharacterBuilder } from "../apps/character-builder.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -28,6 +29,7 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       deleteConnection: InvestigatorSheet.#deleteConnection,
       rollD66: InvestigatorSheet.#rollD66,
       deleteInjury: InvestigatorSheet.#deleteInjury,
+      openCharacterBuilder: InvestigatorSheet.#openCharacterBuilder,
     },
     form: {
       submitOnChange: true,
@@ -314,6 +316,11 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
   static #toggleEditMode(event, target) {
     this._editMode = !this._editMode;
     this.render();
+  }
+
+  static #openCharacterBuilder(event, target) {
+    if (!this.isEditable) return;
+    new DreadlightCharacterBuilder(this.actor).render({ force: true });
   }
 
   static #editPortrait(event, target) {

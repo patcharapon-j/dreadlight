@@ -735,7 +735,8 @@
 }
 
 /* Edit mode toggle button */
-.dreadlight .edit-toggle-btn {
+.dreadlight .edit-toggle-btn,
+.dreadlight .character-builder-btn {
   position: absolute;
   top: 8px;
   right: 8px;
@@ -754,13 +755,19 @@
   transition: all 0.2s ease;
 }
 
-.dreadlight .edit-toggle-btn:hover {
+.dreadlight .character-builder-btn {
+  right: 42px;
+}
+
+.dreadlight .edit-toggle-btn:hover,
+.dreadlight .character-builder-btn:hover {
   background: rgba(var(--rgb-gold), 0.1);
   border-color: rgba(var(--rgb-gold), 0.35);
   box-shadow: 0 0 10px rgba(var(--rgb-gold), 0.18);
 }
 
-.dreadlight .edit-toggle-btn i {
+.dreadlight .edit-toggle-btn i,
+.dreadlight .character-builder-btn i {
   transition: transform var(--dur-emp) var(--ease-spring);
 }
 
@@ -6936,5 +6943,934 @@
 
   #dreadlight-initiative-tracker .initiative-card-back-mark {
     font-size: 42px;
+  }
+}
+
+/* ----------------------------------------------------------
+   Character Builder
+   ---------------------------------------------------------- */
+
+.dreadlight.character-builder,
+.dreadlight.character-builder .window-content {
+  background: var(--dl-bg-primary);
+}
+
+.dreadlight.character-builder .window-content {
+  padding: 0;
+}
+
+.dreadlight.character-builder .character-builder-form {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  height: 100%;
+  min-height: 0;
+}
+
+.dreadlight.character-builder .builder-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 14px 16px 12px;
+}
+
+.dreadlight.character-builder .builder-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: end;
+  padding: 4px 0 10px;
+  border-bottom: 1px solid rgba(var(--rgb-gold), 0.12);
+}
+
+.dreadlight.character-builder .builder-kicker {
+  color: var(--dl-accent-gold);
+  font-size: var(--t-tiny);
+  font-weight: 700;
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.dreadlight.character-builder .builder-header input[name="characterName"] {
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-family: var(--dl-font-primary);
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.dreadlight.character-builder .builder-budget {
+  display: flex;
+  gap: 8px;
+}
+
+.dreadlight.character-builder .builder-budget > div {
+  min-width: 104px;
+  padding: 8px 10px;
+  background: var(--dl-bg-card);
+  background-image: var(--top-light);
+  border: 1px solid rgba(var(--rgb-gold), 0.14);
+  border-radius: var(--r-md);
+  text-align: right;
+}
+
+.dreadlight.character-builder .builder-budget > div.is-invalid {
+  border-color: rgba(var(--rgb-red), 0.45);
+  background: linear-gradient(180deg, rgba(var(--rgb-red), 0.08), var(--dl-bg-card) 70%);
+  box-shadow: 0 0 14px -6px rgba(var(--rgb-red), 0.65);
+}
+
+.dreadlight.character-builder .builder-budget span {
+  display: block;
+  color: var(--dl-accent-gold);
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.dreadlight.character-builder .builder-budget small {
+  display: block;
+  margin-top: 2px;
+  color: var(--dl-text-muted);
+  font-size: 8px;
+  letter-spacing: var(--track-tight);
+  text-transform: uppercase;
+}
+
+.dreadlight.character-builder .builder-section {
+  background: rgba(255, 255, 255, 0.018);
+  border: 1px solid rgba(255, 255, 255, 0.055);
+  border-radius: var(--r-md);
+  padding: 10px;
+}
+
+.dreadlight.character-builder .builder-steps {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.dreadlight.character-builder .builder-steps button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+  min-height: 34px;
+  padding: 5px 6px;
+  overflow: hidden;
+  background: var(--dl-bg-card);
+  border: 1px solid var(--dl-border-subtle);
+  border-radius: var(--r-sm);
+  color: var(--dl-text-muted);
+  font-size: var(--t-tiny);
+  font-weight: 700;
+  letter-spacing: var(--track-tight);
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.dreadlight.character-builder .builder-steps button span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  border-radius: 50%;
+  background: rgba(var(--rgb-gold), 0.08);
+  color: var(--dl-accent-gold);
+}
+
+.dreadlight.character-builder .builder-steps button.active {
+  color: var(--dl-accent-gold);
+  border-color: rgba(var(--rgb-gold), 0.35);
+  box-shadow: 0 0 12px rgba(var(--rgb-gold), 0.08);
+}
+
+.dreadlight.character-builder .builder-steps button.is-invalid {
+  color: var(--dl-accent-red);
+  border-color: rgba(var(--rgb-red), 0.38);
+}
+
+.dreadlight.character-builder .builder-step-panel {
+  display: none;
+  background: rgba(255, 255, 255, 0.018);
+  border: 1px solid rgba(255, 255, 255, 0.055);
+  border-radius: var(--r-md);
+  padding: 10px;
+}
+
+.dreadlight.character-builder .builder-step-panel.active {
+  display: block;
+}
+
+.dreadlight.character-builder .builder-warning {
+  margin: 0 0 10px;
+  padding: 8px 10px;
+  color: var(--dl-accent-red);
+  background: rgba(var(--rgb-red), 0.08);
+  border: 1px solid rgba(var(--rgb-red), 0.28);
+  border-radius: var(--r-sm);
+  font-size: var(--t-sm);
+  font-weight: 700;
+}
+
+.dreadlight.character-builder .builder-two-col {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.dreadlight.character-builder .builder-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.dreadlight.character-builder .builder-field-wide {
+  margin-bottom: 10px;
+}
+
+.dreadlight.character-builder .builder-field > span {
+  color: var(--dl-text-muted);
+  font-size: var(--t-micro);
+  font-weight: 700;
+  letter-spacing: var(--track-base);
+  text-transform: uppercase;
+}
+
+.dreadlight.character-builder .builder-field input,
+.dreadlight.character-builder .builder-field select,
+.dreadlight.character-builder .builder-field textarea,
+.dreadlight.character-builder .builder-talent-row select,
+.dreadlight.character-builder .builder-supply-row input,
+.dreadlight.character-builder .builder-talent-tools select,
+.dreadlight.character-builder .builder-search input {
+  width: 100%;
+  min-width: 0;
+  background: var(--dl-bg-card);
+  border: 1px solid var(--dl-border-subtle);
+  color: var(--dl-text-primary);
+  border-radius: var(--r-sm);
+  padding: 6px 7px;
+}
+
+.dreadlight.character-builder textarea {
+  resize: vertical;
+}
+
+.dreadlight.character-builder .builder-background-card {
+  display: grid;
+  gap: 8px;
+  padding: 9px;
+  background: var(--dl-bg-card);
+  background-image: var(--top-light);
+  border: 1px solid rgba(var(--rgb-gold), 0.1);
+  border-radius: var(--r-md);
+}
+
+.dreadlight.character-builder .builder-background-card.is-invalid {
+  border-color: rgba(var(--rgb-red), 0.45);
+  box-shadow: inset 0 0 0 1px rgba(var(--rgb-red), 0.08), 0 0 16px -8px rgba(var(--rgb-red), 0.7);
+}
+
+.dreadlight.character-builder .builder-custom-background {
+  display: none;
+  gap: 8px;
+}
+
+.dreadlight.character-builder .builder-background-card.is-custom .builder-custom-background {
+  display: grid;
+}
+
+.dreadlight.character-builder .builder-background-details {
+  display: grid;
+  gap: 6px;
+}
+
+.dreadlight.character-builder .builder-background-detail {
+  display: grid;
+  gap: 2px;
+  min-height: 36px;
+  padding: 7px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid var(--dl-border-subtle);
+  border-radius: var(--r-sm);
+}
+
+.dreadlight.character-builder .builder-background-detail.is-empty {
+  opacity: 0.5;
+}
+
+.dreadlight.character-builder .builder-background-detail strong {
+  color: var(--dl-accent-gold);
+  font-size: var(--t-micro);
+  letter-spacing: var(--track-base);
+  text-transform: uppercase;
+}
+
+.dreadlight.character-builder .builder-background-detail span {
+  color: var(--dl-text-secondary);
+  font-size: var(--t-tiny);
+  line-height: 1.4;
+}
+
+.dreadlight.character-builder .builder-attr-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.dreadlight.character-builder .builder-attr {
+  display: grid;
+  grid-template-rows: auto auto auto;
+  gap: 4px;
+  align-items: center;
+  justify-items: center;
+  padding: 8px 6px;
+  background: var(--dl-bg-card);
+  background-image: var(--top-light);
+  border: 1px solid rgba(var(--rgb-gold), 0.1);
+  border-radius: var(--r-md);
+}
+
+.dreadlight.character-builder .builder-attr.is-invalid {
+  border-color: rgba(var(--rgb-red), 0.45);
+  background: linear-gradient(180deg, rgba(var(--rgb-red), 0.08), var(--dl-bg-card) 70%);
+}
+
+.dreadlight.character-builder .builder-attr-abbr {
+  color: var(--dl-accent-gold);
+  font-size: var(--t-tiny);
+  font-weight: 800;
+}
+
+.dreadlight.character-builder .builder-attr-control {
+  display: grid;
+  grid-template-columns: 24px 46px 24px;
+  gap: 4px;
+  align-items: center;
+}
+
+.dreadlight.character-builder .builder-attr-control button {
+  width: 24px;
+  height: 28px;
+  padding: 0;
+  background: var(--dl-bg-elevated);
+  border: 1px solid var(--dl-border-subtle);
+  border-radius: var(--r-sm);
+  color: var(--dl-accent-gold);
+}
+
+.dreadlight.character-builder .builder-attr input {
+  width: 46px;
+  height: 38px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.dreadlight.character-builder .builder-attr-name {
+  color: var(--dl-text-muted);
+  font-size: var(--t-micro);
+  text-transform: uppercase;
+}
+
+.dreadlight.character-builder .builder-track-preview {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.dreadlight.character-builder .builder-track-preview > div {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 9px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid var(--dl-border-subtle);
+  border-radius: var(--r-sm);
+}
+
+.dreadlight.character-builder .builder-track-preview .track-icon {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  font-size: 12px;
+}
+
+.dreadlight.character-builder .builder-track-preview .track-icon .dl-sigil {
+  width: 14px;
+  height: 14px;
+}
+
+.dreadlight.character-builder .builder-track-preview .track-body {
+  border-color: rgba(85, 184, 122, 0.3);
+}
+
+.dreadlight.character-builder .builder-track-preview .track-body strong {
+  color: var(--dl-track-body);
+}
+
+.dreadlight.character-builder .builder-track-preview .track-mind {
+  border-color: rgba(107, 157, 245, 0.3);
+}
+
+.dreadlight.character-builder .builder-track-preview .track-mind strong {
+  color: var(--dl-track-mind);
+}
+
+.dreadlight.character-builder .builder-track-preview .track-soul {
+  border-color: rgba(168, 139, 245, 0.3);
+}
+
+.dreadlight.character-builder .builder-track-preview .track-soul strong {
+  color: var(--dl-track-soul);
+}
+
+.dreadlight.character-builder .builder-selected-talents {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  margin-bottom: 12px;
+  background: rgba(var(--rgb-gold), 0.045);
+  border: 1px solid rgba(var(--rgb-gold), 0.18);
+  border-radius: var(--r-sm);
+}
+
+.dreadlight.character-builder .builder-subsection-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--dl-accent-gold);
+  font-size: var(--t-tiny);
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.dreadlight.character-builder .builder-subsection-title span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.dreadlight.character-builder .builder-subsection-title .dl-sigil {
+  width: 17px;
+  height: 17px;
+}
+
+.dreadlight.character-builder .builder-talent-browser-title {
+  margin-bottom: 8px;
+}
+
+.dreadlight.character-builder .builder-talent-browser-title i {
+  color: var(--dl-accent-gold);
+}
+
+.dreadlight.character-builder .builder-selected-talent-empty {
+  padding: 9px;
+  color: var(--dl-text-muted);
+  background: rgba(0, 0, 0, 0.18);
+  border: 1px dashed rgba(var(--rgb-gold), 0.22);
+  border-radius: var(--r-sm);
+  font-size: var(--t-sm);
+  text-align: center;
+}
+
+.dreadlight.character-builder .builder-selected-talent-empty[hidden] {
+  display: none;
+}
+
+.dreadlight.character-builder .builder-selected-talent-list {
+  display: grid;
+  gap: 6px;
+}
+
+.dreadlight.character-builder .builder-selected-talent-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto 30px;
+  gap: 8px;
+  align-items: center;
+  padding: 8px;
+  background: var(--dl-bg-card);
+  border: 1px solid rgba(var(--rgb-gold), 0.28);
+  border-radius: var(--r-sm);
+}
+
+.dreadlight.character-builder .builder-selected-talent-card[hidden] {
+  display: none;
+}
+
+.dreadlight.character-builder .builder-selected-talent-main {
+  min-width: 0;
+}
+
+.dreadlight.character-builder .builder-selected-talent-main strong {
+  display: block;
+  overflow: hidden;
+  color: var(--dl-text-primary);
+  font-size: var(--t-sm);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dreadlight.character-builder .builder-selected-talent-main span {
+  display: block;
+  overflow: hidden;
+  color: var(--dl-text-muted);
+  font-size: var(--t-tiny);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dreadlight.character-builder .builder-selected-talent-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 5px 10px;
+  color: var(--dl-text-secondary);
+  font-size: var(--t-tiny);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.dreadlight.character-builder .builder-selected-talent-meta strong {
+  color: var(--dl-accent-gold);
+}
+
+.dreadlight.character-builder .builder-selected-talent-remove {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  color: var(--dl-text-muted);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--r-sm);
+}
+
+.dreadlight.character-builder .builder-selected-talent-remove:hover {
+  color: var(--dl-error, #f87171);
+  border-color: rgba(248, 113, 113, 0.35);
+}
+
+.dreadlight.character-builder .builder-talent-tools {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) 150px auto auto;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.dreadlight.character-builder .builder-search {
+  position: relative;
+  min-width: 0;
+}
+
+.dreadlight.character-builder .builder-search i {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  color: var(--dl-text-muted);
+  transform: translateY(-50%);
+}
+
+.dreadlight.character-builder .builder-search input {
+  padding-left: 28px;
+}
+
+.dreadlight.character-builder .builder-selected-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--dl-text-muted);
+  font-size: var(--t-tiny);
+  font-weight: 700;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.dreadlight.character-builder .builder-talent-count {
+  color: var(--dl-accent-gold);
+  font-size: var(--t-tiny);
+  font-weight: 700;
+  text-align: right;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.dreadlight.character-builder .builder-track-preview span {
+  color: var(--dl-text-muted);
+  font-size: var(--t-micro);
+  letter-spacing: var(--track-base);
+  text-transform: uppercase;
+}
+
+.dreadlight.character-builder .builder-track-preview strong {
+  color: var(--dl-text-primary);
+  font-size: var(--t-lg);
+}
+
+.dreadlight.character-builder .builder-talent-list {
+  display: grid;
+  gap: 5px;
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 3px;
+}
+
+.dreadlight.character-builder .builder-talent-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 58px 58px;
+  gap: 8px;
+  align-items: center;
+  padding: 7px 8px;
+  background: var(--dl-bg-card);
+  border: 1px solid rgba(255, 255, 255, 0.045);
+  border-radius: var(--r-sm);
+}
+
+.dreadlight.character-builder .builder-talent-row[hidden] {
+  display: none;
+}
+
+.dreadlight.character-builder .builder-talent-row.is-selected {
+  border-color: rgba(var(--rgb-gold), 0.35);
+  background: linear-gradient(180deg, rgba(var(--rgb-gold), 0.08), var(--dl-bg-card) 70%);
+}
+
+.dreadlight.character-builder .builder-talent-main {
+  min-width: 0;
+}
+
+.dreadlight.character-builder .builder-talent-main strong {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+  color: var(--dl-text-primary);
+  font-size: var(--t-sm);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dreadlight.character-builder .builder-talent-main strong i {
+  color: var(--dl-accent-gold);
+  font-size: var(--t-tiny);
+}
+
+.dreadlight.character-builder .builder-talent-main span {
+  display: block;
+  overflow: hidden;
+  color: var(--dl-text-muted);
+  font-size: var(--t-tiny);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dreadlight.character-builder .builder-talent-main em {
+  display: block;
+  overflow: hidden;
+  margin-top: 2px;
+  color: var(--dl-text-secondary);
+  font-size: var(--t-tiny);
+  font-style: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dreadlight.character-builder .builder-talent-cost {
+  color: var(--dl-accent-gold);
+  font-size: var(--t-tiny);
+  font-weight: 700;
+  text-align: right;
+  text-transform: uppercase;
+}
+
+.dreadlight.character-builder .builder-gear-preview {
+  min-height: 44px;
+  white-space: pre-line;
+  padding: 8px;
+  margin-bottom: 10px;
+  color: var(--dl-text-secondary);
+  background: var(--dl-bg-card);
+  border: 1px solid rgba(var(--rgb-gold), 0.1);
+  border-radius: var(--r-sm);
+  font-size: var(--t-sm);
+}
+
+.dreadlight.character-builder .builder-preview {
+  min-height: 64px;
+  white-space: pre-line;
+  padding: 7px;
+  color: var(--dl-text-secondary);
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid var(--dl-border-subtle);
+  border-radius: var(--r-sm);
+  font-size: var(--t-tiny);
+  line-height: 1.45;
+}
+
+.dreadlight.character-builder .builder-gear-list {
+  display: grid;
+  gap: 12px;
+  max-height: 360px;
+  overflow-y: auto;
+  padding-right: 3px;
+  margin-bottom: 10px;
+}
+
+.dreadlight.character-builder .builder-gear-group {
+  display: grid;
+  gap: 7px;
+}
+
+.dreadlight.character-builder .builder-gear-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 5px;
+  border-bottom: 1px solid rgba(var(--rgb-gold), 0.14);
+  color: var(--dl-accent-gold);
+  font-size: var(--t-tiny);
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.dreadlight.character-builder .builder-gear-group-header small {
+  color: var(--dl-text-muted);
+  font-size: var(--t-micro);
+}
+
+.dreadlight.character-builder .builder-gear-group-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.dreadlight.character-builder .builder-gear-option {
+  position: relative;
+  display: grid;
+  grid-template-columns: 16px 34px minmax(0, 1fr);
+  grid-auto-rows: max-content;
+  gap: 6px 8px;
+  align-items: start;
+  min-width: 0;
+  padding: 8px 48px 8px 8px;
+  background: var(--dl-bg-card);
+  border: 1px solid var(--dl-border-subtle);
+  border-radius: var(--r-sm);
+}
+
+.dreadlight.character-builder .builder-gear-option.is-owned {
+  opacity: 0.58;
+}
+
+.dreadlight.character-builder .builder-gear-option input {
+  margin: 0;
+}
+
+.dreadlight.character-builder .builder-gear-option img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+
+.dreadlight.character-builder .builder-gear-main {
+  min-width: 0;
+}
+
+.dreadlight.character-builder .builder-gear-main strong,
+.dreadlight.character-builder .builder-gear-main em {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dreadlight.character-builder .builder-gear-main strong {
+  color: var(--dl-text-primary);
+  font-size: var(--t-sm);
+}
+
+.dreadlight.character-builder .builder-gear-main em {
+  color: var(--dl-text-muted);
+  font-size: var(--t-tiny);
+  font-style: normal;
+}
+
+.dreadlight.character-builder .builder-gear-bonus-corner {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  min-width: 34px;
+  padding: 4px 7px;
+  color: #0f0d08;
+  background: var(--dl-accent-gold);
+  border: 1px solid rgba(var(--rgb-gold), 0.75);
+  border-radius: var(--r-sm);
+  box-shadow: 0 0 14px rgba(var(--rgb-gold), 0.22);
+  font-size: 16px;
+  font-weight: 900;
+  line-height: 1;
+  text-align: center;
+}
+
+.dreadlight.character-builder .builder-gear-badges,
+.dreadlight.character-builder .builder-gear-stats,
+.dreadlight.character-builder .builder-gear-description,
+.dreadlight.character-builder .builder-gear-traits {
+  grid-column: 2 / -1;
+}
+
+.dreadlight.character-builder .builder-gear-badges,
+.dreadlight.character-builder .builder-gear-stats,
+.dreadlight.character-builder .builder-gear-traits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.dreadlight.character-builder .builder-gear-badge,
+.dreadlight.character-builder .builder-gear-stats b,
+.dreadlight.character-builder .builder-gear-traits b {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 20px;
+  padding: 2px 6px;
+  color: var(--dl-text-secondary);
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: var(--r-sm);
+  font-size: var(--t-micro);
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.dreadlight.character-builder .builder-gear-badge.is-bonus {
+  color: var(--dl-accent-gold);
+  background: rgba(var(--rgb-gold), 0.09);
+  border-color: rgba(var(--rgb-gold), 0.3);
+}
+
+.dreadlight.character-builder .builder-gear-stats b {
+  color: var(--dl-text-primary);
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.dreadlight.character-builder .builder-gear-description {
+  color: var(--dl-text-secondary);
+  font-size: var(--t-tiny);
+  line-height: 1.35;
+}
+
+.dreadlight.character-builder .builder-gear-traits b {
+  color: var(--dl-accent-red);
+  background: rgba(var(--rgb-red), 0.075);
+  border-color: rgba(var(--rgb-red), 0.22);
+}
+
+.dreadlight.character-builder .builder-gear-traits.is-talents b {
+  color: var(--dl-track-mind);
+  background: rgba(107, 157, 245, 0.08);
+  border-color: rgba(107, 157, 245, 0.22);
+}
+
+.dreadlight.character-builder .builder-supply-row {
+  display: grid;
+  grid-template-columns: 140px 32px;
+  gap: 8px;
+  align-items: end;
+}
+
+.dreadlight.character-builder .builder-icon-btn {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--dl-bg-elevated);
+  border: 1px solid rgba(var(--rgb-gold), 0.18);
+  border-radius: var(--r-sm);
+  color: var(--dl-accent-gold);
+}
+
+.dreadlight.character-builder .builder-footer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto auto auto;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 14px;
+  background: var(--dl-bg-surface);
+  border-top: 1px solid rgba(var(--rgb-gold), 0.12);
+}
+
+.dreadlight.character-builder .builder-status {
+  color: var(--dl-accent-red);
+  font-size: var(--t-tiny);
+  line-height: 1.35;
+}
+
+.dreadlight.character-builder .builder-status.is-valid {
+  color: var(--dl-track-body);
+}
+
+.dreadlight.character-builder .builder-footer button {
+  min-height: 30px;
+  padding: 6px 12px;
+  background: var(--dl-bg-elevated);
+  border: 1px solid var(--dl-border-soft);
+  border-radius: var(--r-sm);
+  color: var(--dl-text-secondary);
+  font-size: var(--t-sm);
+}
+
+.dreadlight.character-builder .builder-footer .builder-apply {
+  color: var(--dl-accent-gold);
+  border-color: rgba(var(--rgb-gold), 0.35);
+}
+
+@media (max-width: 760px) {
+  .dreadlight.character-builder .builder-header,
+  .dreadlight.character-builder .builder-two-col,
+  .dreadlight.character-builder .builder-track-preview {
+    grid-template-columns: 1fr;
+  }
+
+  .dreadlight.character-builder .builder-budget {
+    flex-wrap: wrap;
+  }
+
+  .dreadlight.character-builder .builder-steps,
+  .dreadlight.character-builder .builder-gear-list,
+  .dreadlight.character-builder .builder-talent-tools {
+    grid-template-columns: 1fr;
+  }
+
+  .dreadlight.character-builder .builder-attr-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .dreadlight.character-builder .builder-selected-talent-card {
+    grid-template-columns: minmax(0, 1fr) 30px;
+  }
+
+  .dreadlight.character-builder .builder-selected-talent-meta {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-content: flex-start;
+  }
+
+  .dreadlight.character-builder .builder-gear-group-grid {
+    grid-template-columns: 1fr;
   }
 }

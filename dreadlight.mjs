@@ -4,11 +4,13 @@ import { TalentData } from "./module/data/talent.mjs";
 import { WeaponData } from "./module/data/weapon.mjs";
 import { ArmorData } from "./module/data/armor.mjs";
 import { EquipmentData } from "./module/data/equipment.mjs";
+import { BackgroundData } from "./module/data/background.mjs";
+import { DriveData } from "./module/data/drive.mjs";
 import { NpcData } from "./module/data/npc.mjs";
 import { CreatureData } from "./module/data/creature.mjs";
 import { InvestigatorSheet } from "./module/sheets/investigator-sheet.mjs";
 import { TalentSheet } from "./module/sheets/talent-sheet.mjs";
-import { WeaponSheet, ArmorSheet, EquipmentSheet } from "./module/sheets/item-sheet.mjs";
+import { WeaponSheet, ArmorSheet, EquipmentSheet, BackgroundSheet, DriveSheet } from "./module/sheets/item-sheet.mjs";
 import { NpcSheet } from "./module/sheets/npc-sheet.mjs";
 import { CreatureSheet } from "./module/sheets/creature-sheet.mjs";
 import { BaseDie, DreadDie, GearDie } from "./module/dice/terms.mjs";
@@ -77,6 +79,7 @@ Hooks.once("init", () => {
   Object.assign(CONFIG.Item.dataModels, {
     talent: TalentData, weapon: WeaponData,
     armor: ArmorData, equipment: EquipmentData,
+    background: BackgroundData, drive: DriveData,
   });
 
   // Register Sheet Classes
@@ -120,6 +123,16 @@ Hooks.once("init", () => {
     makeDefault: true,
     label: "DREADLIGHT.SheetEquipment",
   });
+  Items.registerSheet("dreadlight", BackgroundSheet, {
+    types: ["background"],
+    makeDefault: true,
+    label: "DREADLIGHT.SheetBackground",
+  });
+  Items.registerSheet("dreadlight", DriveSheet, {
+    types: ["drive"],
+    makeDefault: true,
+    label: "DREADLIGHT.SheetDrive",
+  });
 
   // Preload Handlebars partials
   foundry.applications.handlebars.loadTemplates([
@@ -136,11 +149,14 @@ Hooks.once("init", () => {
     "systems/dreadlight/templates/chat/adhoc-roll-result.hbs",
     "systems/dreadlight/templates/chat/d66-result.hbs",
     "systems/dreadlight/templates/chat/d66-prompt.hbs",
+    "systems/dreadlight/templates/apps/character-builder.hbs",
     "systems/dreadlight/templates/actors/npc-sheet.hbs",
     "systems/dreadlight/templates/actors/creature-sheet.hbs",
     "systems/dreadlight/templates/actors/parts/npc-header.hbs",
     "systems/dreadlight/templates/actors/parts/npc-key-stats.hbs",
     "systems/dreadlight/templates/actors/parts/creature-attacks.hbs",
+    "systems/dreadlight/templates/items/background-sheet.hbs",
+    "systems/dreadlight/templates/items/drive-sheet.hbs",
   ]);
 
   // Register system settings

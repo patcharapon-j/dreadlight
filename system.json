@@ -31,7 +31,9 @@
       "talent": {},
       "weapon": {},
       "armor": {},
-      "equipment": {}
+      "equipment": {},
+      "background": {},
+      "drive": {}
     }
   },
   "grid": {
@@ -71,6 +73,20 @@
       "name": "equipment",
       "label": "Dreadlight Equipment",
       "path": "packs/equipment",
+      "type": "Item",
+      "system": "dreadlight"
+    },
+    {
+      "name": "backgrounds",
+      "label": "Dreadlight Backgrounds",
+      "path": "packs/backgrounds",
+      "type": "Item",
+      "system": "dreadlight"
+    },
+    {
+      "name": "drives",
+      "label": "Dreadlight Drives",
+      "path": "packs/drives",
       "type": "Item",
       "system": "dreadlight"
     }
