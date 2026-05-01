@@ -35,7 +35,7 @@ https://github.com/patcharapon-j/dreadlight/releases/latest/download/system.json
 ## Compatibility
 
 - **FoundryVTT**: v13 (minimum and verified)
-- **Status**: v0.2.3 (pre-release)
+- **Status**: v0.3.0 (pre-release)
 
 ## License
 
