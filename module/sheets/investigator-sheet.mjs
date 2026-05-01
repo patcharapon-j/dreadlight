@@ -3,6 +3,7 @@ import { rollD66 } from "../dice/d66-roll.mjs";
 import { sendD66ToChat, sendD66PromptToChat } from "../dice/chat-message.mjs";
 import { DreadlightCharacterBuilder } from "../apps/character-builder.mjs";
 import { DreadlightAdvancementManager } from "../apps/advancement-manager.mjs";
+import { mountDreadTendrils } from "../effects/dread-tendrils.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -177,6 +178,11 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
     // Bind drag-drop handlers
     this.#dragDrop.forEach((d) => d.bind(this.element));
 
+    // Mount the PIXI/WebGL dread corruption overlay across the sheet content.
+    if (game.settings.get("dreadlight", "showDreadVeins")) {
+      mountDreadTendrils(this.element);
+    }
+
     if (!this.isEditable) return;
 
     // Track button clicks: left-click = +1, right-click = −1
@@ -213,11 +219,6 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
         const val = this.actor.system.dread.value;
         if (val > 0) this.actor.update({ "system.dread.value": val - 1 });
       });
-    }
-
-    // Inject dread corruption veins SVG into the tracks bar
-    if (game.settings.get("dreadlight", "showDreadVeins")) {
-      InvestigatorSheet.#injectDreadVeins(this.element);
     }
 
     // Supply button: left-click = +1, right-click = −1

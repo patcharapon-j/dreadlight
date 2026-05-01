@@ -836,6 +836,11 @@
   overflow: hidden;
 }
 
+.dreadlight .track-btn > * {
+  position: relative;
+  z-index: 2;
+}
+
 .dreadlight .track-btn.body { border-color: rgba(85, 184, 122, 0.15); }
 .dreadlight .track-btn.mind { border-color: rgba(107, 157, 245, 0.15); }
 .dreadlight .track-btn.soul { border-color: rgba(168, 139, 245, 0.15); }
@@ -1022,59 +1027,35 @@
   margin: 0 2px;
 }
 
-/* Dread corruption veins — SVG crack/vein paths snake out from the dread box */
+/* Dread corruption veins: full-content PIXI/WebGL canvas mounted by investigator-sheet.mjs */
 .dreadlight .tracks-bar {
   position: relative;
 }
 
-.dreadlight .dread-veins {
+.dreadlight .dread-corruption-canvas {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: 1;
-  overflow: visible;
+  z-index: 50;
+  mix-blend-mode: screen;
+  opacity: 0;
+  filter: saturate(1.12) contrast(1.03);
 }
 
-.dreadlight .dread-veins path {
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+.dreadlight .dread-corruption-canvas[data-dread="0"] {
+  opacity: 0;
 }
 
-/* Vein groups — each group appears at a dread level */
-.dreadlight .dread-veins .vein-group { opacity: 0; transition: opacity 0.8s ease; }
-
-/* Teaser at dread 0 — barely-visible silhouette of the d1 vein */
-.dreadlight .tracks-bar:not([data-dread="0"]) .vein-d1,
-.dreadlight .tracks-bar[data-dread="0"] .vein-d1 { opacity: 0.04; }
-
-.dreadlight .tracks-bar[data-dread="1"] .vein-d1 { opacity: 1; }
-.dreadlight .tracks-bar[data-dread="2"] .vein-d1,
-.dreadlight .tracks-bar[data-dread="2"] .vein-d2 { opacity: 1; }
-.dreadlight .tracks-bar[data-dread="3"] .vein-d1,
-.dreadlight .tracks-bar[data-dread="3"] .vein-d2,
-.dreadlight .tracks-bar[data-dread="3"] .vein-d3 { opacity: 1; }
-.dreadlight .tracks-bar[data-dread="4"] .vein-d1,
-.dreadlight .tracks-bar[data-dread="4"] .vein-d2,
-.dreadlight .tracks-bar[data-dread="4"] .vein-d3,
-.dreadlight .tracks-bar[data-dread="4"] .vein-d4 { opacity: 1; }
-.dreadlight .tracks-bar[data-dread="5"] .vein-d1,
-.dreadlight .tracks-bar[data-dread="5"] .vein-d2,
-.dreadlight .tracks-bar[data-dread="5"] .vein-d3,
-.dreadlight .tracks-bar[data-dread="5"] .vein-d4,
-.dreadlight .tracks-bar[data-dread="5"] .vein-d5 { opacity: 1; }
-
-/* Dread 5: pulse animation */
-@keyframes dread-veins-pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.55; }
-}
-
-.dreadlight .tracks-bar[data-dread="5"] .dread-veins {
-  animation: dread-veins-pulse 3s ease-in-out infinite;
+.dreadlight .dread-corruption-canvas[data-dread="1"] { opacity: 0.16; }
+.dreadlight .dread-corruption-canvas[data-dread="2"] { opacity: 0.26; }
+.dreadlight .dread-corruption-canvas[data-dread="3"] { opacity: 0.4; }
+.dreadlight .dread-corruption-canvas[data-dread="4"] { opacity: 0.52; }
+.dreadlight .dread-corruption-canvas[data-dread="5"] {
+  opacity: 0.64;
+  filter: saturate(1.22) contrast(1.05) drop-shadow(0 0 4px rgba(224, 64, 64, 0.12));
 }
 
 /* Dread 4+: subtly tint the track separators */
