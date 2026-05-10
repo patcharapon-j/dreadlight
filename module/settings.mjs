@@ -74,6 +74,24 @@ export function registerSettings() {
 
   // --- Visual & Player-Facing Settings (client-scoped) ---
 
+  game.settings.register("dreadlight", "fontScale", {
+    name: "DREADLIGHT.SettingFontScale",
+    hint: "DREADLIGHT.SettingFontScaleHint",
+    scope: "client",
+    config: true,
+    type: Number,
+    default: 1.0,
+    range: { min: 0.85, max: 1.5, step: 0.05 },
+    onChange: (value) => {
+      applyFontScale(value);
+      // Re-render any open Dreadlight sheets so initial-size logic re-applies for new opens
+      // and zoom CSS picks up immediately for already-open ones.
+      for (const app of foundry.applications.instances?.values?.() ?? []) {
+        if (app.element?.classList?.contains?.("dreadlight")) app.render();
+      }
+    },
+  });
+
   game.settings.register("dreadlight", "showDreadVeins", {
     name: "DREADLIGHT.SettingShowDreadVeins",
     hint: "DREADLIGHT.SettingShowDreadVeinsHint",
@@ -102,4 +120,36 @@ export function registerSettings() {
   });
 
   console.log("Dreadlight | System settings registered");
+}
+
+/**
+ * Apply the user's font scale by setting a CSS variable on :root.
+ * Sheets read this via `var(--dl-font-scale, 1)` to drive a CSS `zoom` rule.
+ */
+export function applyFontScale(value) {
+  const scale = Number.isFinite(value) ? value : 1;
+  document.documentElement.style.setProperty("--dl-font-scale", String(scale));
+}
+
+/**
+ * Get the current font scale, safe to call before settings init.
+ */
+export function getFontScale() {
+  try { return game.settings.get("dreadlight", "fontScale") ?? 1; }
+  catch { return 1; }
+}
+
+/**
+ * Modestly scale a sheet's initial height by the user's fontScale so that
+ * vertically-stacked content (lists, panels) doesn't immediately need a
+ * scrollbar at higher scales. Width is unchanged because the layout uses
+ * fixed-pixel column widths — scaling text via CSS variables doesn't push
+ * the design wider, only taller.
+ */
+export function scaleSheetPosition(merged) {
+  const scale = getFontScale();
+  if (scale !== 1 && merged?.position) {
+    if (merged.position.height) merged.position.height = Math.round(merged.position.height * scale);
+  }
+  return merged;
 }

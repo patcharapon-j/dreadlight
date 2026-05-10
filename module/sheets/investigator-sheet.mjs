@@ -4,6 +4,7 @@ import { sendD66ToChat, sendD66PromptToChat } from "../dice/chat-message.mjs";
 import { DreadlightCharacterBuilder } from "../apps/character-builder.mjs";
 import { DreadlightAdvancementManager } from "../apps/advancement-manager.mjs";
 import { mountDreadTendrils } from "../effects/dread-tendrils.mjs";
+import { scaleSheetPosition } from "../settings.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -59,6 +60,11 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
   constructor(options = {}) {
     super(options);
     this.#dragDrop = this.#createDragDropHandlers();
+  }
+
+  /** @override */
+  _initializeApplicationOptions(options) {
+    return scaleSheetPosition(super._initializeApplicationOptions(options));
   }
 
   get dragDrop() {

@@ -290,6 +290,8 @@
   "DREADLIGHT.SettingAdhocMaxDiceHint": "Maximum number of dice per pool in the ad-hoc roller.",
   "DREADLIGHT.SettingAutoDrawCardInitiative": "Auto-Draw Card Initiative",
   "DREADLIGHT.SettingAutoDrawCardInitiativeHint": "Draw card initiative automatically when combat starts and each new round begins.",
+  "DREADLIGHT.SettingFontScale": "Sheet Font Scale",
+  "DREADLIGHT.SettingFontScaleHint": "Scale the size of text and UI on Dreadlight sheets. 1.0 = default; raise for accessibility, lower to fit more on screen.",
   "DREADLIGHT.SettingShowDreadVeins": "Show Dread Veins",
   "DREADLIGHT.SettingShowDreadVeinsHint": "Display the corruption veins overlay on the character sheet as dread increases.",
   "DREADLIGHT.SettingShowChatPortrait": "Show Chat Portraits",

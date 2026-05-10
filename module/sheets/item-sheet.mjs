@@ -1,3 +1,5 @@
+import { scaleSheetPosition } from "../settings.mjs";
+
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ItemSheetV2 } = foundry.applications.sheets;
 
@@ -13,6 +15,11 @@ class DreadlightItemSheetBase extends HandlebarsApplicationMixin(ItemSheetV2) {
       submitOnChange: true,
     },
   };
+
+  /** @override */
+  _initializeApplicationOptions(options) {
+    return scaleSheetPosition(super._initializeApplicationOptions(options));
+  }
 
   /** @override */
   async _prepareContext(options) {

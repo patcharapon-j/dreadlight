@@ -1,3 +1,5 @@
+import { scaleSheetPosition } from "../settings.mjs";
+
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ItemSheetV2 } = foundry.applications.sheets;
 
@@ -25,6 +27,11 @@ export class TalentSheet extends HandlebarsApplicationMixin(ItemSheetV2) {
   static PARTS = {
     sheet: { template: "systems/dreadlight/templates/items/talent-sheet.hbs" },
   };
+
+  /** @override */
+  _initializeApplicationOptions(options) {
+    return scaleSheetPosition(super._initializeApplicationOptions(options));
+  }
 
   /** @override */
   _prepareSubmitData(event, form, formData) {

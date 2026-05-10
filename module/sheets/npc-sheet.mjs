@@ -1,4 +1,5 @@
 import { DreadlightRollDialog } from "../dice/roll-dialog.mjs";
+import { scaleSheetPosition } from "../settings.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -34,6 +35,11 @@ export class NpcSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   /* ---------------------------------------- */
 
   #dragDrop;
+
+  /** @override */
+  _initializeApplicationOptions(options) {
+    return scaleSheetPosition(super._initializeApplicationOptions(options));
+  }
 
   constructor(options = {}) {
     super(options);

@@ -35,7 +35,7 @@
       </div>
       <div class="stat-box stat-gold">
         <div class="stat-label">{{localize "DREADLIGHT.WeaponRange"}}</div>
-        <select name="system.range" class="stat-value" style="font-size:12px;" {{#unless editable}}disabled{{/unless}}>
+        <select name="system.range" class="stat-value" style="font-size:var(--t-12);" {{#unless editable}}disabled{{/unless}}>
           <option value="engaged" {{#if (eq system.range "engaged")}}selected{{/if}}>{{localize "DREADLIGHT.RangeEngaged"}}</option>
           <option value="short" {{#if (eq system.range "short")}}selected{{/if}}>{{localize "DREADLIGHT.RangeShort"}}</option>
           <option value="medium" {{#if (eq system.range "medium")}}selected{{/if}}>{{localize "DREADLIGHT.RangeMedium"}}</option>

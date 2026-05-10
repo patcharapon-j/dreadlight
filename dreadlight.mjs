@@ -18,7 +18,7 @@ import { registerDSN } from "./module/dice/dsn-integration.mjs";
 import { registerChatListeners, sendD66PromptToChat } from "./module/dice/chat-message.mjs";
 import { registerAdhocRoller } from "./module/dice/adhoc-roller.mjs";
 import { registerHandlebarsHelpers } from "./module/helpers/handlebars.mjs";
-import { registerSettings } from "./module/settings.mjs";
+import { registerSettings, applyFontScale } from "./module/settings.mjs";
 import { d66Tables } from "./module/data/d66-tables.mjs";
 import { registerCardInitiative } from "./module/combat/card-initiative.mjs";
 
@@ -176,6 +176,10 @@ Hooks.once("init", () => {
   registerCardInitiative();
 
   console.log("Dreadlight | System initialized");
+});
+
+Hooks.once("ready", () => {
+  applyFontScale(game.settings.get("dreadlight", "fontScale"));
 });
 
 Hooks.once("diceSoNiceReady", (dice3d) => { registerDSN(dice3d); });

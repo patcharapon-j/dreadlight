@@ -33,7 +33,7 @@
       </div>
       <div class="stat-box stat-gold">
         <div class="stat-label">{{localize "DREADLIGHT.Weight"}}</div>
-        <select name="system.weight" class="stat-value" style="font-size:12px;" {{#unless editable}}disabled{{/unless}}>
+        <select name="system.weight" class="stat-value" style="font-size:var(--t-12);" {{#unless editable}}disabled{{/unless}}>
           <option value="0" {{#if (eq system.weight 0)}}selected{{/if}}>0</option>
           <option value="0.25" {{#if (eq system.weight 0.25)}}selected{{/if}}>¼</option>
           <option value="0.5" {{#if (eq system.weight 0.5)}}selected{{/if}}>½</option>

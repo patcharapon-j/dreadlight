@@ -1,5 +1,6 @@
 import { DreadlightRoll } from "../dice/dreadlight-roll.mjs";
 import { sendRollToChat } from "../dice/chat-message.mjs";
+import { scaleSheetPosition } from "../settings.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -24,6 +25,11 @@ export class CreatureSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   static PARTS = {
     sheet: { template: "systems/dreadlight/templates/actors/creature-sheet.hbs" },
   };
+
+  /** @override */
+  _initializeApplicationOptions(options) {
+    return scaleSheetPosition(super._initializeApplicationOptions(options));
+  }
 
   /* ---------------------------------------- */
   /*  Context                                 */
