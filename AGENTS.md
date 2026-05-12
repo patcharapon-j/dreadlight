@@ -26,7 +26,7 @@ To test changes: reload the FoundryVTT browser tab (F5) or use the "Reload Syste
 - `roll-dialog.mjs` - AppV2 dialog for configuring rolls (difficulty, gear bonus, etc.).
 - `chat-message.mjs` - Renders roll results to chat cards and handles the push mechanic (lock 6s & 1s, re-roll the rest, apply consequences).
 - `dsn-integration.mjs` - Registers three Dice So Nice colorsets (base/dread/gear).
-**Combat system** (`module/combat/`): Card initiative helpers and top-screen tracker HUD for the revised combat rules. Cards 1-10 are drawn each round; the lowest card acts first. Creature Ferocity determines how many cards a creature draws, and each drawn card is represented as its own initiative slot.
+**Combat system** (`module/combat/`): Card initiative helpers and top-screen tracker HUD for the revised combat rules. Cards 1-13 are drawn each round (J=11, Q=12, K=13 — face cards extend the deck for crowded combats); the lowest card acts first. Creature Ferocity determines how many cards a creature draws, and each drawn card is represented as its own initiative slot.
 
 **Helpers** (`module/helpers/handlebars.mjs`): 20+ custom Handlebars helpers for rendering pips, conditions, and localization.
 
@@ -43,7 +43,7 @@ To test changes: reload the FoundryVTT browser tab (F5) or use the "Reload Syste
 - **Critical Injuries**: D66 tables (Coriolis-style) for body/mind/soul - rolled when a track breaks
 - **Dice outcomes**: failure (no 6s), dire failure (no 6s + dread 1s), tainted success (only dread 6s, no base/gear 6s), success (has base/gear 6s)
 - **Push**: re-roll non-locked dice; 1s cause consequences (mind/soul loss, gear damage). Omen/GM dread points have been removed from the current rules.
-- **Initiative**: draw cards 1-10 each round; lowest card acts first. Creatures have Ferocity 1-3 and draw that many cards. Cards can be flipped/spent for reactions and swapped for initiative-switching effects.
+- **Initiative**: draw cards 1-13 each round (J=11, Q=12, K=13); lowest card acts first. Creatures have Ferocity 1-3 and draw that many cards. Cards can be flipped/spent for reactions and swapped for initiative-switching effects.
 
 ## Key Conventions
 

@@ -24,6 +24,8 @@ export class TalentData extends foundry.abstract.TypeDataModel {
       masteryName: new fields.StringField({ required: true, initial: "" }),
 
       masteryDescription: new fields.HTMLField({ required: true, initial: "" }),
+
+      designReview: new fields.BooleanField({ required: true, initial: false }),
     };
   }
 }

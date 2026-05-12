@@ -9,6 +9,10 @@ export class ArmorData extends foundry.abstract.TypeDataModel {
 
       weight: new fields.NumberField({ required: true, initial: 1, min: 0 }),
 
+      // Per §16.9: only armor that is currently worn is free against carry limit.
+      // Carried-but-not-worn armor counts at full slot cost.
+      worn: new fields.BooleanField({ required: true, initial: true }),
+
       properties: new fields.ArrayField(
         new fields.StringField({ required: true, initial: "" })
       ),

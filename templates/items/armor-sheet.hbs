@@ -44,6 +44,15 @@
       </div>
     </div>
 
+    {{!-- Worn toggle (only worn armor is free against carry limit) --}}
+    <div class="field-group">
+      <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+        <input type="checkbox" name="system.worn" {{#if system.worn}}checked{{/if}} {{#unless editable}}disabled{{/unless}} />
+        <span class="field-label" style="margin:0;">{{localize "DREADLIGHT.ArmorWorn"}}</span>
+        <span style="font-size:var(--t-11); color:var(--c-text-muted);">{{localize "DREADLIGHT.ArmorWornHint"}}</span>
+      </label>
+    </div>
+
     {{!-- Properties --}}
     <div class="field-group">
       <div class="field-label">{{localize "DREADLIGHT.Properties"}}</div>

@@ -28,14 +28,27 @@ https://github.com/patcharapon-j/dreadlight/releases/latest/download/system.json
 - **Dread Mechanic**: Dread dice (0-5) corrupt every roll, adding risk alongside reward
 - **Dice System**: Base, Dread, and Gear dice with distinct outcomes -- success, tainted success, dire failure
 - **Push Mechanic**: Re-roll for another chance, but 1s carry consequences
-- **Card Initiative**: Draw cards 1-10 each round; lowest card acts first, with Ferocity, card flipping, swaps, and a top-screen tracker HUD
+- **Card Initiative**: Draw cards 1-13 (J=11, Q=12, K=13) each round; lowest card acts first, with Ferocity, card flipping, swaps, and a top-screen tracker HUD
 - **Conditions**: Six conditions tied to attributes that reduce your dice pools
 - **Dice So Nice Integration**: Custom colorsets for Base, Dread, and Gear dice
 
 ## Compatibility
 
 - **FoundryVTT**: v13 (minimum and verified)
-- **Status**: v0.3.2 (pre-release)
+- **Status**: v0.4.0 (pre-release)
+
+## Rules Revision Notes (v0.4.0)
+
+Synced to the core-rules audit pass (May 2026):
+
+- **Initiative deck extended** to 1-13 — J/Q/K added for crowded combats (§16.3).
+- **Heavy Pistol** now tagged `Restricted`; Restricted is a gear property requiring license or black-market acquisition (§16.8).
+- **Worn armor** is free against carry limit; carried-but-not-worn armor takes its full slot cost (§16.9). Armor sheet has a "Worn" toggle.
+- **Brutal** (Close Combat L2) deals **+2** damage (was +1) (§16.6).
+- **True Faith** now requires an opportunity cost — sanctified site, ≥1 stretch ritual time, or clerical authority (§16.6).
+- **Procure** is capped at +2 gear, 2 SP, or 1 stretch service per use (§16.6).
+- **Design-review flags** on Iron Soul, The Thread, Eureka, and Vanish — surfaced on the talent sheet (§16.7).
+- NPC sheet supports Minor / Important / Major tiers (§16.11).
 
 ## License
 

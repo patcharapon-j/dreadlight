@@ -82,7 +82,22 @@
         <input type="text" name="system.masteryName" value="{{system.masteryName}}" placeholder="{{#if (or system.isDreadlore (eq system.category 'dreadlore'))}}Abyssal lore name...{{else}}{{localize "DREADLIGHT.TalentMasteryName"}}{{/if}}" style="width:100%; margin-bottom:4px;" />
       {{/if}}
       <textarea name="system.masteryDescription" class="field-textarea" style="min-height:48px;" {{#unless editable}}disabled{{/unless}}>{{system.masteryDescription}}</textarea>
+      {{#if system.designReview}}
+        <div class="design-review-flag" style="margin-top:6px; padding:6px 8px; border-left:2px solid rgba(224,164,64,0.6); background:rgba(224,164,64,0.08); font-size:var(--t-11); color:var(--c-text-muted);">
+          <i class="fa-solid fa-triangle-exclamation"></i> {{localize "DREADLIGHT.TalentDesignReview"}}
+        </div>
+      {{/if}}
     </div>
+
+    {{!-- Design review toggle (edit mode only) --}}
+    {{#if editable}}
+      <div class="field-group" style="margin-top:8px;">
+        <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:var(--t-11); color:var(--c-text-muted);">
+          <input type="checkbox" name="system.designReview" {{#if system.designReview}}checked{{/if}} />
+          <span>{{localize "DREADLIGHT.TalentDesignReviewToggle"}}</span>
+        </label>
+      </div>
+    {{/if}}
 
   </div>
 

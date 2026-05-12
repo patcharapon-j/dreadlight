@@ -138,8 +138,10 @@ export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) 
       .filter((i) => i.type === "equipment")
       .sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0));
 
-    // Carry weight (items + supply at ¼ slot each)
-    const gearItems = [...context.weapons, ...context.armors, ...context.equipment];
+    // Carry weight (items + supply at ¼ slot each).
+    // §16.9: worn armor is free; carried-but-not-worn armor counts at full slot cost.
+    const carriedArmors = context.armors.filter((a) => !a.system.worn);
+    const gearItems = [...context.weapons, ...carriedArmors, ...context.equipment];
     const itemWeight = gearItems.reduce((sum, i) => sum + (i.system.weight ?? 0), 0);
     const supplyWeight = (system.supply.value ?? 0) * game.settings.get("dreadlight", "supplyWeight");
     context.carryUsed = Math.round((itemWeight + supplyWeight) * 100) / 100;

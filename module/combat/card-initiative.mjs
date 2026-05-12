@@ -8,7 +8,14 @@
  */
 const MODULE_ID = "dreadlight";
 const CARD_FLAG = "cardInitiative";
-const INVERTED_CARD_BASE = 11;
+// Deck spans 1..13 (J=11, Q=12, K=13) per §16.3. Invert against the highest
+// card +1 so lower card values map to higher Foundry initiative scores.
+const INVERTED_CARD_BASE = 14;
+const FACE_CARD_LABELS = { 11: "J", 12: "Q", 13: "K" };
+
+function cardLabel(card) {
+  return FACE_CARD_LABELS[card] ?? String(card);
+}
 
 let redrawLock = false;
 let turnSyncLock = false;
@@ -335,7 +342,9 @@ function _drawCountForCombatant(combatant) {
 }
 
 function _shuffledCards() {
-  const cards = Array.from({ length: 10 }, (_, i) => i + 1);
+  // Cards 1..13 — face cards (J=11, Q=12, K=13) extend the deck for crowded
+  // combats. Lower numbers still act first; face cards act later in the round.
+  const cards = Array.from({ length: 13 }, (_, i) => i + 1);
   for (let i = cards.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [cards[i], cards[j]] = [cards[j], cards[i]];
@@ -358,7 +367,7 @@ function _renumberInitiativeOrder(entries) {
 
 async function _postInitiativeSummary(combat, entries) {
   const rows = entries
-    .map(entry => `<li><strong>${_escapeHTML(entry.combatantName)}</strong>: ${game.i18n.format("DREADLIGHT.InitiativeCardValue", { card: entry.card })}</li>`)
+    .map(entry => `<li><strong>${_escapeHTML(entry.combatantName)}</strong>: ${game.i18n.format("DREADLIGHT.InitiativeCardValue", { card: cardLabel(entry.card) })}</li>`)
     .join("");
 
   await ChatMessage.create({
@@ -500,19 +509,21 @@ class DreadlightInitiativeTracker {
     const spentTicker = Array.from({ length: 8 }, () => spentLabel).join("&ensp;");
     const image = _escapeHTML(entry.img || "icons/svg/mystery-man.svg");
 
+    const cardFace = _escapeHTML(cardLabel(entry.card));
+
     return `
       <article class="${classes}" data-key="${_escapeHTML(entry.key)}" draggable="${canControl ? "true" : "false"}" style="--i: ${index};">
         <button type="button" class="initiative-card-button" data-action="${hasPending && !isPending ? "finish-swap" : "select-card"}" ${canControl ? "" : "disabled"}>
           <span class="initiative-card-inner">
             <span class="initiative-card-face initiative-card-front">
-              <span class="initiative-card-number">${entry.card}</span>
+              <span class="initiative-card-number">${cardFace}</span>
               <span class="initiative-card-portrait"><img src="${image}" alt="" /></span>
               <span class="initiative-card-name">${_escapeHTML(entry.combatantName)}</span>
               <span class="initiative-card-status">${_escapeHTML(game.i18n.localize(label))}</span>
             </span>
             <span class="initiative-card-face initiative-card-back">
               <span class="initiative-card-back-portrait"><img src="${image}" alt="" /></span>
-              <span class="initiative-card-back-mark">${entry.card}</span>
+              <span class="initiative-card-back-mark">${cardFace}</span>
               <span class="initiative-card-back-label">${spentTicker}</span>
             </span>
           </span>
