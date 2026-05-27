@@ -1,4 +1,4 @@
-// Dreadlight — FoundryVTT v13 System
+// Dreadlight — FoundryVTT v14 System
 import { InvestigatorData } from "./module/data/investigator.mjs";
 import { TalentData } from "./module/data/talent.mjs";
 import { WeaponData } from "./module/data/weapon.mjs";
@@ -82,10 +82,9 @@ Hooks.once("init", () => {
     background: BackgroundData, drive: DriveData,
   });
 
-  // Register Sheet Classes
-  // Note: Using deprecated globals (Actors/Items) — the v13 namespaced collections
-  // don't register AppV2 sheets correctly. These globals work until v15.
-  Actors.unregisterSheet("core", ActorSheet);
+  // Register Sheet Classes — v14 namespaced document collections.
+  const { Actors, Items } = foundry.documents.collections;
+  Actors.unregisterSheet("core", foundry.appv1.sheets.ActorSheet);
   Actors.registerSheet("dreadlight", InvestigatorSheet, {
     types: ["investigator"],
     makeDefault: true,
@@ -102,7 +101,7 @@ Hooks.once("init", () => {
     label: "DREADLIGHT.SheetCreature",
   });
 
-  Items.unregisterSheet("core", ItemSheet);
+  Items.unregisterSheet("core", foundry.appv1.sheets.ItemSheet);
   Items.registerSheet("dreadlight", TalentSheet, {
     types: ["talent"],
     makeDefault: true,

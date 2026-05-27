@@ -4,6 +4,7 @@ import { scaleSheetPosition } from "../settings.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
+const FilePicker = foundry.applications.apps.FilePicker.implementation;
 
 export class CreatureSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 

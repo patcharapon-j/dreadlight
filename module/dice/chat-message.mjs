@@ -234,38 +234,36 @@ export function registerChatListeners() {
  * @param {string} [defaultId] — pre-selected actor ID
  * @returns {Promise<Actor|null>} — selected actor or null if cancelled
  */
-function _pickInvestigator(investigators, defaultId) {
-  return new Promise((resolve) => {
-    const options = investigators
-      .map(a => `<option value="${a.id}" ${a.id === defaultId ? "selected" : ""}>${a.name}</option>`)
-      .join("");
+async function _pickInvestigator(investigators, defaultId) {
+  const options = investigators
+    .map(a => `<option value="${a.id}" ${a.id === defaultId ? "selected" : ""}>${a.name}</option>`)
+    .join("");
 
-    new Dialog({
-      title: game.i18n.localize("DREADLIGHT.D66ApplyTo"),
-      content: `
-        <form class="dreadlight">
-          <div style="margin: 8px 0;">
-            <select id="d66-target" style="width: 100%; font-family: var(--dl-font-primary); padding: 4px;">
-              ${options}
-            </select>
-          </div>
-        </form>
-      `,
-      buttons: {
-        apply: {
-          label: game.i18n.localize("DREADLIGHT.D66Apply"),
-          callback: (html) => {
-            const actorId = html.find("#d66-target").val();
-            resolve(game.actors.get(actorId) ?? null);
-          },
-        },
-        cancel: {
-          label: "Cancel",
-          callback: () => resolve(null),
-        },
+  const actorId = await foundry.applications.api.DialogV2.wait({
+    window: { title: game.i18n.localize("DREADLIGHT.D66ApplyTo") },
+    classes: ["dreadlight"],
+    content: `
+      <div style="margin: 8px 0;">
+        <select name="target" style="width: 100%; font-family: var(--dl-font-primary); padding: 4px;">
+          ${options}
+        </select>
+      </div>
+    `,
+    buttons: [
+      {
+        action: "apply",
+        label: game.i18n.localize("DREADLIGHT.D66Apply"),
+        default: true,
+        callback: (event, button) => button.form.elements.target.value,
       },
-      default: "apply",
-      close: () => resolve(null),
-    }).render(true);
+      {
+        action: "cancel",
+        label: game.i18n.localize("Cancel"),
+      },
+    ],
+    rejectClose: false,
   });
+
+  if (!actorId || actorId === "cancel") return null;
+  return game.actors.get(actorId) ?? null;
 }

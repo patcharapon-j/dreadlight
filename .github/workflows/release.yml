@@ -1,0 +1,111 @@
+name: Release
+
+# Manually-triggered release. Bumps the version in system.json, builds a
+# distributable zip, and publishes a GitHub Release whose assets back the
+# manifest install/update URL:
+#   https://github.com/<owner>/<repo>/releases/latest/download/system.json
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: "Semantic version increment"
+        type: choice
+        required: true
+        default: patch
+        options:
+          - patch
+          - minor
+          - major
+      version:
+        description: "Explicit version (X.Y.Z) — overrides the bump choice when set"
+        type: string
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Compute and write version
+        id: version
+        env:
+          BUMP: ${{ inputs.bump }}
+          EXPLICIT_VERSION: ${{ inputs.version }}
+        run: |
+          node <<'NODE'
+          const fs = require("fs");
+          const file = "system.json";
+          const data = JSON.parse(fs.readFileSync(file, "utf8"));
+
+          const explicit = (process.env.EXPLICIT_VERSION || "").trim();
+          const bump = process.env.BUMP || "patch";
+
+          let version;
+          if (explicit) {
+            if (!/^\d+\.\d+\.\d+$/.test(explicit)) {
+              throw new Error(`Invalid explicit version: "${explicit}" (expected X.Y.Z)`);
+            }
+            version = explicit;
+          } else {
+            const parts = String(data.version).split(".").map(Number);
+            if (parts.length !== 3 || parts.some(Number.isNaN)) {
+              throw new Error(`Cannot parse current version: "${data.version}"`);
+            }
+            let [maj, min, pat] = parts;
+            if (bump === "major") { maj += 1; min = 0; pat = 0; }
+            else if (bump === "minor") { min += 1; pat = 0; }
+            else { pat += 1; }
+            version = `${maj}.${min}.${pat}`;
+          }
+
+          const server = process.env.GITHUB_SERVER_URL || "https://github.com";
+          const repo = process.env.GITHUB_REPOSITORY;
+          data.version = version;
+          data.manifest = `${server}/${repo}/releases/latest/download/system.json`;
+          data.download = `${server}/${repo}/releases/download/v${version}/dreadlight-v${version}.zip`;
+
+          fs.writeFileSync(file, JSON.stringify(data, null, 2) + "\n");
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `version=${version}\n`);
+          console.log(`Releasing version ${version}`);
+          NODE
+
+      - name: Build release archive
+        run: |
+          set -euo pipefail
+          VERSION="${{ steps.version.outputs.version }}"
+          INCLUDE="system.json dreadlight.mjs module templates styles lang assets README.md"
+          # Compendium packs are git-ignored and generated inside Foundry; bundle
+          # them only when present in the checkout.
+          if [ -d packs ] && [ -n "$(ls -A packs 2>/dev/null)" ]; then
+            INCLUDE="$INCLUDE packs"
+          fi
+          zip -r "dreadlight-v${VERSION}.zip" $INCLUDE
+
+      - name: Commit version bump and tag
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add system.json
+          git commit -m "Release v${VERSION}"
+          git tag "v${VERSION}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+          git push origin "v${VERSION}"
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          name: Dreadlight v${{ steps.version.outputs.version }}
+          generate_release_notes: true
+          files: |
+            system.json
+            dreadlight-v${{ steps.version.outputs.version }}.zip

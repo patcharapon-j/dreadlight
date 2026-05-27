@@ -1,6 +1,6 @@
 # Dreadlight
 
-A horror investigation RPG system for [FoundryVTT](https://foundryvtt.com/) v13, built on a modified Year Zero Engine. Corruption lives in your dice.
+A horror investigation RPG system for [FoundryVTT](https://foundryvtt.com/) v14, built on a modified Year Zero Engine. Corruption lives in your dice.
 
 ## Installation
 
@@ -34,8 +34,8 @@ https://github.com/patcharapon-j/dreadlight/releases/latest/download/system.json
 
 ## Compatibility
 
-- **FoundryVTT**: v13 (minimum and verified)
-- **Status**: v0.4.0 (pre-release)
+- **FoundryVTT**: v14 (verified), v13 (minimum)
+- **Status**: v0.5.0 (pre-release)
 
 ## Rules Revision Notes (v0.4.0)
 

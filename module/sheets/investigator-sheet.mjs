@@ -8,6 +8,8 @@ import { scaleSheetPosition } from "../settings.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2 } = foundry.applications.sheets;
+const DragDrop = foundry.applications.ux.DragDrop.implementation;
+const FilePicker = foundry.applications.apps.FilePicker.implementation;
 
 export class InvestigatorSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 
