@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Dreadlight is a FoundryVTT v13 game system - a horror investigation RPG built on a modified Year Zero Engine. The system is at v0.2.1 (pre-release) and targets FoundryVTT v13 exclusively.
+Dreadlight is a FoundryVTT v14 game system - a horror investigation RPG built on a modified Year Zero Engine. The system is at v0.5.0 (pre-release); it is verified for FoundryVTT v14 and keeps a minimum compatibility of v13.
 
 ## Development
 
@@ -46,8 +46,9 @@ To test changes: reload the FoundryVTT browser tab (F5) or use the "Reload Syste
 
 ## Key Conventions
 
-- FoundryVTT v13 AppV2 sheets — not legacy Application/FormApplication
-- Sheet registration uses deprecated globals (`Actors.registerSheet`, `Items.registerSheet`) as a workaround — v13 namespaced collections don't register AppV2 sheets correctly (works until v15)
+- FoundryVTT v14 AppV2 sheets — not legacy Application/FormApplication
+- Sheet registration uses the namespaced `foundry.documents.collections.Actors`/`Items` collections; core V1 sheets are unregistered via `foundry.appv1.sheets.ActorSheet`/`ItemSheet`
+- UX helpers are accessed through their v14 namespaces: `foundry.applications.ux.DragDrop.implementation`, `foundry.applications.apps.FilePicker.implementation`, and `foundry.applications.api.DialogV2`
 - All localization keys prefixed with `DREADLIGHT.` (defined in `lang/en.json`)
 - CONFIG namespace is `CONFIG.DREADLIGHT` (attributes, conditions, difficulty table, dread table)
 - Compendium packs stored as LevelDB in `packs/`
