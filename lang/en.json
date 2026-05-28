@@ -349,5 +349,13 @@
   "DREADLIGHT.Abilities": "Special Abilities",
   "DREADLIGHT.Weakness": "Weakness",
   "DREADLIGHT.AddAttribute": "Add Attribute",
-  "DREADLIGHT.RemoveAttribute": "Remove"
+  "DREADLIGHT.RemoveAttribute": "Remove",
+  "DREADLIGHT.TrackMax": "Max",
+  "DREADLIGHT.NpcMinorHint": "A minor NPC. Just a name and a note — promote the tier to add stats.",
+  "DREADLIGHT.NpcDropImportant": "Drop weapons or equipment here",
+  "DREADLIGHT.NpcDropMajor": "Drop talents, weapons, armor, or equipment here",
+  "DREADLIGHT.NpcItemTypeRejected": "{tier}-tier NPCs cannot carry {type}.",
+  "DREADLIGHT.KeyTalentPlaceholder": "Talent name...",
+  "DREADLIGHT.RollWeaponHint": "Roll attack",
+  "DREADLIGHT.CreatureAttackNoPool": "This creature has no {attr} attribute to roll. Add it first."
 }

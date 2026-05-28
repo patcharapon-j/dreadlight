@@ -7,6 +7,11 @@
 
   {{> "systems/dreadlight/templates/actors/parts/npc-header.hbs"}}
 
+  {{!-- Minor tier: notecard layout, just notes (sheet header above already shows name, tier, appearance) --}}
+  {{#if (eq system.tier "minor")}}
+    <div class="npc-minor-hint">{{localize "DREADLIGHT.NpcMinorHint"}}</div>
+  {{/if}}
+
   {{!-- Important tier: key stats + tracks --}}
   {{#if (eq system.tier "important")}}
     {{> "systems/dreadlight/templates/actors/parts/npc-key-stats.hbs"}}
@@ -21,6 +26,12 @@
           </div>
           <span class="track-num">{{system.body.value}}</span>
         </div>
+        {{#if editable}}
+          <div class="track-max-edit">
+            <label>{{localize "DREADLIGHT.TrackMax"}}</label>
+            <input type="number" name="system.body.max" value="{{system.body.max}}" min="4" max="12" class="track-max-input" data-dtype="Number" />
+          </div>
+        {{/if}}
       </div>
       <div class="track-col">
         <div class="track-btn mind {{#if system.mind.broken}}is-broken{{/if}}">
@@ -31,6 +42,12 @@
           </div>
           <span class="track-num">{{system.mind.value}}</span>
         </div>
+        {{#if editable}}
+          <div class="track-max-edit">
+            <label>{{localize "DREADLIGHT.TrackMax"}}</label>
+            <input type="number" name="system.mind.max" value="{{system.mind.max}}" min="4" max="12" class="track-max-input" data-dtype="Number" />
+          </div>
+        {{/if}}
       </div>
     </div>
 
@@ -40,19 +57,20 @@
       {{#each weapons}}
         <div class="item-row weapon-row" data-item-id="{{this.id}}">
           <div class="item-icon red art"><img src="{{itemIcon this}}" data-fallback-src="{{this.img}}" onerror="this.onerror=null; this.src=this.dataset.fallbackSrc;" alt="" /></div>
-          <div class="item-info">
+          <div class="item-info" data-action="openItem">
             <div class="item-name">{{this.name}}</div>
           </div>
           <div class="item-stat stat-red">DMG {{this.system.damage}}</div>
           {{#if this.system.gearBonusMax}}
             <div class="item-stat stat-gold">+{{this.system.gearBonus}}</div>
           {{/if}}
+          <button type="button" class="row-roll-btn" data-action="rollWeapon" title="{{localize 'DREADLIGHT.RollWeaponHint'}}"><i class="fa-solid fa-dice-d6"></i></button>
         </div>
       {{/each}}
       {{#each equipment}}
         <div class="item-row gear-row" data-item-id="{{this.id}}">
           <div class="item-icon gold art"><img src="{{itemIcon this}}" data-fallback-src="{{this.img}}" onerror="this.onerror=null; this.src=this.dataset.fallbackSrc;" alt="" /></div>
-          <div class="item-info">
+          <div class="item-info" data-action="openItem">
             <div class="item-name">{{this.name}}</div>
           </div>
           {{#if this.system.gearBonusMax}}
@@ -60,7 +78,7 @@
           {{/if}}
         </div>
       {{/each}}
-      <div class="drop-zone">{{localize "DREADLIGHT.DropItems"}}</div>
+      <div class="drop-zone">{{localize "DREADLIGHT.NpcDropImportant"}}</div>
     </div>
   {{/if}}
 
@@ -140,6 +158,7 @@
             </div>
             <div class="item-stat stat-red">DMG {{this.system.damage}}</div>
             <div class="item-stat stat-gold">CRIT {{this.system.critThreshold}}</div>
+            <button type="button" class="row-roll-btn" data-action="rollWeapon" title="{{localize 'DREADLIGHT.RollWeaponHint'}}"><i class="fa-solid fa-dice-d6"></i></button>
           </div>
         {{/each}}
 
@@ -164,7 +183,7 @@
           </div>
         {{/each}}
 
-        <div class="drop-zone">{{localize "DREADLIGHT.DropItems"}}</div>
+        <div class="drop-zone">{{localize "DREADLIGHT.NpcDropMajor"}}</div>
       </div>
     </div>
   {{/if}}

@@ -40,14 +40,15 @@
               <option value="{{this.value}}" {{#if (eq this.value ../attr)}}selected{{/if}}>{{this.label}}</option>
             {{/each}}
           </select>
-          <input type="number" name="system.attributes.{{@index}}.value" value="{{this.value}}" min="1" max="8" class="creature-attr-value" />
+          <input type="number" name="system.attributes.{{@index}}.value" value="{{this.value}}" min="1" max="8" class="creature-attr-value" data-dtype="Number" />
+          <button type="button" class="creature-attr-roll" data-action="rollAttribute" data-index="{{@index}}" title="{{localize 'DREADLIGHT.RollAttribute'}}"><i class="fa-solid fa-dice-d6"></i></button>
           {{#if ../editable}}
             <button type="button" class="remove-btn" data-action="removeAttribute" data-index="{{@index}}"><i class="fa-solid fa-xmark"></i></button>
           {{/if}}
         </div>
       {{/each}}
       {{#if canAddAttribute}}
-        <button type="button" class="add-btn" data-action="addAttribute"><i class="fa-solid fa-plus"></i></button>
+        <button type="button" class="add-btn" data-action="addAttribute"><i class="fa-solid fa-plus"></i> {{localize "DREADLIGHT.AddAttribute"}}</button>
       {{/if}}
     </div>
   </div>
@@ -65,8 +66,8 @@
       </div>
       {{#if editable}}
         <div class="body-max-edit">
-          <label>Max:</label>
-          <input type="number" name="system.body.max" value="{{system.body.max}}" min="1" max="30" class="body-max-input" />
+          <label>{{localize "DREADLIGHT.TrackMax"}}</label>
+          <input type="number" name="system.body.max" value="{{system.body.max}}" min="1" max="30" class="body-max-input" data-dtype="Number" />
         </div>
       {{/if}}
     </div>

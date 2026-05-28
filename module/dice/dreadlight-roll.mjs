@@ -148,7 +148,7 @@ export class DreadlightRoll {
       actorId: this.actor.id,
       actorImg: this.actor.img,
       actorName: this.actor.name,
-      portraitChat: this.actor.system.portrait?.chat ?? { offsetX: 50, offsetY: 50, zoom: 1 },
+      portraitChat: this.actor.system.portrait?.chat ?? { offsetX: 0, offsetY: 0, zoom: 1 },
       showPortrait: game.settings.get("dreadlight", "showChatPortrait"),
       showTaintedFlavorText: game.settings.get("dreadlight", "showTaintedFlavorText"),
       attribute: this.attribute,
@@ -189,10 +189,11 @@ export class DreadlightRoll {
 
 export function buildPool({ actor, attribute, talentLevel = 0, gearBonus = 0, difficultyMod = 0, helpDice = 0, injuryPenalty = 0 }) {
   const system = actor.system;
-  const attrValue = system.attributes[attribute].value;
-  const dread = system.dread.value;
+  const attrValue = system.attributes?.[attribute]?.value ?? 0;
+  // Dread/conditions/injuries only apply to investigators — NPCs and creatures lack these fields.
+  const dread = system.dread?.value ?? 0;
   const condition = CONFIG.DREADLIGHT.conditionMap[attribute];
-  const conditionPenalty = system.conditions[condition] ? game.settings.get("dreadlight", "conditionPenalty") : 0;
+  const conditionPenalty = system.conditions?.[condition] ? game.settings.get("dreadlight", "conditionPenalty") : 0;
   let rawBase = attrValue + talentLevel - conditionPenalty + difficultyMod - injuryPenalty;
   let totalPool = Math.max(rawBase, dread);
   let dreadDice = dread;

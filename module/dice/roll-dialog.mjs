@@ -60,11 +60,11 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
 
     context.actor = this.#actor;
     context.attribute = this.#attribute;
-    context.attrValue = system.attributes[this.#attribute].value;
+    context.attrValue = system.attributes?.[this.#attribute]?.value ?? 0;
     context.attributeOptions = CONFIG.DREADLIGHT.attributes.map(key => ({
       key,
       label: game.i18n.localize(CONFIG.DREADLIGHT.attributeLabels[key]),
-      value: system.attributes[key]?.value ?? 0,
+      value: system.attributes?.[key]?.value ?? 0,
       selected: key === this.#attribute,
     }));
 
@@ -85,9 +85,10 @@ export class DreadlightRollDialog extends HandlebarsApplicationMixin(Application
     context.selectedGearName = this.#gearItem?.name || "";
     context.selectedGearBonus = this.#gearItem?.system.gearBonus || 0;
     context.difficulties = CONFIG.DREADLIGHT.difficulties;
-    context.dreadValue = system.dread.value;
+    // NPCs and creatures don't track dread — fall back to 0 so the dialog renders cleanly.
+    context.dreadValue = system.dread?.value ?? 0;
 
-    // Injuries with penalty > 0
+    // Injuries with penalty > 0 (investigators only — NPCs and creatures have no injuries field)
     context.injuries = (system.injuries ?? [])
       .map((inj, i) => ({ ...inj, index: i }))
       .filter(inj => inj.penalty > 0);
