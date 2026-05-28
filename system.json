@@ -2,7 +2,7 @@
   "id": "dreadlight",
   "title": "Dreadlight",
   "description": "A horror investigation RPG built on a modified Year Zero Engine. Corruption lives in your dice.",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "compatibility": {
     "minimum": "13",
     "verified": "14"
@@ -50,7 +50,7 @@
   "socket": false,
   "url": "https://github.com/patcharapon-j/dreadlight",
   "manifest": "https://github.com/patcharapon-j/dreadlight/releases/latest/download/system.json",
-  "download": "https://github.com/patcharapon-j/dreadlight/releases/download/v0.6.0/dreadlight-v0.6.0.zip",
+  "download": "https://github.com/patcharapon-j/dreadlight/releases/download/v0.7.0/dreadlight-v0.7.0.zip",
   "packs": [
     {
       "name": "talents",
