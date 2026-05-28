@@ -5994,6 +5994,94 @@
   background: rgba(var(--rgb-red), 0.06);
 }
 
+/* Minor-tier notecard hint */
+.dreadlight.npc.tier-minor .npc-minor-hint {
+  padding: var(--space-3) var(--space-5);
+  color: var(--dl-text-muted);
+  font-family: var(--dl-font-italic);
+  font-size: var(--t-sm);
+  font-style: italic;
+  text-align: center;
+  border-bottom: 1px dashed rgba(var(--rgb-gold), 0.08);
+}
+
+/* Editable track max input (Important tier) */
+.dreadlight.npc .track-max-edit {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-1);
+  margin-top: 4px;
+  padding: 0 var(--space-2);
+}
+
+.dreadlight.npc .track-max-edit label {
+  color: var(--dl-text-muted);
+  font-size: var(--t-micro);
+  font-weight: 700;
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+}
+
+.dreadlight.npc .track-max-input {
+  background: var(--dl-bg-input);
+  border: 1px solid var(--dl-border-subtle);
+  color: var(--dl-text-secondary);
+  font-family: var(--dl-font-primary);
+  font-size: var(--t-tiny);
+  width: 40px;
+  text-align: center;
+  border-radius: var(--r-xs);
+  padding: 1px 2px;
+}
+
+.dreadlight.npc .track-max-input:focus {
+  border-color: rgba(var(--rgb-gold), 0.4);
+  outline: none;
+}
+
+/* Inline row roll button (weapons, key talents) */
+.dreadlight.npc .row-roll-btn,
+.dreadlight.creature .creature-attr-roll,
+.dreadlight.npc .key-talent-roll-btn {
+  background: transparent;
+  border: 1px solid rgba(var(--rgb-gold), 0.22);
+  color: var(--dl-accent-gold);
+  width: 26px;
+  height: 26px;
+  border-radius: var(--r-xs);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--dur-base) var(--ease-out);
+  font-size: var(--t-sm);
+  flex-shrink: 0;
+}
+
+.dreadlight.npc .row-roll-btn:hover,
+.dreadlight.creature .creature-attr-roll:hover,
+.dreadlight.npc .key-talent-roll-btn:hover {
+  background: rgba(var(--rgb-gold), 0.08);
+  border-color: rgba(var(--rgb-gold), 0.55);
+  box-shadow: 0 0 10px -2px rgba(var(--rgb-gold), 0.32);
+}
+
+.dreadlight.npc .row-roll-btn:active,
+.dreadlight.creature .creature-attr-roll:active,
+.dreadlight.npc .key-talent-roll-btn:active {
+  transform: translateY(1px);
+}
+
+/* Tier-specific body classes for compact framing */
+.dreadlight.npc.tier-minor .sheet-header.npc-header {
+  padding-bottom: var(--space-3);
+}
+
+.dreadlight.npc.tier-minor .npc-notes {
+  padding-top: var(--space-3);
+}
+
 /* ============================================================
    CREATURE SHEET — investigator-quality with red threat accent
    ============================================================ */

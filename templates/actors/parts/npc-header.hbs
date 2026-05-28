@@ -8,7 +8,7 @@
   <div class="header-identity">
     <input class="name-input" type="text" name="name" value="{{actor.name}}" placeholder="NPC Name" />
     <div class="tier-row">
-      <select name="system.tier" class="tier-select" data-action="changeTier">
+      <select name="system.tier" class="tier-select">
         {{#each tierOptions}}
           <option value="{{this.value}}" {{#if this.selected}}selected{{/if}}>{{localize this.label}}</option>
         {{/each}}

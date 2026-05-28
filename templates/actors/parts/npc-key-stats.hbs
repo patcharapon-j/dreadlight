@@ -33,11 +33,12 @@
   <div class="key-talent-list">
     {{#each keyTalents}}
       <div class="key-talent-entry" data-index="{{@index}}">
-        <input type="text" name="system.keyTalents.{{@index}}.name" value="{{this.name}}" placeholder="Talent name..." class="key-talent-name" />
+        <input type="text" name="system.keyTalents.{{@index}}.name" value="{{this.name}}" placeholder="{{localize 'DREADLIGHT.KeyTalentPlaceholder'}}" class="key-talent-name" />
         <div class="key-talent-level">
           {{{talentPips this.level "gold"}}}
         </div>
         <input type="number" name="system.keyTalents.{{@index}}.level" value="{{this.level}}" min="0" max="3" class="key-talent-level-input" />
+        <button type="button" class="key-talent-roll-btn" data-action="rollKeyTalent" data-index="{{@index}}" title="{{localize 'DREADLIGHT.RollTalent'}}"><i class="fa-solid fa-dice-d6"></i></button>
         {{#if ../editable}}
           <button type="button" class="remove-btn" data-action="removeKeyTalent" data-index="{{@index}}"><i class="fa-solid fa-xmark"></i></button>
         {{/if}}

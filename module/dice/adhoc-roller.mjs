@@ -130,7 +130,7 @@ async function sendAdhocRollToChat(roll, actor) {
     userName: actor?.name || game.user.name,
     hasActor: !!actor,
     actorImg: actor?.img || null,
-    portraitChat: actor?.system?.portrait?.chat ?? { offsetX: 50, offsetY: 50, zoom: 1 },
+    portraitChat: actor?.system?.portrait?.chat ?? { offsetX: 0, offsetY: 0, zoom: 1 },
     showPortrait: game.settings.get("dreadlight", "showChatPortrait"),
     baseResults: roll.baseResults,
     dreadResults: roll.dreadResults,

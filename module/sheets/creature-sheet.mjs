@@ -10,11 +10,12 @@ export class CreatureSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 
   static DEFAULT_OPTIONS = {
     classes: ["dreadlight", "sheet", "actor", "creature"],
-    position: { width: 480, height: 620 },
+    position: { width: 520, height: 720 },
     window: { resizable: true },
     actions: {
       editPortrait: CreatureSheet.#editPortrait,
       rollAttack: CreatureSheet.#rollAttack,
+      rollAttribute: CreatureSheet.#rollAttribute,
       addAttack: CreatureSheet.#addAttack,
       removeAttack: CreatureSheet.#removeAttack,
       addAttribute: CreatureSheet.#addAttribute,
@@ -45,22 +46,18 @@ export class CreatureSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     context.config = CONFIG.DREADLIGHT;
     context.editable = this.isEditable;
 
-    // Threat level options
     context.threatOptions = Object.entries(CONFIG.DREADLIGHT.threatLevels).map(([value, label]) => ({
       value, label, selected: value === system.threatLevel,
     }));
 
-    // Attribute options for dropdowns
     context.attrOptions = CONFIG.DREADLIGHT.attributes.map(key => ({
       value: key,
       label: game.i18n.localize(CONFIG.DREADLIGHT.attributeLabels[key]),
     }));
 
-    // Creature attributes with resolved values
     context.creatureAttributes = system.attributes ?? [];
     context.canAddAttribute = (system.attributes?.length ?? 0) < 6;
 
-    // Attacks with resolved pool values
     context.attacks = (system.attacks ?? []).map((atk, i) => ({
       ...atk,
       poolValue: system.getAttributeValue(atk.attribute),
@@ -92,6 +89,17 @@ export class CreatureSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
         if (track.value > 0) this.actor.update({ "system.body.value": track.value - 1 });
       });
     }
+
+    // Live update attack pool value when the attribute select changes (before form submit completes).
+    this.element.querySelectorAll(".attack-attr-select").forEach((sel) => {
+      sel.addEventListener("change", (ev) => {
+        const card = ev.target.closest(".attack-card");
+        const valueEl = card?.querySelector(".attack-stat-value");
+        if (!valueEl) return;
+        const pool = this.actor.system.getAttributeValue(ev.target.value);
+        valueEl.textContent = pool;
+      });
+    });
   }
 
   /* ---------------------------------------- */
@@ -107,18 +115,43 @@ export class CreatureSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     fp.render(true);
   }
 
+  static async #rollAttribute(event, target) {
+    const index = parseInt(target.closest("[data-index]")?.dataset.index ?? "-1", 10);
+    if (index < 0) return;
+    const entry = this.actor.system.attributes?.[index];
+    if (!entry) return;
+
+    const roll = new DreadlightRoll({
+      baseDice: entry.value,
+      dreadDice: 0,
+      gearDice: 0,
+      attribute: entry.attr,
+      actor: this.actor,
+    });
+    await roll.evaluate();
+    await roll.showDSN();
+    await sendRollToChat(roll);
+  }
+
   static async #rollAttack(event, target) {
-    const index = parseInt(target.closest("[data-index]").dataset.index);
+    const index = parseInt(target.closest("[data-index]")?.dataset.index ?? "-1", 10);
+    if (index < 0) return;
     const attack = this.actor.system.attacks[index];
     if (!attack) return;
 
     const poolValue = this.actor.system.getAttributeValue(attack.attribute);
+    if (poolValue <= 0) {
+      ui.notifications.warn(game.i18n.format("DREADLIGHT.CreatureAttackNoPool", {
+        attr: game.i18n.localize(CONFIG.DREADLIGHT.attributeLabels[attack.attribute] ?? attack.attribute),
+      }));
+      return;
+    }
     const roll = new DreadlightRoll({
       baseDice: poolValue,
       dreadDice: 0,
       gearDice: 0,
       attribute: attack.attribute,
-      talentName: attack.name,
+      talentName: attack.name || game.i18n.localize("DREADLIGHT.Attack"),
       actor: this.actor,
       weaponDamage: attack.damage ?? 0,
       weaponCritThreshold: attack.critThreshold ?? 6,
@@ -131,13 +164,14 @@ export class CreatureSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   static #addAttack(event, target) {
     const attacks = this.actor.system.attacks ?? [];
     if (attacks.length >= 3) return;
+    const firstAttr = this.actor.system.attributes?.[0]?.attr ?? "str";
     this.actor.update({
-      "system.attacks": [...attacks, { name: "", attribute: "str", damage: 1, critThreshold: 6, range: "engaged" }],
+      "system.attacks": [...attacks, { name: "", attribute: firstAttr, damage: 1, critThreshold: 6, range: "engaged" }],
     });
   }
 
   static #removeAttack(event, target) {
-    const index = parseInt(target.closest("[data-index]").dataset.index);
+    const index = parseInt(target.closest("[data-index]").dataset.index, 10);
     const attacks = [...(this.actor.system.attacks ?? [])];
     attacks.splice(index, 1);
     this.actor.update({ "system.attacks": attacks });
@@ -146,13 +180,16 @@ export class CreatureSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   static #addAttribute(event, target) {
     const attrs = this.actor.system.attributes ?? [];
     if (attrs.length >= 6) return;
+    // Pick the first attribute key that isn't already used, fall back to "str".
+    const used = new Set(attrs.map(a => a.attr));
+    const next = CONFIG.DREADLIGHT.attributes.find(k => !used.has(k)) ?? "str";
     this.actor.update({
-      "system.attributes": [...attrs, { attr: "str", value: 3 }],
+      "system.attributes": [...attrs, { attr: next, value: 3 }],
     });
   }
 
   static #removeAttribute(event, target) {
-    const index = parseInt(target.closest("[data-index]").dataset.index);
+    const index = parseInt(target.closest("[data-index]").dataset.index, 10);
     const attrs = [...(this.actor.system.attributes ?? [])];
     attrs.splice(index, 1);
     this.actor.update({ "system.attributes": attrs });
