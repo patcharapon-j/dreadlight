@@ -19,21 +19,21 @@ export function registerDSN(dice3d) {
 
   // ── Colorsets ──────────────────────────────────────────────────────
 
-  // Base dice — black
+  // Base dice — smoked frosted glass on the ink ramp (Etched Glass)
   dice3d.addColorset({
     name: "dreadlight-base",
     description: "Dreadlight Base",
     category: "Dreadlight",
     foreground: "#ffffff",
-    background: "#1a1a1a",
+    background: "#14141c",
     outline: "#000000",
-    edge: "#333333",
-    material: "metal",
-    texture: "metal",
+    edge: "#3a3a48",
+    material: "glass",
+    texture: "ice",
     font: FONT,
   });
 
-  // Dread dice — deep red with fiery texture
+  // Dread dice — deep red with fiery texture, hazard-lit edges
   dice3d.addColorset({
     name: "dreadlight-dread",
     description: "Dreadlight Dread",
@@ -41,7 +41,7 @@ export function registerDSN(dice3d) {
     foreground: "#ffffff",
     background: "#8b2020",
     outline: "#4a1010",
-    edge: "#c93030",
+    edge: "#e05555",
     material: "metal",
     texture: "fire",
     font: FONT,

@@ -97,7 +97,13 @@
 /* Six bloom — brief light pulse on rolled successes */
 @keyframes gl-six-bloom {
   0%, 100% { filter: brightness(1); }
-  50%      { filter: brightness(1.3) drop-shadow(0 0 7px color-mix(in srgb, var(--gl-accent) 65%, transparent)); }
+  50%      { filter: brightness(1.3) drop-shadow(0 0 7px color-mix(in srgb, var(--gl-bloom, var(--gl-accent)) 65%, transparent)); }
+}
+
+/* Window-open ceremony — the slab settles into place */
+@keyframes gl-window-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.985); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 /* Card / panel rise-in */
@@ -158,6 +164,7 @@
    ---------------------------------------------------------- */
 
 .application.dreadlight {
+  animation: gl-window-in 360ms var(--gl-ease);
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0) 34%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.22)),
@@ -200,6 +207,14 @@
   background: transparent;
   border: none;
   box-shadow: none;
+}
+
+/* The template root inside window-content also matches the base
+   grain rule, painting the blend-mode noise overlay twice per
+   sheet. One grain layer (on the window) is enough — drop the
+   duplicate; it costs paint time and double-darkens the surface. */
+.dreadlight .window-content > .dreadlight.sheet::after {
+  content: none;
 }
 
 /* ----------------------------------------------------------
@@ -455,12 +470,17 @@
 .chat-message:last-child .dreadlight-chat .die:nth-child(12) { animation-delay: 470ms; }
 .chat-message:last-child .dreadlight-chat .die:nth-child(13) { animation-delay: 505ms; }
 
-/* Sixes bloom twice after landing, then settle */
+/* Sixes bloom twice after landing, then settle — bloom color
+   follows the die type, not the outcome */
 .chat-message:last-child .dreadlight-chat .die.six {
+  --gl-bloom: #cfd6e4;
   animation:
     gl-die-in 0.46s var(--gl-pop) backwards,
     gl-six-bloom 1.1s ease-in-out 0.62s 2;
 }
+
+.chat-message:last-child .dreadlight-chat .die-dread.six { --gl-bloom: var(--gl-hazard); }
+.chat-message:last-child .dreadlight-chat .die-gear.six { --gl-bloom: #c9a96e; }
 
 /* Result row — etched-ghost label lit by a drawn precision rule */
 .dreadlight-chat .result-row {
@@ -518,7 +538,15 @@
   box-shadow: 0 1px 10px rgba(224, 85, 85, 0.45);
 }
 
+/* Dread loops are paint-expensive (animated filters), so only the
+   newest few cards in the log breathe; older cards hold a static
+   hazard glow. */
 .dreadlight-chat.chat-dire .result-icon.dire-glow {
+  animation: none;
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--gl-hazard) 50%, transparent));
+}
+
+.chat-message:nth-last-child(-n+3) .dreadlight-chat.chat-dire .result-icon.dire-glow {
   animation: gl-dread-pulse var(--gl-dread) ease-in-out infinite;
 }
 
@@ -578,7 +606,17 @@
   pointer-events: none;
 }
 
+/* Same discipline for the push warning: static hazard edging on
+   old cards, the dread loop only where the player is looking. */
 .dreadlight-chat[data-has-ones="true"] .push-btn {
+  animation: none;
+  border-color: color-mix(in srgb, var(--gl-hazard) 40%, transparent);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 0 12px -4px color-mix(in srgb, var(--gl-hazard) 50%, transparent);
+}
+
+.chat-message:nth-last-child(-n+3) .dreadlight-chat[data-has-ones="true"] .push-btn {
   animation: gl-dread-pulse var(--gl-dread) ease-in-out infinite;
 }
 
@@ -611,12 +649,17 @@
   -webkit-backdrop-filter: blur(14px) saturate(1.15);
 }
 
-/* Top precision rule (kept from the old shell, sharpened) */
+/* Top precision rule (kept from the old shell, sharpened).
+   The HUD rebuilds its DOM on a new round, so the draw replays
+   exactly at round boundaries — rule draws, cards cascade,
+   round numeral pops: the round ceremony. */
 #dreadlight-initiative-tracker .initiative-shell::before {
   top: 3px;
   background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--gl-accent) 70%, transparent) 24%, color-mix(in srgb, var(--gl-accent) 70%, transparent) 76%, transparent);
   box-shadow: 0 0 14px color-mix(in srgb, var(--gl-accent) 45%, transparent);
   opacity: 0.7;
+  transform-origin: left;
+  animation: gl-rule-draw var(--gl-d-reveal) var(--gl-ease) backwards;
 }
 
 /* Bottom hairline becomes the chamfer-cut accent (14px cut) */
@@ -993,7 +1036,111 @@
 }
 
 /* ----------------------------------------------------------
-   EG-8. MOTION RESPECT — clamp everything this layer adds.
+   EG-8. SHEET ETCHING — the actor sheet header becomes a filed
+   case document; list rows take the hover-rule idiom.
+   ---------------------------------------------------------- */
+
+/* L-bracket registration mark on the header slab */
+.dreadlight .sheet-header::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  z-index: 6;
+  width: 8px;
+  height: 8px;
+  border-top: 1px solid var(--gl-line-strong);
+  border-left: 1px solid var(--gl-line-strong);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Serial garnish — quiet provenance text; the broken-state overlay
+   claims this pseudo-element and replaces it when a track breaks */
+.dreadlight .sheet-header::after {
+  content: "DRD\00B7LX \2044 CASE FILE";
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  z-index: 6;
+  font-size: 6.5px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--gl-text-faint);
+  text-transform: uppercase;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* Hover contract for list rows (§7.2): a precision rule draws along
+   the top edge; the left accent bar remains the base layer's job. */
+.dreadlight .talent-row::after,
+.dreadlight .item-row::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 6px;
+  right: 6px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--gl-accent), transparent 72%);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--gl-accent) 45%, transparent);
+  opacity: 0.8;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--gl-d-quick) var(--gl-ease);
+  pointer-events: none;
+}
+
+.dreadlight .talent-row:hover::after,
+.dreadlight .item-row:hover::after {
+  transform: scaleX(1);
+}
+
+.dreadlight .talent-row.dreadlore::after {
+  background: linear-gradient(90deg, var(--gl-hazard), transparent 72%);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--gl-hazard) 45%, transparent);
+}
+
+.dreadlight .talent-row.occult::after {
+  background: linear-gradient(90deg, var(--gl-violet), transparent 72%);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--gl-violet) 45%, transparent);
+}
+
+/* Empty placeholders speak in the etched annotation voice */
+.dreadlight .empty-message {
+  font-family: var(--dl-font-primary);
+  font-size: var(--t-8);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  border: 1px dashed color-mix(in srgb, var(--gl-accent) 22%, transparent);
+  clip-path: polygon(6px 0, 100% 0, 100% 100%, 0 100%, 0 6px);
+  background: rgba(8, 8, 13, 0.3);
+}
+
+/* ----------------------------------------------------------
+   EG-9. UTILITY POLISH
+   ---------------------------------------------------------- */
+
+/* Scrollbar thumb warms to the accent under the pointer */
+.dreadlight ::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--gl-accent) 45%, transparent);
+}
+
+/* Text selection carries the accent */
+.dreadlight ::selection,
+.dreadlight-chat ::selection,
+.dreadlight-roll-form ::selection {
+  background: color-mix(in srgb, var(--gl-accent) 30%, transparent);
+  color: var(--gl-text-bright);
+}
+
+/* Round numeral pops when the toolbar rebuilds (new round / redraw) */
+#dreadlight-initiative-tracker .initiative-title strong {
+  animation: gl-pop-in 0.4s var(--gl-snap) backwards;
+}
+
+/* ----------------------------------------------------------
+   EG-10. MOTION RESPECT — clamp everything this layer adds.
    (The base stylesheet clamps .dreadlight scopes; the chat
    wrapper lives outside them, so it is covered here.)
    ---------------------------------------------------------- */
