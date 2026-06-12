@@ -31,7 +31,7 @@ To test changes: reload the FoundryVTT browser tab (F5) or use the "Reload Syste
 
 **Templates** (`templates/`): Handlebars templates organized by type — actors (with partials), items, chat, dialogs.
 
-**Styles** (`styles/dreadlight.css`): Single CSS file (~49KB). All selectors scoped under `.dreadlight` to prevent FoundryVTT UI leaks.
+**Styles** (`styles/`): Two stylesheets, loaded in order via `system.json`. `dreadlight.css` is the base design system; `etched-glass.css` is the premium "Etched Glass" overlay (frosted-glass window/HUD/chat-card material, chamfered corners, precision-rule and sheen-sweep animations, `--gl-*` design tokens). All selectors scoped under `.dreadlight` / `.dreadlight-chat` / `#dreadlight-initiative-tracker` to prevent FoundryVTT UI leaks.
 
 ## Game Mechanics to Understand
 

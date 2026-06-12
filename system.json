@@ -16,7 +16,8 @@
     "dreadlight.mjs"
   ],
   "styles": [
-    "styles/dreadlight.css"
+    "styles/dreadlight.css",
+    "styles/etched-glass.css"
   ],
   "languages": [
     {
